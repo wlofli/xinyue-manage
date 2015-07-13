@@ -153,7 +153,7 @@
 <td colspan="2">操作</td>
 </tr></thead><tbody>
 <c:forEach items="${fastproductlist}" var="list" varStatus="vs"><tr>
-<td colspan="2"><input type="checkbox" name="ckbx"/><span>
+<td colspan="2"><input type="checkbox" name="ckbx" value="${list.id }"/><span>
 <c:out value="${vs.count + (page.nowPage-1)*10}" /></span></td>
 <td colspan="4">${list.code }</td>
 <td colspan="2"><c:if test="${!empty list.credit }"> ${list.credit }万</c:if></td>

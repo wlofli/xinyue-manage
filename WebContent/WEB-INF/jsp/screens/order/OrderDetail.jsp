@@ -56,8 +56,8 @@ function update(){
 	<div><span>审核人员：</span><input type="text" class="t1" value="<%=AutheManage.getUsername(request) %>" name="taxAuditePerson" disabled="disabled"/><div class="clear"></div></div>
 	<div><span>审核结果：</span><span class=" dx1"><input type="radio" name="status"  value="3"/>审核通过</span>
 							 <span class=" dx1"><input type="radio" name="status" checked="checked"  value="2"/>审核中</span>
-							 <span class=" dx1"><input type="radio" name="status"  value="4"/>审核不通过</span><div class="clear"></div></div>
-	<div><span>添加备注：</span><textarea class="qxsz qxsz2"></textarea><div class="clear"></div></div>
+							 <span class=" dx1"><input type="radio" name="status"  value="5"/>审核不通过</span><div class="clear"></div></div>
+	<div><span>添加备注：</span><textarea class="qxsz qxsz2" name="taxAuditeRemark">${order.taxAuditeRemark }</textarea><div class="clear"></div></div>
 	<div><input type="button" value="确 定" class="tj_btn" onclick="update()"/></div>
 </c:when>
 <c:when test="${order.status == '机构审核中'||order.status == '等待机构审核' }">
@@ -69,10 +69,10 @@ function update(){
 	<div><span>新越网备注：</span><span class="dx2">${order.taxAuditeRemark }</span><div class="clear"></div></div>
 	<div><span>银行审核时间：</span><fmt:formatDate value="${order.blankAuditeTime}" type="date"/><div class="clear"></div></div>
 	<div><span>银行审核人员：</span><input type="text" class="t1" value="<%=AutheManage.getUsername(request) %>" name="blankAuditePerson" disabled="disabled"/><div class="clear"></div></div>
-	<div><span>银行审核结果：</span><span class=" dx1"><input type="radio" checked="checked" value="5" name="status"/>审核中</span>
-								<span class=" dx1"><input type="radio"  value="6" name="status"/>审核通过</span>
-								<span class=" dx1"><input type="radio" value="7" name="status"/>审核不通过</span><div class="clear"></div></div>
-	<div><span>添加备注：</span><textarea class="qxsz qxsz2" name="blankAuditeRemark"></textarea><div class="clear"></div></div>
+	<div><span>银行审核结果：</span><span class=" dx1"><input type="radio" checked="checked" value="7" name="status"/>审核中</span>
+								<span class=" dx1"><input type="radio"  value="8" name="status"/>审核通过</span>
+								<span class=" dx1"><input type="radio" value="9" name="status"/>审核不通过</span><div class="clear"></div></div>
+	<div><span>添加备注：</span><textarea class="qxsz qxsz2" name="blankAuditeRemark">${order.blankAuditeRemark }</textarea><div class="clear"></div></div>
 	<div><input type="button" value="确 定" class="tj_btn" onclick="update()" /></div>
 </c:when>
 <c:when test="${order.status == '机构审核通过' }">
@@ -89,12 +89,12 @@ function update(){
 		<c:if test="${order.blankAuditeStatus == 1 }">审核通过</c:if>
 		<c:if test="${order.blankAuditeStatus == 0 }">审核不通过</c:if>
 	</span><div class="clear"></div></div>
-	<div><span>机构备注：</span><span class="dx2">${order.blankAuditeRemark }</span><div class="clear"></div></div>
+	<div><span>机构备注：</span><span class="dx2" >${order.blankAuditeRemark }</span><div class="clear"></div></div>
 	
 	<div><span>放款状态：</span><span class=" dx1"><input type="radio" checked="checked" name="status" value="10" />放款成功</span><span class=" dx1"><input type="radio" name="status" value="11"/>放款失败</span><div class="clear"></div></div>
 <div><span>放款时间：</span><input type="text" name="auditeTime"  class="t1" value="" disabled="disabled" /><div class="clear"></div></div>
 <div><span>放款金额(万元)：</span><input type="text" class="t1 required number" value="" name="creditReal"/><span class="dw"></span><div class="clear"></div></div>
-<div><span>添加备注：</span><textarea class="qxsz qxsz2"></textarea><div class="clear"></div></div>
+<div><span>添加备注：</span><textarea class="qxsz qxsz2" name="remark">${order.remark }</textarea><div class="clear"></div></div>
 <div><input type="button" value="确 定" class="tj_btn" onclick="update()" /></div>
 
 </c:when>

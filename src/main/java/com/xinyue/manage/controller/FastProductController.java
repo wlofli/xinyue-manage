@@ -61,6 +61,7 @@ public class FastProductController {
 		model.addAttribute("fspdt", fastProduct);
 		if(fastProduct.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_CHINESE) 
 				|| fastProduct.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET_CHINESE)){
+System.out.println(fastProduct.getOrderType());
 			if(fastProduct.getOrderType() != null){
 				switch (fastProduct.getOrderType()) {
 					case GlobalConstant.ORDER_TYPE_FIXED_CHINESE:
@@ -96,11 +97,11 @@ public class FastProductController {
 //System.out.println(fastProduct.getRemark());
 		try {
 			fastProductService.updateFastProductStatus(fastProduct,AutheManage.getUsername(request));
-			return GlobalConstant.RET_SUCCESS;
 		} catch (Exception e) {
 			// TODO: handle exception
+			return GlobalConstant.RET_FAIL;
 		}
-		return GlobalConstant.RET_FAIL;
+		return GlobalConstant.RET_SUCCESS;
 	}
 	
 	@RequestMapping("updatestatuslist")
@@ -109,9 +110,9 @@ public class FastProductController {
 			fastProductService.updateFastProductStatusList(idList, GlobalConstant.ORDER_STATUS_BLANK, AutheManage.getUsername(request));
 		} catch (Exception e) {
 			// TODO: handle exception
+			return GlobalConstant.RET_FAIL;
 		}
-		
-		return GlobalConstant.RET_FAIL;
+		return GlobalConstant.RET_SUCCESS;
 	}
 	
 	
@@ -123,10 +124,9 @@ public class FastProductController {
 		orderFixed.setModifiedId(AutheManage.getUsername(request));
 		orderFixed.setOrderId(id);
 		orderFixed.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-		
 		try {
 			orderCustomerService.addOrderFixed(orderFixed, GlobalConstant.FASTPRODUCT_TABNAME_FAST, 
-					GlobalConstant.ORDER_ORDERSTATUS_RESET);
+					GlobalConstant.ORDER_ORDERSTATUS_NOSTART);
 		} catch (Exception e) {
 			// TODO: handle exception
 			return GlobalConstant.RET_FAIL;
@@ -145,7 +145,7 @@ public class FastProductController {
 		orderAuction.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
 			orderCustomerService.addOrderAuction(orderAuction, GlobalConstant.FASTPRODUCT_TABNAME_FAST,
-					GlobalConstant.ORDER_ORDERSTATUS_RESET);
+					GlobalConstant.ORDER_ORDERSTATUS_NOSTART);
 		} catch (Exception e) {
 			// TODO: handle exception
 			return GlobalConstant.RET_FAIL;
@@ -162,7 +162,7 @@ public class FastProductController {
 		orderLowPrice.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
 			orderCustomerService.addOrderLowPrice(orderLowPrice, GlobalConstant.FASTPRODUCT_TABNAME_FAST,
-					GlobalConstant.ORDER_ORDERSTATUS_RESET);
+					GlobalConstant.ORDER_ORDERSTATUS_NOSTART);
 		} catch (Exception e) {
 			// TODO: handle exception
 			return GlobalConstant.RET_FAIL;
@@ -182,7 +182,7 @@ public class FastProductController {
 		orderAppointed.setId(UUID.randomUUID().toString().replaceAll("-", ""));
 		try {
 			orderCustomerService.addOrderAppointed(orderAppointed, GlobalConstant.FASTPRODUCT_TABNAME_FAST, 
-					GlobalConstant.ORDER_ORDERSTATUS_RESET);
+					GlobalConstant.ORDER_ORDERSTATUS_NOSTART);
 		} catch (Exception e) {
 			// TODO: handle exception
 			return GlobalConstant.RET_FAIL;

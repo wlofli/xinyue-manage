@@ -121,13 +121,15 @@
 <div><span>申请人姓名：</span><span class="dw">${fspdt.contactName }</span><div class="clear"></div></div>
 <div><span>联系方式(手机)：</span><span class="dw">${fspdt.contactPhone }</span></div>
 <div><span>订单状态：</span><span class="dw">${fspdt.status}</span><div class="clear"></div></div>
-<div><span>接单时间：</span><span class="dw"><fmt:formatDate value="${fspdt.receiveTime}" type="both" pattern="yyyy-MM-dd h:m"/></span><div class="clear"></div></div>
-<div><span>接单人员：</span><span class="dw">${fspdt.receiver }</span><div class="clear"></div></div>
-<div><span>备注：</span>${fspdt.remark }<div class="clear"></div></div>
+<div><span>领取方式：</span><span class="dw">${fspdt.orderType}</span><div class="clear"></div></div>
+<%-- <div><span>领取状态：</span><span class="dw">${fspdt.orderStatus}</span><div class="clear"></div></div> --%>
+<%-- <div><span>接单时间：</span><span class="dw"><fmt:formatDate value="${fspdt.receiveTime}" type="both" pattern="yyyy-MM-dd h:m"/></span><div class="clear"></div></div> --%>
+<%-- <div><span>接单人员：</span><span class="dw">${fspdt.receiver }</span><div class="clear"></div></div> --%>
+<%-- <div><span>备注：</span>${fspdt.remark }<div class="clear"></div></div> --%>
 </sf:form>
 <div id="ordercustomer">
 <c:choose>
-<c:when test="${fspdt.orderType == '1' }">
+<c:when test="${fspdt.orderType == '立即领取' }">
 	<div class="bt"><span>立即领取</span></div> 
 	<div><span>立即领取价：</span><span class="dw">${fixed.price}元</span><div class="clear"></div></div>
 	<div><span>领取开始时间：</span><span class="dw"><fmt:formatDate value="${fixed.startTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
@@ -136,7 +138,7 @@
 	<div><input type="button" value="重置" class="tj_btn" onclick="javascript:resetOrder('${fspdt.id}')"/></div>
 </c:when>
 	
-<c:when test="${fspdt.orderType == '2' }">
+<c:when test="${fspdt.orderType == '竞拍' }">
 	<div class="bt"><span>竞拍</span></div> 
 	<div><span>一口价：</span><span class="dw">${auction.fixedPrice}元</span><div class="clear"></div></div>
 	<div><span>起拍价：</span><span class="dw">${auction.startPrice}元</span><div class="clear"></div></div>
@@ -147,7 +149,7 @@
 	<div><input type="button" value="重置" class="tj_btn" onclick="javascript:resetOrder('${fspdt.id}')"/></div>
 </c:when>
 
-<c:when test="${fspdt.orderType == '3' }">
+<c:when test="${fspdt.orderType == '唯一低价' }">
 <div class="bt"><span>唯一低价</span></div> 
 	<div><span>最高价：</span><span class="dw">${lowprice.maxPrice}元</span><div class="clear"></div></div>
 	<div><span>最低价：</span><span class="dw">${lowprice.minPrice}元</span><div class="clear"></div></div>
@@ -158,7 +160,7 @@
 	<div><span>领取状态：</span><span class="dw">${fspdt.orderStatus}</span><div class="clear"></div></div>
 	<div><input type="button" value="重置" class="tj_btn" onclick="javascript:resetOrder('${fspdt.id}')"/></div>
 </c:when>
-<c:when test="${fspdt.orderType == '4'}">
+<c:when test="${fspdt.orderType == '指定推送'}">
 <div class="bt"><span>指定推送</span></div> 
 	<div><span>信贷经理姓名：</span><span class="dw">${appointed.creditName}</span><div class="clear"></div></div>
 	<div><span>手机号：</span><span class="dw">${appointed.creditPhone}</span><div class="clear"></div></div>
