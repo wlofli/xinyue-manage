@@ -1,6 +1,7 @@
 package com.xinyue.manage.controller;
 
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,8 +55,6 @@ public class FastProductController {
 	}
 	
 	
-	
-	
 	@RequestMapping(value={"turnupdate"})
 	public String turnFastProductEdit(Model model,String id){
 		FastProduct fastProduct = fastProductService.getFastProduct(id);
@@ -88,8 +87,6 @@ public class FastProductController {
 		}else {
 			return "screens/fastProduct/fastProductEdit";
 		}
-		
-		
 	}
 	
 	
@@ -103,6 +100,17 @@ public class FastProductController {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		return GlobalConstant.RET_FAIL;
+	}
+	
+	@RequestMapping("updatestatuslist")
+	public @ResponseBody String updateStatusList(@ModelAttribute("list")List<String> idList, HttpServletRequest request){
+		try {
+			fastProductService.updateFastProductStatusList(idList, GlobalConstant.ORDER_STATUS_BLANK, AutheManage.getUsername(request));
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
 		return GlobalConstant.RET_FAIL;
 	}
 	
@@ -195,13 +203,6 @@ public class FastProductController {
 		
 		return GlobalConstant.RET_SUCCESS;
 	}
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

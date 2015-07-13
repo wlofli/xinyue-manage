@@ -64,7 +64,7 @@
 // 				alert("ajax");
 				$.ajax({
 					type:"post",
-					url:"${ctx}/order/updatestatuslist?list="+box,
+					url:"${ctx}/fastproduct/updatestatuslist?list="+box,
 					success:function(data){
 						if(data == "success"){
 							alert("移除成功");
@@ -81,7 +81,7 @@
 // 		alert("in");
 		$.ajax({
 			type:'post',
-			url:"${ctx}/order/updatestatuslist?list="+id,
+			url:"${ctx}/fastproduct/updatestatuslist?list="+id,
 			success:function(data){
 				if(data == "success"){
 					alert("移除成功");
@@ -91,9 +91,6 @@
 			}
 		});
 	}
-	
-	
-	
 	
 	$().ready(function(){
 		if($("#selstatus").val() != '4'){
@@ -119,9 +116,9 @@
 <li><span>申请人：</span><sf:input path="contactName" class="s2"/></li>
 <li><span>手机号：</span><sf:input path="contactPhone" class="s1"/></li>
 <li><span>订单状态：</span>
-<sf:select path="status">
+<sf:select path="status" id="selstatus" onchange="changeSel(this.options[this.options.selectedIndex].value)">
 <sf:option value="">请选择</sf:option>	
-<sf:options items="${status}" itemLabel="value" itemValue="key" id="selstatus" onchange="changeSel(this.options[this.options.selectedIndex].value)"/>
+<sf:options items="${status}" itemLabel="value" itemValue="key"  />
 </sf:select></li>
 <li><span>领取方式：</span>
 <sf:select path="orderType" class="s1 selordertype" >
@@ -138,9 +135,7 @@
 </sf:form>
 </div>
 <div class="c_table" style="overflow-x: scroll;">
-<table class="table2" cellpadding="0" cellspacing="0">
-<thead>
-<tr>
+<table class="table2" cellpadding="0" cellspacing="0"><thead><tr>
 <td colspan="2">序号</td>
 <td colspan="4">订单号</td>
 <td colspan="2">申贷金额</td>
@@ -156,14 +151,10 @@
 <td colspan="2">领取状态</td>
 <td colspan="4">备注</td>
 <td colspan="2">操作</td>
-</tr>
-</thead>
-<tbody>
-<c:forEach items="${fastproductlist}" var="list" varStatus="vs">
-<tr>
-<td colspan="2"><input type="checkbox" /><span>
-<c:out value="${vs.count + (page.nowPage-1)*10}" />
-</span></td>
+</tr></thead><tbody>
+<c:forEach items="${fastproductlist}" var="list" varStatus="vs"><tr>
+<td colspan="2"><input type="checkbox" name="ckbx"/><span>
+<c:out value="${vs.count + (page.nowPage-1)*10}" /></span></td>
 <td colspan="4">${list.code }</td>
 <td colspan="2"><c:if test="${!empty list.credit }"> ${list.credit }万</c:if></td>
 <td colspan="3"><fmt:formatDate value="${list.createdTime}" type="date"/></td>
@@ -177,7 +168,11 @@
 <td colspan="2">${list.orderType }</td>
 <td colspan="2">${list.orderStatus }</td>
 <td colspan="4">${list.remark }</td>
-<td colspan="2"><a href="${ctx }/fastproduct/turnupdate?id=${list.id}">订单详情</a></td>
+<td colspan="2"><a href="${ctx }/fastproduct/turnupdate?id=${list.id}">订单详情</a>
+<c:if test="${list.status == '新越网审核通过' || (list.status =='新越网审核通过设为推荐' && list.orderStatus !='无人领取')}">
+<a href="javascript:rmvSingle('${list.id }')" class="del">移除</a>
+</c:if>
+</td>
 </tr>
 </c:forEach>
 </tbody>
