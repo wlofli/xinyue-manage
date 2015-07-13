@@ -34,6 +34,7 @@ public class DocumentHandler {
         configuration.setClassForTemplateLoading(this.getClass(), "/main/resources/wordtemplete");  
         Template t=null;  
         try {  
+            //orderTemplete.xml为要装载的模板  
             t = configuration.getTemplate("orderTemplete.xml");  
         } catch (IOException e) {  
             e.printStackTrace();  
