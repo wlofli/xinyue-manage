@@ -101,12 +101,8 @@
 </script>
 </head>
 <body>
-<div class="c_right">
-<div class="c_r_bt"><h1>
-<img src="${ctx }/images/dd_tb1.png" alt="快速申贷订单列表" /><span>快速申贷订单列表</span>
-</h1>
-</div>
-<div class="c_r_bt1">
+<div class="c_right"><div class="c_r_bt"><h1>
+<img src="${ctx }/images/dd_tb1.png" alt="快速申贷订单列表" /><span>快速申贷订单列表</span></h1></div><div class="c_r_bt1">
 <sf:form action="${ctx }/fastproduct/list?index=0" commandName="fastproduct" method="post" id="searchForm">
 <ul>
 <li><span>订单号：</span><sf:input path="code" class="s1"/></li>
@@ -148,7 +144,7 @@
 <td colspan="2">领取方式</td>
 <td colspan="2">领取状态</td>
 <td colspan="4">备注</td>
-<td colspan="2">操作</td>
+<td colspan="4">操作</td>
 </tr></thead><tbody>
 <c:forEach items="${fastproductlist}" var="list" varStatus="vs"><tr>
 <td colspan="2"><input type="checkbox" name="ckbx" value="${list.id }"/><span>
@@ -166,7 +162,7 @@
 <td colspan="2">${list.orderType }</td>
 <td colspan="2">${list.orderStatus }</td>
 <td colspan="4">${list.remark }</td>
-<td colspan="2"><a href="${ctx }/fastproduct/turnupdate?id=${list.id}">订单详情</a>
+<td colspan="4"><a href="${ctx }/fastproduct/turnupdate?id=${list.id}">订单详情</a>
 <c:if test="${list.status == '新越网审核通过' || (list.status =='新越网审核通过设为推荐' && list.orderStatus !='无人领取')}">
 <a href="javascript:rmvSingle('${list.id }')" class="del">移除</a>
 </c:if>

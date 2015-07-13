@@ -94,9 +94,6 @@
 		});
 	}
 	
-	
-	
-	
 	$().ready(function(){
 		if($("#selstatus").val() != '4'){
 			$(".selordertype").attr("disabled",true);
