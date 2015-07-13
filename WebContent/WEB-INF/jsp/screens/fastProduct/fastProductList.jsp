@@ -15,7 +15,6 @@
 
 	function changePage(page){
 		var index = page - 1;
-		
 		document.getElementById("searchForm").attributes['action'].value = "${ctx}/fastproduct/list?index="+index;
 		$("#searchForm").submit();
 		
@@ -40,7 +39,6 @@
 			$(".selordertype").val("");
 			$(".selordertype").attr("disabled",true);
 		}
-		
 	}
 	
 	function getchecked(){
@@ -187,7 +185,6 @@
 </ul>
 <%@ include file="../../commons/page.jsp" %>
 </div>
-	
 </div>
 </body>
 </html>
