@@ -26,13 +26,11 @@ function update(){
 			}
 		}
 	});
-	
+}
 function getList(){
 	window.location.href="${ctx}/order/auditeorderlist?index=0";
 }
 
-	
-}
 </script>
 </head>
 <body>

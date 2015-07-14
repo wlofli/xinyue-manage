@@ -101,8 +101,8 @@
 </script>
 </head>
 <body>
-<div class="c_right"><div class="c_r_bt"><h1>
-<img src="${ctx }/images/dd_tb1.png" alt="快速申贷订单列表" /><span>快速申贷订单列表</span></h1></div><div class="c_r_bt1">
+<div class="c_right"><div class="c_r_bt"><h1><img src="${ctx }/images/dd_tb1.png" alt="快速申贷订单列表" /><span>快速申贷订单列表</span></h1></div>
+<div class="c_r_bt1">
 <sf:form action="${ctx }/fastproduct/list?index=0" commandName="fastproduct" method="post" id="searchForm">
 <ul>
 <li><span>订单号：</span><sf:input path="code" class="s1"/></li>
@@ -110,8 +110,8 @@
 <li><span>申请人：</span><sf:input path="contactName" class="s2"/></li>
 <li><span>手机号：</span><sf:input path="contactPhone" class="s1"/></li>
 <li><span>订单状态：</span>
-<sf:select path="status" id="selstatus" onchange="changeSel(this.options[this.options.selectedIndex].value)">
-<sf:option value="">请选择</sf:option>	
+<sf:select path="status" class="s1" id="selstatus" onchange="changeSel(this.options[this.options.selectedIndex].value)">
+<sf:option value="">请选择</sf:option>
 <sf:options items="${status}" itemLabel="value" itemValue="key"  />
 </sf:select></li>
 <li><span>领取方式：</span>
@@ -162,7 +162,7 @@
 <td colspan="2">${list.orderType }</td>
 <td colspan="2">${list.orderStatus }</td>
 <td colspan="4">${list.remark }</td>
-<td colspan="4"><a href="${ctx }/fastproduct/turnupdate?id=${list.id}">订单详情</a>
+<td colspan="4" class="cjtd"><a href="${ctx }/fastproduct/turnupdate?id=${list.id}">订单详情</a>
 <c:if test="${list.status == '新越网审核通过' || (list.status =='新越网审核通过设为推荐' && list.orderStatus !='无人领取')}">
 <a href="javascript:rmvSingle('${list.id }')" class="del">移除</a>
 </c:if>

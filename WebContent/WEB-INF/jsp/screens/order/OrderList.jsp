@@ -135,8 +135,8 @@
 	
 </script>
 <body>
-<div class="c_right"><div class="c_r_bt">
-<h1><img src="../images/dd_tb1.png" alt="订单列表" /><span>订单列表</span></h1></div><div class="c_r_bt1">
+<div class="c_right"><div class="c_r_bt"><h1><img src="../images/dd_tb1.png" alt="订单列表" /><span>订单列表</span></h1></div>
+<div class="c_r_bt1">
 <sf:form action="${ctx }/order/list?index=0" commandName="order" method="post" id="searchForm">
 <ul>
 <li><span>订单号：</span><sf:input path="code" class="s1" /></li>
