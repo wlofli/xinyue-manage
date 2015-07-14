@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <?mso-application progid="Word.Document"?>
 <pkg:package xmlns:pkg="http://schemas.microsoft.com/office/2006/xmlPackage">
 	<pkg:part pkg:name="/_rels/.rels"
@@ -108,7 +108,7 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
@@ -136,7 +136,7 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
@@ -164,12 +164,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>${createdTime}</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -192,12 +192,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>${contactName}</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -220,12 +220,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00066A6E">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00066A6E">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>${company}</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -248,12 +248,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>${contactName}</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -276,12 +276,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>${phone}</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -304,12 +304,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>${code}</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -332,12 +332,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>${code}</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -360,12 +360,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>___________</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -388,12 +388,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>_________</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -404,19 +404,11 @@
 									<w:tcW w:w="1809" w:type="dxa" />
 								</w:tcPr>
 								<w:p w:rsidR="00E322E5" w:rsidRDefault="00E322E5" w:rsidP="00E322E5">
-									<w:proofErr w:type="gramStart" />
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>新越网</w:t>
-									</w:r>
-									<w:proofErr w:type="gramEnd" />
-									<w:r>
-										<w:rPr>
-											<w:rFonts w:hint="eastAsia" />
-										</w:rPr>
-										<w:t>审核时间</w:t>
+										<w:t>新越网审核时间</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -424,12 +416,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>____________</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -440,19 +432,11 @@
 									<w:tcW w:w="1809" w:type="dxa" />
 								</w:tcPr>
 								<w:p w:rsidR="00E322E5" w:rsidRDefault="00E322E5" w:rsidP="00E322E5">
-									<w:proofErr w:type="gramStart" />
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>新越网</w:t>
-									</w:r>
-									<w:proofErr w:type="gramEnd" />
-									<w:r>
-										<w:rPr>
-											<w:rFonts w:hint="eastAsia" />
-										</w:rPr>
-										<w:t>审核人员</w:t>
+										<w:t>新越网审核人员</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -460,12 +444,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>_____________</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -476,19 +460,11 @@
 									<w:tcW w:w="1809" w:type="dxa" />
 								</w:tcPr>
 								<w:p w:rsidR="00E322E5" w:rsidRDefault="00E322E5" w:rsidP="00E322E5">
-									<w:proofErr w:type="gramStart" />
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>新越网</w:t>
-									</w:r>
-									<w:proofErr w:type="gramEnd" />
-									<w:r>
-										<w:rPr>
-											<w:rFonts w:hint="eastAsia" />
-										</w:rPr>
-										<w:t>审核结果</w:t>
+										<w:t>新越网审核结果</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -496,12 +472,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>______________</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -512,19 +488,11 @@
 									<w:tcW w:w="1809" w:type="dxa" />
 								</w:tcPr>
 								<w:p w:rsidR="00E322E5" w:rsidRDefault="00E322E5" w:rsidP="00E322E5">
-									<w:proofErr w:type="gramStart" />
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>新越网</w:t>
-									</w:r>
-									<w:proofErr w:type="gramEnd" />
-									<w:r>
-										<w:rPr>
-											<w:rFonts w:hint="eastAsia" />
-										</w:rPr>
-										<w:t>备注</w:t>
+										<w:t>新越网备注</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -532,12 +500,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>____________</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -560,12 +528,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>__________</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -588,12 +556,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>_________</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -616,12 +584,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>____________</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -644,12 +612,12 @@
 								<w:tcPr>
 									<w:tcW w:w="6713" w:type="dxa" />
 								</w:tcPr>
-								<w:p w:rsidR="00E322E5" w:rsidRDefault="00066A6E" w:rsidP="00E322E5">
+								<w:p w:rsidR="00E322E5" w:rsidRDefault="006D6D83" w:rsidP="00E322E5">
 									<w:r>
 										<w:rPr>
 											<w:rFonts w:hint="eastAsia" />
 										</w:rPr>
-										<w:t>____________</w:t>
+										<w:t>________</w:t>
 									</w:r>
 								</w:p>
 							</w:tc>
@@ -973,7 +941,6 @@
 				<w:zoom w:percent="106" />
 				<w:bordersDoNotSurroundHeader />
 				<w:bordersDoNotSurroundFooter />
-				<w:proofState w:spelling="clean" w:grammar="clean" />
 				<w:defaultTabStop w:val="420" />
 				<w:drawingGridVerticalSpacing w:val="156" />
 				<w:displayHorizontalDrawingGridEvery
@@ -1004,11 +971,12 @@
 					<w:rsid w:val="000D603E" />
 					<w:rsid w:val="00115185" />
 					<w:rsid w:val="00130E82" />
+					<w:rsid w:val="002121BA" />
 					<w:rsid w:val="00233D2C" />
 					<w:rsid w:val="00476CB4" />
+					<w:rsid w:val="006D6D83" />
 					<w:rsid w:val="00992C70" />
 					<w:rsid w:val="00A01387" />
-					<w:rsid w:val="00CA4F4F" />
 					<w:rsid w:val="00E322E5" />
 					<w:rsid w:val="00EE7FD6" />
 				</w:rsids>
@@ -1425,9 +1393,9 @@
 				<dc:creator>acer</dc:creator>
 				<cp:lastModifiedBy>acer</cp:lastModifiedBy>
 				<cp:revision>2</cp:revision>
-				<dcterms:created xsi:type="dcterms:W3CDTF">2015-07-13T09:06:00Z
+				<dcterms:created xsi:type="dcterms:W3CDTF">2015-07-14T02:34:00Z
 				</dcterms:created>
-				<dcterms:modified xsi:type="dcterms:W3CDTF">2015-07-13T09:06:00Z
+				<dcterms:modified xsi:type="dcterms:W3CDTF">2015-07-14T02:34:00Z
 				</dcterms:modified>
 			</cp:coreProperties>
 		</pkg:xmlData>
@@ -1835,8 +1803,8 @@
 				<Template>Normal.dotm</Template>
 				<TotalTime>0</TotalTime>
 				<Pages>1</Pages>
-				<Words>56</Words>
-				<Characters>325</Characters>
+				<Words>45</Words>
+				<Characters>260</Characters>
 				<Application>Microsoft Office Word</Application>
 				<DocSecurity>0</DocSecurity>
 				<Lines>2</Lines>
@@ -1844,7 +1812,7 @@
 				<ScaleCrop>false</ScaleCrop>
 				<Company />
 				<LinksUpToDate>false</LinksUpToDate>
-				<CharactersWithSpaces>380</CharactersWithSpaces>
+				<CharactersWithSpaces>304</CharactersWithSpaces>
 				<SharedDoc>false</SharedDoc>
 				<HyperlinksChanged>false</HyperlinksChanged>
 				<AppVersion>14.0000</AppVersion>

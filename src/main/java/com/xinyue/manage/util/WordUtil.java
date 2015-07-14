@@ -67,7 +67,7 @@ public class WordUtil {
 		Writer out;
 		try {
 			out = new OutputStreamWriter(new FileOutputStream("D:/tmp/test.doc"), "UTF-8");
-			handler.write("/com/xinyue/manage/util", "order.xml", map, out);
+			handler.write("/com/xinyue/manage/util", "orderTemplete.xml", map, out);
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
