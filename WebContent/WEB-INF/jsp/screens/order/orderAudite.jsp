@@ -112,7 +112,7 @@ $().ready(function(){
 		$("#sel option[value='9']").attr("disabled",false);
 	}
 	
-	if($("#sel").val() != '3'){
+	if($("#sel").val() != '4'){
 		$(".selordertype").attr("disabled",true);
 		$("#out").hide();
 		$("#down").hide();
