@@ -103,12 +103,17 @@
 		 + "<div><span>获得价格(元)：</span><input type='text' name='price' class='t1 number required' /><div class='clear'></div></div>"  
 		 + "<div><input type='button' value='确定推送' class='tj_btn' onclick='addOrderCustomer(appointForm)'/></div></div></ +>");
 	}
+	
+	function getList(){
+		document.location.href="${ctx}/order/list?index=0";
+	}
 
 
 </script>
 <body> 
 <div class="c_right">
-<div class="c_r_bt"><h1><img src="../images/dd_tb1.png" alt="订单详情"/><span>订单详情</span></h1></div>
+<div class="c_r_bt"><h1><img src="../images/dd_tb1.png" alt="订单详情"/><span>订单详情</span></h1>
+<a href="javascript:getList()">返回</a></div>
 <div class="c_form">
 <sf:form  commandName="order" id="editForm" method="post">
 <sf:hidden path="id"/>

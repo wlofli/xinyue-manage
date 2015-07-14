@@ -45,6 +45,9 @@
 		});
 	}
 	
+	function getList(){
+		document.location.href="${ctx}/fastproduct/list?index=0";
+	}
 	
 	function resetOrder(id){
 		$.ajax({
@@ -108,7 +111,8 @@
 </script>
 <body> 
 <div class="c_right">
-<div class="c_r_bt"><h1><img src="../images/dd_tb1.png" alt="快速申贷订单详情"/><span>快速申贷订单详情</span></h1></div>
+<div class="c_r_bt"><h1><img src="../images/dd_tb1.png" alt="快速申贷订单详情"/><span>快速申贷订单详情</span></h1>
+<a href="javascript:getList()">返回</a></div>
 <div class="c_form">
 <sf:form  commandName="fspdt" id="editForm" method="post">
 <sf:hidden path="id"/>

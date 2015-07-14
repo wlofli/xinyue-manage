@@ -20,20 +20,25 @@ function update(){
 		success:function(data){
 			if(data == "success"){
 				alert("修改成功")
-				window.location.href="${ctx}/order/auditeorderlist?index=0";
+				getList();
 			}else{
 				alert("修改失败")
 			}
 		}
 	});
 	
+function getList(){
+	window.location.href="${ctx}/order/auditeorderlist?index=0";
+}
+
 	
 }
 </script>
 </head>
 <body>
 <div class="c_right" >
-<div class="c_r_bt"><h1><img src="../images/cp_tb1.png" alt="订单详情" /><span>订单详情</span></h1></div>
+<div class="c_r_bt"><h1><img src="../images/cp_tb1.png" alt="订单详情" /><span>订单详情</span></h1>
+<a href="javascript:getList()">返回</a></div>
 <div class="c_form">
 <div><span>订单号：</span><span class="dx2"><strong>${order.code }</strong></span><div class="clear"></div></div>
 <div><span>订单状态：</span><span class="dx2">${order.status }</span><div class="clear"></div></div>

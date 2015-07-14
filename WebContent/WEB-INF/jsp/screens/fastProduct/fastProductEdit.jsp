@@ -11,6 +11,11 @@
 <title>新越网后台管理系统_快速申贷订单_订单详情</title>
 </head>
 <script>
+	function getList(){
+		document.location.href="${ctx}/fastproduct/list?index=0";
+	}
+
+
 	function update(){
 		$.ajax({
 			url:"${ctx}/fastproduct/update",
@@ -20,7 +25,7 @@
 			success:function(data){
 				if(data == "success"){
 					alert("修改成功");
-					document.location.href="${ctx}/fastproduct/list?index=0";
+					getList();
 				}else{
 					alert("添加失败");
 				}
@@ -31,7 +36,8 @@
 </script>
 <body> 
 <div class="c_right">
-<div class="c_r_bt"><h1><img src="../images/dd_tb1.png" alt="快速申贷订单详情"/><span>快速申贷订单详情</span></h1></div>
+<div class="c_r_bt"><h1><img src="../images/dd_tb1.png" alt="快速申贷订单详情"/><span>快速申贷订单详情</span></h1>
+<a href="javascript:getList()">返回</a></div>
 <div class="c_form">
 <div><span>快速申贷订单号：</span><span class="dw"><strong>${fspdt.code }</strong></span><div class="clear"></div></div>
 <div><span>订单提交时间：</span><span class="dw"><fmt:formatDate value="${fspdt.createdTime}" type="both" pattern="yyyy-MM-dd h:m"/></span><div class="clear"></div></div>
