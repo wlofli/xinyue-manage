@@ -335,6 +335,7 @@ System.out.println(order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET
 		
 		}
 		
+		
 		return "screens/companyInfo/companyDetail";
 	}
 	

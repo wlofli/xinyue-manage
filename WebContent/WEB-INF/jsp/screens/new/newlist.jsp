@@ -12,8 +12,8 @@
 
 <link href="${ctx }/css/style.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="${ctx }/js/jquery-1.7.1.min.js"></script>
-<script type="text/javascript"
-	src="${ctx }/js/My97DatePicker.4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="${ctx }/js/My97DatePicker.4.8/WdatePicker.js"></script>
+
 <title>Insert title here</title>
 </head>
 <script>
