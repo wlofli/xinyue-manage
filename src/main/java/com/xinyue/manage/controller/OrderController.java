@@ -8,6 +8,8 @@ import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import net.sf.json.JSONObject;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -55,28 +57,6 @@ public class OrderController {
 	@Resource
 	private OrderCustomerService orderCustomerService;
 	
-//	
-//	@InitBinder("orderappointed")
-//	public void InitBinder1(WebDataBinder binder){
-//		binder.setFieldDefaultPrefix("orderappointed.");
-//	}
-//	
-//	@InitBinder("orderlowprice")
-//	public void InitBinder(WebDataBinder binder){
-//		binder.setFieldDefaultPrefix("orderlowprice.");
-//	}
-//	
-//	
-//	@InitBinder("orderauction")
-//	public void InitBinder2(WebDataBinder binder){
-//		binder.setFieldDefaultPrefix("orderauction.");
-//	}
-//	
-//	@InitBinder("orderfixed")
-//	public void InitBinder3(WebDataBinder binder){
-//		binder.setFieldDefaultPrefix("orderfixed.");
-//	}
-//	
 	
 	
 	@RequestMapping("auditeorderlist")
@@ -94,18 +74,6 @@ System.out.println(block);
 		CommonFunction cf = new CommonFunction();
 		cf.getAuth(model,request, authList, GlobalConstant.ORDER_AUDITE_NAME);
 		
-		//默认状态设置
-//		if(StringUtils.isEmpty(block)){
-//			if(AutheManage.chkAuthe(request, GlobalConstant.ORDER_AUDITE_UNCHECK) == 1){
-//				block = "1";
-//			}else if(AutheManage.chkAuthe(request, GlobalConstant.ORDER_AUDITE_TAX )== 1){
-//				block = "3";
-//			}else if (AutheManage.chkAuthe(request, GlobalConstant.ORDER_AUDITE_BLANK )== 1) {
-//				block = "4";
-//			}else {
-//				return "redirect:/errors/fail_authority.html";
-//			}
-//		}
 
 		List<Order> list = orderService.getListByStatus(order, GlobalConstant.PAGE_SIZE, index, statusList);
 		model.addAttribute("auditestatus", block);
@@ -248,6 +216,32 @@ System.out.println(order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET
 		}
 		
 	}
+	
+	
+	@RequestMapping("getappointed")
+	@ResponseBody
+	public String getAppointed(String orderId){
+		JSONObject json = new JSONObject();
+		
+		OrderAppointed appointed = orderCustomerService.getOrderAppointedFromOrder(orderId);
+System.out.println(appointed);
+		json.accumulate("appointed", appointed);
+		
+		
+		return json.toString();
+	}
+	
+	
+	@RequestMapping("getfixed")
+	@ResponseBody
+	public String getFixed(String orderId){
+		JSONObject json = new JSONObject();
+		OrderFixed fixed = orderCustomerService.getOrderFixedFromOrder(orderId);
+System.out.println(fixed);
+		json.accumulate("fixed", fixed);
+		return json.toString();
+	}
+	
 	
 	/**
 	 * 

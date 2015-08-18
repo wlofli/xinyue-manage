@@ -217,7 +217,7 @@ public class CompanyInfoController {
 			
 			businessList = companyInfoService.getBusinessInfoById(companyDetail.get("member_id"));
 			
-			documentList = companyInfoService.getDocumentInfoById(companyDetail.get("member_id"));
+			documentList = companyInfoService.getDocumentInfoById(companyDetail.get("member_id"),0);
 		}
 		if (holdList == null || holdList.size() == 0) {
 			holdList = new ArrayList<Hold>();
@@ -361,8 +361,8 @@ public class CompanyInfoController {
 			businessInfos = companyInfoService.editBusinessInfoById(companyDetail
 					.get("member_id"));
 
-			documentList = companyInfoService.editDocumentInfoById(companyDetail
-					.get("member_id"));
+//			documentList = companyInfoService.editDocumentInfoById(companyDetail
+//					.get("member_id"));
 		}
 
 		model.addAttribute("holdInfos", holdInfos);
