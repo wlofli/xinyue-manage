@@ -25,6 +25,7 @@ import com.xinyue.manage.model.Applicant;
 import com.xinyue.manage.model.Business;
 import com.xinyue.manage.model.CompanyBase;
 import com.xinyue.manage.model.Control;
+import com.xinyue.manage.model.CreditManager;
 import com.xinyue.manage.model.Debt;
 import com.xinyue.manage.model.Document;
 import com.xinyue.manage.model.Hold;
@@ -428,7 +429,8 @@ System.out.println("in");
 	
 	@RequestMapping("addappoint")
 	public @ResponseBody String addAppointed(String id,@ModelAttribute("appoint")OrderAppointed orderAppointed, HttpServletRequest request){
-System.out.println(orderAppointed.getCreditName());	
+System.out.println(id);	
+System.out.println(orderAppointed.getId());
 		orderAppointed.setType(GlobalConstant.ORDER_CUSTOMER_TYPE);
 		orderAppointed.setCreatedId(AutheManage.getUsername(request));
 		orderAppointed.setModifiedId(AutheManage.getUsername(request));
@@ -454,6 +456,39 @@ System.out.println(orderAppointed.getCreditName());
 			return GlobalConstant.RET_FAIL;
 		}
 		return GlobalConstant.RET_SUCCESS;
+	}
+	
+	
+	@RequestMapping("getmanagelist")
+	@ResponseBody
+	public String getManageList(){
+		JSONObject json = new JSONObject();
+		List<SelectInfo> manageList = orderService.getCreditMangerList();
+		if(manageList.size() > 0){
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
+			json.accumulate("list", manageList);
+		}else {
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
+		}
+		return json.toString();
+		
+	}
+	
+	@RequestMapping("getmanageinfo")
+	@ResponseBody
+	public String getManageInfo(String name){
+System.out.println(name);
+		JSONObject json = new JSONObject();
+		try {
+			CreditManager creditManager = orderService.getCreditManager(name);
+			json.accumulate("manager", creditManager);
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
+		} catch (Exception e) {
+			// TODO: handle exception
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
+			json.accumulate(GlobalConstant.RET_MESSAGE, "用户姓名出错");
+		}
+		return json.toString();
 	}
 	
 	

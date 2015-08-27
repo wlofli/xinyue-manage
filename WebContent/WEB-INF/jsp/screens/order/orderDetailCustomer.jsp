@@ -8,6 +8,14 @@
 <html>
 <script src="${ctx }/js/jquery-1.7.1.min.js" type="text/javascript" ></script>
 <%@ include file="../../commons/validate.jsp" %>
+<script src="${ctx }/js/jquery-ui.min.js" type="text/javascript" ></script>
+<script src="${ctx }/js/jquery.autocomplete.js" type="text/javascript" ></script>
+<script src="${ctx }/js/countries.js" type="text/javascript" ></script>
+<script src="${ctx }/js/demo.js" type="text/javascript" ></script>
+<%-- <script src="${ctx }/js/jquery.mockjax.js" type="text/javascript" ></script> --%>
+
+
+
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>新越网后台管理系统_快速申贷订单_订单详情</title>
@@ -130,7 +138,7 @@
 			$.ajax({
 				   url:"${ctx}/order/getfixed?orderId=${order.id}",
 				   method:"post",
-				   sync:true,
+				   async:true,
 				   success:function(data){
 					   var jsonData = eval('('+data+')');
 					   if(jsonData.result == "success"){
@@ -147,10 +155,11 @@
 						   $("#collateral").val(jsonData.fixed.collateral);
 						   $("#limitDate").val(jsonData.fixed.limitDate);
 						   $("#totalVat").val(jsonData.fixed.totalVat);
-						   fixed = true;
+						  
 					   }else{
 						   alert("获取失败");
 					   }
+					   fixed = true;
 				  	}
 				});
 		}
@@ -178,7 +187,7 @@
 			$.ajax({
 				   url:"${ctx}/order/getappointed?orderId=${order.id}",
 				   method:"post",
-				   sync:true,
+				   async:true,
 				   success:function(data){
 				   		var jsonData = eval('('+data+')');
 				   		if(jsonData.result == "success"){
@@ -191,10 +200,11 @@
 				   			$("#applicantPhone2").val(jsonData.appointed.applicantPhone);
 				   			$("#companyName2").val(jsonData.appointed.companyName);
 				   			$("#applicantTime2").val(date);
-				   			appointed = true;
+				   			
 				   		}else{
 				   			alert("获取失败");
 				   		}
+				   		appointed = true;
 				   }
 				});
 		}
@@ -207,6 +217,52 @@
 // 	}
 
 
+	function getCreditInfo(){
+		var name = $("#creditName2").val();
+alert(name);
+		$.ajax({
+			   url:"${ctx}/order/getmanageinfo",
+			   type:"post",
+			   data:{"name":name},
+			   async:true,
+			   success:function(data){
+				   var jsonData = eval('('+data+')');
+				   if(jsonData.result == "success"){
+					   
+				   		$("#appointid2").val(jsonData.manager.id);  
+				   		$("#creditName2").val(jsonData.manager.realName);
+				   		$("#tel2").val(jsonData.manager.tel);
+				   		$("#org2").val(jsonData.manager.organization);
+				   		
+			   	   }else{
+			   		   alert(jsonData.message);
+			   	   }
+			  }
+			});
+	}
+
+	 $().ready(function(){
+// 		 $.AJAX({
+// 			   URL:"${CTX}/ORDER/GETMANAGELIST",
+// 			   TYPE:"POST",
+// 			   ASYNC:TRUE,
+// 			   SUCCESS:FUNCTION(DATA){
+// 			   VAR JSON = EVAL('('+DATA+')');
+// 			    IF(JSON.RESULT == "SUCCESS"){
+			    	
+// 			    	alert("suc");
+				   $("#creditName2").autocomplete({
+					lookup:coucountriesArray  
+				   });
+// 			   }ELSE{
+// 				   ALERT("FAIL");
+// 			   }
+// 			   }
+// 			});
+	 });
+	
+	
+	
 </script>
 <body> 
 <div class="c_right">
@@ -347,9 +403,13 @@
 	<sf:form action="${ctx }/order/addappoint" commandName="order" id="appointForm" method="post">
 	<div class="c_form" id="tab3" style="display:none">
 	<sf:hidden path="id"/>
-	<div><span>信贷经理姓名：</span><input type="text" name="creditName" class="t1 required"/><div class="clear"></div></div>
-	<div><span>手机号：</span><input type="text" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
-	<div><span>所属机构：</span><input type="text" name="blank" class="t1 required"/><div class="clear"></div></div>
+	
+	<input type="hidden" name="manageId" id="appointid2"/>
+	<div><span>信贷经理姓名：</span><input type="text" id="creditName2" name="creditName" class="t1 required"/>
+<!-- 	<div><input type="button" value="获取" class="tj_btn" onclick="getCreditInfo()"/></div> -->
+	<div class="clear"></div></div>
+	<div><span>手机号：</span><input type="text" id="tel2" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
+	<div><span>所属机构：</span><input type="text" id="org2" name="blank" class="t1 required"/><div class="clear"></div></div>
 	<div><span>获得价格(元)：</span><input type="text" name="price" class="t1 required number" /><div class="clear"></div></div>
 	
 <div class="bt"><span>推送信息确认</span></div>

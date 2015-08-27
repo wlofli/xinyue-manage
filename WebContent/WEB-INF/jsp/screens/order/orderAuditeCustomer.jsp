@@ -127,7 +127,7 @@
 			$.ajax({
 				   url:"${ctx}/order/getfixed?orderId=${order.id}",
 				   method:"post",
-				   sync:true,
+				   async:true,
 				   success:function(data){
 					   var jsonData = eval('('+data+')');
 					   if(jsonData.result == "success"){
@@ -144,10 +144,11 @@
 						   $("#collateral").val(jsonData.fixed.collateral);
 						   $("#limitDate").val(jsonData.fixed.limitDate);
 						   $("#totalVat").val(jsonData.fixed.totalVat);
-						   fixed = true;
+						  
 					   }else{
 						   alert("获取失败");
 					   }
+				   fixed = true;
 				  	}
 				});
 		}
@@ -175,7 +176,7 @@
 			$.ajax({
 				   url:"${ctx}/order/getappointed?orderId=${order.id}",
 				   method:"post",
-				   sync:true,
+				   async:true,
 				   success:function(data){
 				   		var jsonData = eval('('+data+')');
 				   		if(jsonData.result == "success"){
@@ -188,13 +189,36 @@
 				   			$("#applicantPhone2").val(jsonData.appointed.applicantPhone);
 				   			$("#companyName2").val(jsonData.appointed.companyName);
 				   			$("#applicantTime2").val(date);
-				   			appointed = true;
+				   			
 				   		}else{
 				   			alert("获取失败");
 				   		}
+			   		appointed = true;
 				   }
 				});
 		}
+	}
+	
+	function getCreditInfo(){
+		var name = $("#creditName2").val();
+alert(name);
+		$.ajax({
+			   url:"${ctx}/order/getmanageinfo?name=" + name,
+			   method:"post",
+			   async:true,
+			   success:function(data){
+				   var jsonData = eval('('+data+')');
+				   if(jsonData.result == "success"){
+				   		$("#appointid2").val(jsonData.manager.id);  
+				   		$("#creditName2").val(jsonData.manager.realName);
+				   		$("#tel2").val(jsonData.manager.tel);
+				   		$("#org2").val(jsonData.manager.org);
+				   		
+			   	   }else{
+			   		   alert(jsonData.message);
+			   	   }
+			  }
+			});
 	}
 
 </script>
@@ -338,10 +362,13 @@
 	<sf:form action="${ctx }/order/addappoint" commandName="order" id="appointForm" method="post">
 	<div class="c_form" id="tab3" style="display:none">
 	<sf:hidden path="id"/>
-	<div><span>信贷经理姓名：</span><input type="text" name="creditName" class="t1 required"/><div class="clear"></div></div>
-	<div><span>手机号：</span><input type="text" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
-	<div><span>所属机构：</span><input type="text" name="blank" class="t1 required"/><div class="clear"></div></div>
-	<div><span>获得价格(元)：</span><input type="text" name="price" class="t1 required number" /><div class="clear"></div></div>
+	<input type="hidden" name="id" id="appointid2"/>
+	<div><span>信贷经理姓名：</span><input type="text" id="creditName2" name="creditName" class="t1 required"/>
+<!-- 	<div><input type="button" value="获取" class="tj_btn" onclick="getCreditInfo()"/></div> -->
+	<div class="clear"></div></div>
+	<div><span>手机号：</span><input type="text" id="tel2" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
+	<div><span>所属机构：</span><input type="text" id="org2" name="blank" class="t1 required"/><div class="clear"></div></div>
+	<div><span>获得价格(元)：</span><input type="text"  name="price" class="t1 required number" /><div class="clear"></div></div>
 	
 <div class="bt"><span>推送信息确认</span></div>
 <div><span>贷款金额(万)：</span><input name="credit" id="credit2" type="text" class="t1 number required" value=""/><div class="clear"></div></div>
