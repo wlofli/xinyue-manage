@@ -3,10 +3,13 @@
     pageEncoding="UTF-8"%>
   <%@ include file="../../commons/common.jsp" %>
    <%@ include file="../../commons/validate.jsp" %>
+
   	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %> 
   <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+<script src="${ctx }/js/jquery-ui.min.js" type="text/javascript" ></script>
+<link href="${ctx}/css/jquery-ui.min.css" type="text/css" rel="stylesheet" />
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>新越网后台管理系统_快速申贷订单_订单详情</title>
@@ -201,18 +204,20 @@
 	
 	function getCreditInfo(){
 		var name = $("#creditName2").val();
-alert(name);
+// alert(name);
 		$.ajax({
-			   url:"${ctx}/order/getmanageinfo?name=" + name,
-			   method:"post",
+			   url:"${ctx}/order/getmanageinfo",
+			   type:"post",
+			   data:{"name":name},
 			   async:true,
 			   success:function(data){
 				   var jsonData = eval('('+data+')');
 				   if(jsonData.result == "success"){
+					   
 				   		$("#appointid2").val(jsonData.manager.id);  
 				   		$("#creditName2").val(jsonData.manager.realName);
 				   		$("#tel2").val(jsonData.manager.tel);
-				   		$("#org2").val(jsonData.manager.org);
+				   		$("#org2").val(jsonData.manager.organization);
 				   		
 			   	   }else{
 			   		   alert(jsonData.message);
@@ -220,6 +225,36 @@ alert(name);
 			  }
 			});
 	}
+
+	
+	
+	 $().ready(function(){
+		 var availableTags = [];
+		 $.ajax({
+			   url:"${ctx}/order/getmanagelist",
+			   type:"post",
+			   async:true,
+			   success:function(data){
+				   var json = eval('('+data+')');
+				    if(json.result == "success"){
+				    	for(i=0; i< json.list.length; i++){
+				    		availableTags.push(json.list[i].value);
+				    	}
+					   $("#creditName2")
+					   .autocomplete({
+							source:availableTags,
+							select:function (e,ui){
+										  if(ui.item.value);
+			 							   getCreditInfo();
+							},
+							minLength: 0
+					   });
+				   }else{
+					   alert("fail");
+				   }
+			   }
+		  });
+	 });
 
 </script>
 <body> 
@@ -362,13 +397,11 @@ alert(name);
 	<sf:form action="${ctx }/order/addappoint" commandName="order" id="appointForm" method="post">
 	<div class="c_form" id="tab3" style="display:none">
 	<sf:hidden path="id"/>
-	<input type="hidden" name="id" id="appointid2"/>
-	<div><span>信贷经理姓名：</span><input type="text" id="creditName2" name="creditName" class="t1 required"/>
-<!-- 	<div><input type="button" value="获取" class="tj_btn" onclick="getCreditInfo()"/></div> -->
-	<div class="clear"></div></div>
-	<div><span>手机号：</span><input type="text" id="tel2" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
-	<div><span>所属机构：</span><input type="text" id="org2" name="blank" class="t1 required"/><div class="clear"></div></div>
-	<div><span>获得价格(元)：</span><input type="text"  name="price" class="t1 required number" /><div class="clear"></div></div>
+	<input type="hidden" name="manageId" id="appointid2"/>
+	<div><span>信贷经理姓名：</span><input type="text" id="creditName2" name="creditName" class="t1 required"/><div class="clear"></div></div>
+	<div><span>手机号：</span><input  type="text" id="tel2" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
+	<div><span>所属机构：</span><input  type="text" id="org2" name="blank" class="t1 required"/><div class="clear"></div></div>
+	<div><span>获得价格(元)：</span><input type="text" name="price" class="t1 required number" /><div class="clear"></div></div>
 	
 <div class="bt"><span>推送信息确认</span></div>
 <div><span>贷款金额(万)：</span><input name="credit" id="credit2" type="text" class="t1 number required" value=""/><div class="clear"></div></div>

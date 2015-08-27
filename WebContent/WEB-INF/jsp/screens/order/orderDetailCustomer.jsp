@@ -8,11 +8,9 @@
 <html>
 <script src="${ctx }/js/jquery-1.7.1.min.js" type="text/javascript" ></script>
 <%@ include file="../../commons/validate.jsp" %>
+
 <script src="${ctx }/js/jquery-ui.min.js" type="text/javascript" ></script>
-<script src="${ctx }/js/jquery.autocomplete.js" type="text/javascript" ></script>
-<script src="${ctx }/js/countries.js" type="text/javascript" ></script>
-<script src="${ctx }/js/demo.js" type="text/javascript" ></script>
-<%-- <script src="${ctx }/js/jquery.mockjax.js" type="text/javascript" ></script> --%>
+<link href="${ctx}/css/jquery-ui.min.css" type="text/css" rel="stylesheet" />
 
 
 
@@ -219,7 +217,7 @@
 
 	function getCreditInfo(){
 		var name = $("#creditName2").val();
-alert(name);
+// alert(name);
 		$.ajax({
 			   url:"${ctx}/order/getmanageinfo",
 			   type:"post",
@@ -241,24 +239,34 @@ alert(name);
 			});
 	}
 
+	
+	
 	 $().ready(function(){
-// 		 $.AJAX({
-// 			   URL:"${CTX}/ORDER/GETMANAGELIST",
-// 			   TYPE:"POST",
-// 			   ASYNC:TRUE,
-// 			   SUCCESS:FUNCTION(DATA){
-// 			   VAR JSON = EVAL('('+DATA+')');
-// 			    IF(JSON.RESULT == "SUCCESS"){
-			    	
-// 			    	alert("suc");
-				   $("#creditName2").autocomplete({
-					lookup:coucountriesArray  
-				   });
-// 			   }ELSE{
-// 				   ALERT("FAIL");
-// 			   }
-// 			   }
-// 			});
+		 var availableTags = [];
+		 $.ajax({
+			   url:"${ctx}/order/getmanagelist",
+			   type:"post",
+			   async:true,
+			   success:function(data){
+				   var json = eval('('+data+')');
+				    if(json.result == "success"){
+				    	for(i=0; i< json.list.length; i++){
+				    		availableTags.push(json.list[i].value);
+				    	}
+					   $("#creditName2")
+					   .autocomplete({
+							source:availableTags,
+							select:function (e,ui){
+										  if(ui.item.value);
+			 							   getCreditInfo();
+							},
+							minLength: 0
+					   });
+				   }else{
+					   alert("fail");
+				   }
+			   }
+		  });
 	 });
 	
 	
@@ -405,11 +413,9 @@ alert(name);
 	<sf:hidden path="id"/>
 	
 	<input type="hidden" name="manageId" id="appointid2"/>
-	<div><span>信贷经理姓名：</span><input type="text" id="creditName2" name="creditName" class="t1 required"/>
-<!-- 	<div><input type="button" value="获取" class="tj_btn" onclick="getCreditInfo()"/></div> -->
-	<div class="clear"></div></div>
-	<div><span>手机号：</span><input type="text" id="tel2" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
-	<div><span>所属机构：</span><input type="text" id="org2" name="blank" class="t1 required"/><div class="clear"></div></div>
+	<div><span>信贷经理姓名：</span><input type="text" id="creditName2" name="creditName" class="t1 required"/><div class="clear"></div></div>
+	<div><span>手机号：</span><input  type="text" id="tel2" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
+	<div><span>所属机构：</span><input  type="text" id="org2" name="blank" class="t1 required"/><div class="clear"></div></div>
 	<div><span>获得价格(元)：</span><input type="text" name="price" class="t1 required number" /><div class="clear"></div></div>
 	
 <div class="bt"><span>推送信息确认</span></div>
