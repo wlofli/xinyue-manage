@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xinyue.authe.AutheManage;
 import com.xinyue.manage.beans.PageInfo;
+import com.xinyue.manage.beans.SelectInfo;
 import com.xinyue.manage.model.Applicant;
 import com.xinyue.manage.model.Business;
 import com.xinyue.manage.model.CompanyBase;
 import com.xinyue.manage.model.Control;
+import com.xinyue.manage.model.CreditManager;
 import com.xinyue.manage.model.Debt;
 import com.xinyue.manage.model.Document;
 import com.xinyue.manage.model.Hold;
@@ -36,6 +38,7 @@ import com.xinyue.manage.model.RealEstate;
 import com.xinyue.manage.service.CompanyInfoService;
 import com.xinyue.manage.service.OrderCustomerService;
 import com.xinyue.manage.service.OrderService;
+import com.xinyue.manage.service.SelectService;
 import com.xinyue.manage.util.CommonFunction;
 import com.xinyue.manage.util.GlobalConstant;
 
@@ -56,6 +59,9 @@ public class OrderController {
 	
 	@Resource
 	private OrderCustomerService orderCustomerService;
+	
+	@Resource
+	private SelectService selectService;
 	
 	
 	
@@ -171,6 +177,7 @@ System.out.println(block);
 					break;
 				}
 			}
+			getOrderDetailSelectInfo(model);
 			return "screens/order/orderAuditeCustomer";
 		}else {
 			return "screens/order/orderAuditeEdit";
@@ -210,6 +217,8 @@ System.out.println(order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET
 					break;
 				}
 			}
+			getOrderDetailSelectInfo(model);
+			
 			return "screens/order/orderDetailCustomer";
 		}else {
 			return "screens/order/OrderDetail";
@@ -222,12 +231,15 @@ System.out.println(order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET
 	@ResponseBody
 	public String getAppointed(String orderId){
 		JSONObject json = new JSONObject();
-		
+//System.out.println(orderId);
 		OrderAppointed appointed = orderCustomerService.getOrderAppointedFromOrder(orderId);
-System.out.println(appointed);
-		json.accumulate("appointed", appointed);
-		
-		
+//System.out.println(appointed);
+		if(appointed != null){
+			json.accumulate("appointed", appointed);
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
+		}else {
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
+		}
 		return json.toString();
 	}
 	
@@ -235,10 +247,17 @@ System.out.println(appointed);
 	@RequestMapping("getfixed")
 	@ResponseBody
 	public String getFixed(String orderId){
+//System.out.println(orderId);
 		JSONObject json = new JSONObject();
 		OrderFixed fixed = orderCustomerService.getOrderFixedFromOrder(orderId);
-System.out.println(fixed);
-		json.accumulate("fixed", fixed);
+//System.out.println(fixed);
+		if(fixed != null){
+			json.accumulate("fixed", fixed);
+//			System.out.println(fixed.getCompanyType());
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
+		}else {
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
+		}
 		return json.toString();
 	}
 	
@@ -328,8 +347,6 @@ System.out.println(fixed);
 			}
 		
 		}
-		
-		
 		return "screens/companyInfo/companyDetail";
 	}
 	
@@ -411,8 +428,9 @@ System.out.println("in");
 	
 	
 	@RequestMapping("addappoint")
-	public @ResponseBody String addAppointed(String id,@ModelAttribute("appint")OrderAppointed orderAppointed, HttpServletRequest request){
-		
+	public @ResponseBody String addAppointed(String id,@ModelAttribute("appoint")OrderAppointed orderAppointed, HttpServletRequest request){
+System.out.println(id);	
+System.out.println(orderAppointed.getId());
 		orderAppointed.setType(GlobalConstant.ORDER_CUSTOMER_TYPE);
 		orderAppointed.setCreatedId(AutheManage.getUsername(request));
 		orderAppointed.setModifiedId(AutheManage.getUsername(request));
@@ -437,10 +455,49 @@ System.out.println("in");
 			// TODO: handle exception
 			return GlobalConstant.RET_FAIL;
 		}
-		
 		return GlobalConstant.RET_SUCCESS;
 	}
 	
 	
+	@RequestMapping("getmanagelist")
+	@ResponseBody
+	public String getManageList(){
+		JSONObject json = new JSONObject();
+		List<SelectInfo> manageList = orderService.getCreditMangerList();
+		if(manageList.size() > 0){
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
+			json.accumulate("list", manageList);
+		}else {
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
+		}
+		return json.toString();
+		
+	}
 	
+	@RequestMapping("getmanageinfo")
+	@ResponseBody
+	public String getManageInfo(String name){
+System.out.println(name);
+		JSONObject json = new JSONObject();
+		try {
+			CreditManager creditManager = orderService.getCreditManager(name);
+			json.accumulate("manager", creditManager);
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
+		} catch (Exception e) {
+			// TODO: handle exception
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
+			json.accumulate(GlobalConstant.RET_MESSAGE, "用户姓名出错");
+		}
+		return json.toString();
+	}
+	
+	
+	private void getOrderDetailSelectInfo(Model model){
+		List<SelectInfo> companyTypes = selectService.findSelectByType(GlobalConstant.COMPANY_BUSINESS_TYPE);
+		model.addAttribute("companytypeList", companyTypes);
+		List<SelectInfo> guaranteeTypes = selectService.findSelectByType(GlobalConstant.COMPANY_GUARANTEE_TYPE);
+		model.addAttribute("guaranteetypeList", guaranteeTypes);
+		List<SelectInfo> creditTypes = selectService.findSelectByType(GlobalConstant.COMPANY_CREDIT_TYPE);
+		model.addAttribute("credittypeList", creditTypes);
+	}
 }

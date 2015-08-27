@@ -4,7 +4,10 @@ package com.xinyue.manage.controller;
 import java.util.List;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xinyue.authe.AutheManage;
 import com.xinyue.manage.beans.PageInfo;
+import com.xinyue.manage.beans.SelectInfo;
 import com.xinyue.manage.model.FastProduct;
 import com.xinyue.manage.model.OrderAppointed;
 import com.xinyue.manage.model.OrderAuction;
@@ -22,6 +26,7 @@ import com.xinyue.manage.model.OrderFixed;
 import com.xinyue.manage.model.OrderLowPrice;
 import com.xinyue.manage.service.FastProductService;
 import com.xinyue.manage.service.OrderCustomerService;
+import com.xinyue.manage.service.SelectService;
 import com.xinyue.manage.util.CommonFunction;
 import com.xinyue.manage.util.GlobalConstant;
 
@@ -34,6 +39,9 @@ public class FastProductController {
 	
 	@Autowired
 	private OrderCustomerService orderCustomerService;
+	
+	@Resource
+	private SelectService selectService;
 	
 	@RequestMapping("/list")
 	public String fastProductList(Model model, @ModelAttribute("fastproduct")FastProduct fastProduct, int index){
@@ -84,6 +92,7 @@ System.out.println(fastProduct.getOrderType());
 						break;
 				}
 			}
+			getOrderDetailSelectInfo(model);
 			return "screens/fastProduct/fastProductOrderEdit";
 		}else {
 			return "screens/fastProduct/fastProductEdit";
@@ -205,6 +214,50 @@ System.out.println(fastProduct.getOrderType());
 	}
 	
 	
+	
+	@RequestMapping("getappointed")
+	@ResponseBody
+	public String getAppointed(String orderId){
+		JSONObject json = new JSONObject();
+System.out.println(orderId);
+		OrderAppointed appointed = orderCustomerService.getOrderAppointedFromFastProduct(orderId);
+//System.out.println(appointed);
+		if(appointed != null){
+			json.accumulate("appointed", appointed);
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
+		}else {
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
+		}
+		return json.toString();
+	}
+	
+	
+	@RequestMapping("getfixed")
+	@ResponseBody
+	public String getFixed(String orderId){
+System.out.println(orderId);
+		JSONObject json = new JSONObject();
+		OrderFixed fixed = orderCustomerService.getOrderFixedFromFastProduct(orderId);
+System.out.println(fixed);
+		if(fixed != null){
+			json.accumulate("fixed", fixed);
+//			System.out.println(fixed.getCompanyType());
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
+		}else {
+			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
+		}
+		return json.toString();
+	}
+	
+	
+	private void getOrderDetailSelectInfo(Model model){
+		List<SelectInfo> companyTypes = selectService.findSelectByType(GlobalConstant.COMPANY_BUSINESS_TYPE);
+		model.addAttribute("companytypeList", companyTypes);
+		List<SelectInfo> guaranteeTypes = selectService.findSelectByType(GlobalConstant.COMPANY_GUARANTEE_TYPE);
+		model.addAttribute("guaranteetypeList", guaranteeTypes);
+		List<SelectInfo> creditTypes = selectService.findSelectByType(GlobalConstant.COMPANY_CREDIT_TYPE);
+		model.addAttribute("credittypeList", creditTypes);
+	}
 	
 	
 }

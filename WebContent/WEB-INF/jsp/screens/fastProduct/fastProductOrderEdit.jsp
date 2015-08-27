@@ -14,6 +14,12 @@
 <script>
 	function tab_item(n)
 	{
+			if(n == 0){
+				getFixed();
+			}
+			if(n == 3){
+				getAppointed();
+			}
 			var menu = document.getElementById("menu");
 			var menuli = menu.getElementsByTagName("li");
 			for(var i = 0; i< menuli.length; i++)
@@ -56,7 +62,8 @@
 			success:function(data){
 				if(data == "success"){
 					alert("重置成功");
-					resetHtml();
+					window.location.href="${ctx}/fastproduct/turnupdate?id=" + id;
+// 					resetHtml();
 				}else{
 					alert("重置失败");
 				}
@@ -105,6 +112,88 @@
 		 + "<div><span>所属机构：</span><input type='text' name='blank' class='t1 required'/><div class='clear'></div></div>"  
 		 + "<div><span>获得价格(元)：</span><input type='text' name='price' class='t1 number required' /><div class='clear'></div></div>"  
 		 + "<div><input type='button' value='确定推送' class='tj_btn' onclick='addOrderCustomer(appointForm)'/></div></div></ +>");
+	}
+	
+	
+	//获取标志位
+	var fixed = false;
+	var appointed = false;
+	
+	function getFixed(){
+		if(!fixed){
+			$.ajax({
+				   url:"${ctx}/fastproduct/getfixed?orderId=${fspdt.id}",
+				   method:"post",
+				   async:true,
+				   success:function(data){
+					   var jsonData = eval('('+data+')');
+					   if(jsonData.result == "success"){
+// 	 					   alert("获取成功");
+//	  				       alert(jsonData.fixed);
+//	 					   alert(jsonData.fixed.companyType);
+						   $("#companyType").val(jsonData.fixed.companyType);
+						   $("#personNum").val(jsonData.fixed.personNum);
+						   $("#sales").val(jsonData.fixed.sales);
+						   $("#runYear").val(jsonData.fixed.runYear);
+						   $("#credit").val(jsonData.fixed.credit);
+						   $("#guaranteeType").val(jsonData.fixed.guaranteeType);
+						   $("#twoYearCredit").val(jsonData.fixed.twoYearCredit);
+						   $("#collateral").val(jsonData.fixed.collateral);
+						   $("#limitDate").val(jsonData.fixed.limitDate);
+// 						   $("#totalVat").val(jsonData.fixed.totalVat);
+						   
+					   }else{
+						   alert("获取失败");
+					   }
+					   fixed = true;
+				  	}
+				});
+		}
+	}
+	
+	Date.prototype.Format = function (fmt) { //author: meizz 
+	    var o = {
+	        "M+": this.getMonth() + 1, //月份 
+	        "d+": this.getDate(), //日 
+	        "h+": this.getHours(), //小时 
+	        "m+": this.getMinutes(), //分 
+	        "s+": this.getSeconds(), //秒 
+	        "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+	        "S": this.getMilliseconds() //毫秒 
+	    };
+	    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+	    for (var k in o)
+	    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	    return fmt;
+	}
+	
+	
+	function getAppointed(){
+		if(!appointed){
+			$.ajax({
+				   url:"${ctx}/fastproduct/getappointed?orderId=${fspdt.id}",
+				   method:"post",
+				   async:true,
+				   success:function(data){
+				   		var jsonData = eval('('+data+')');
+				   		if(jsonData.result == "success"){
+// 				   			alert("获取成功");
+// 							alert(jsonData.appointed);
+				   			var date = new Date(jsonData.appointed.applicantTime.time).Format("yyyy-MM-dd hh:mm:ss");
+				   			$("#credit2").val(jsonData.appointed.credit);
+				   			$("#limitDate2").val(jsonData.appointed.limitDate);
+				   			$("#applicantName2").val(jsonData.appointed.applicantName);
+				   			$("#applicantPhone2").val(jsonData.appointed.applicantPhone);
+				   			$("#companyName2").val(jsonData.appointed.companyName);
+				   			$("#applicantTime2").val(date);
+				   			
+				   		}else{
+				   			alert("获取失败");
+				   		}
+				   		appointed = true;
+				   }
+				});
+		}
 	}
 
 
@@ -190,6 +279,30 @@
 	<div><span>立即领取价(元)：</span><input type="text"  name="price" class="t1 number required"/><div class="clear"></div></div>
 	<div><span>领取开始时间：</span><input type="text" name="startTime" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="t1 required"/><div class="clear"></div></div>
 	<div><span>领取结束时间：</span><input type="text" name="endTime"  onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="t1 required"/><div class="clear"></div></div>
+	
+	<div class="bt"><span>领取信息确认</span></div>
+<div><span>企业类型：</span><select class="t1" name="companyType" id="companyType">
+	       		<c:forEach items="${ companytypeList}" var="list">
+	       			<option value="${list.key }">${list.value }</option>
+	       		</c:forEach></select><div class="clear"></div></div>
+<div><span>员工人数：</span><input name="personNum" id="personNum" type="text" class="t1 digits required" value="" /><div class="clear"></div></div> 
+<div><span>年销售收入(万)：</span><input name="sales" id="sales" type="text" class="t1 number required" value="" /><div class="clear"></div></div>
+<div><span>经营年限(年)：</span><input name="runYear" id="runYear" type="text" class="t1 digits required" value="" /><div class="clear"></div></div> 
+<div><span>贷款额度(万)：</span><input name="credit" id="credit" type="text" class="t1 number required" value="" /><div class="clear"></div></div>
+<div><span>担保方式：</span><select class="t1" name="guaranteeType" id="guaranteeType">
+	       		<c:forEach items="${guaranteetypeList }" var="list">
+	       			<option value="${list.key }">${list.value }</option>
+	       		</c:forEach></select><div class="clear"></div></div> 
+<div><span>信用记录：</span><select class="t1" name="twoYearCredit" id="twoYearCredit">
+	       			<c:forEach items="${credittypeList }" var="list">
+			       			<option value="${list.key }">${list.value }</option>
+	       			</c:forEach></select><div class="clear"></div></div>
+<div><span>抵押物：</span><input name="collateral" id="collateral" type="text" class="t1 required" value="" /><div class="clear"></div></div> 
+<div><span>申贷期限(月)：</span><input name="limitDate" id="limitDate" type="text" class="t1 digits required" value="" /><div class="clear"></div></div>
+<div><span>年增值税(万)：</span><input name="totalVat" id="totalVat" type="text" class="t1 number required" value="" /><div class="clear"></div></div> 
+	
+	
+	
 	<div><input type="button" value="确定推送" class="tj_btn" onclick="addOrderCustomer(fixedForm)" /></div></div>
 	</sf:form>
 	
@@ -224,6 +337,20 @@
 	<div><span>手机号：</span><input type="text" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
 	<div><span>所属机构：</span><input type="text" name="blank" class="t1 required"/><div class="clear"></div></div>
 	<div><span>获得价格(元)：</span><input type="text" name="price" class="t1 required number" /><div class="clear"></div></div>
+	
+	
+	<div class="bt"><span>推送信息确认</span></div>
+<div><span>贷款金额(万)：</span><input name="credit" id="credit2" type="text" class="t1 number required" value=""/><div class="clear"></div></div>
+<div><span>贷款期限(月)：</span><input name="limitDate" id="limitDate2" type="text" class="t1 digits required" value="" /><div class="clear"></div></div> 
+<div><span>贷款人姓名：</span><input name="applicantName" id="applicantName2" type="text" class="t1 required" value="" /><div class="clear"></div></div>
+<div><span>贷款人电话：</span><input name="applicantPhone" id="applicantPhone2" type="text" class="t1 required" value="" /><div class="clear"></div></div> 
+<div><span>借款单位：</span><input name="companyName" id="companyName2" type="text" class="t1 required" value="" /><div class="clear"></div></div>
+<div><span>申贷时间：</span><input name="applicantTime" id="applicantTime2" type="text" class="t1 required" value="" onclick="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"   /><div class="clear"></div></div> 
+	
+	
+	
+	
+	
 	<div><input type="button" value="确定推送" class="tj_btn" onclick="addOrderCustomer(appointForm)"/></div></div>
 	</sf:form>
 </c:otherwise>
