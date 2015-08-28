@@ -9,10 +9,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +37,7 @@ import com.xinyue.manage.model.OrderAuction;
 import com.xinyue.manage.model.OrderFixed;
 import com.xinyue.manage.model.OrderLowPrice;
 import com.xinyue.manage.model.RealEstate;
+import com.xinyue.manage.plugin.JsonConfigFactory;
 import com.xinyue.manage.service.CompanyInfoService;
 import com.xinyue.manage.service.OrderCustomerService;
 import com.xinyue.manage.service.OrderService;
@@ -50,6 +53,10 @@ import com.xinyue.manage.util.GlobalConstant;
 @Controller
 @RequestMapping("/order")
 public class OrderController {
+	
+	
+	@Autowired
+	private ApplicationContext ctx;
 	
 	@Resource
 	private OrderService orderService;
@@ -190,9 +197,9 @@ System.out.println(block);
 		Order order = orderService.getOrder(id);
 		
 		model.addAttribute("order", order);
-System.out.println(order.getStatus());	
-System.out.println(order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET_CHINESE) 
-		|| order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_CHINESE));
+//System.out.println(order.getStatus());	
+//System.out.println(order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET_CHINESE) 
+//		|| order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_CHINESE));
 		if(order.getStatus() != null && (order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET_CHINESE) 
 				|| order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_CHINESE))){
 			if(order.getOrderType() != null){
@@ -200,6 +207,7 @@ System.out.println(order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET
 				case GlobalConstant.ORDER_TYPE_FIXED_CHINESE:
 					OrderFixed orderFixed  = orderCustomerService.getOrderFixed(order.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
 					model.addAttribute("fixed",orderFixed);
+					System.out.println(orderFixed.getCredit());
 					break;
 				case GlobalConstant.ORDER_TYPE_AUCTION_CHINESE:
 					OrderAuction orderAuction = orderCustomerService.getOrderAuction(order.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
@@ -231,11 +239,14 @@ System.out.println(order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET
 	@ResponseBody
 	public String getAppointed(String orderId){
 		JSONObject json = new JSONObject();
+		
 //System.out.println(orderId);
 		OrderAppointed appointed = orderCustomerService.getOrderAppointedFromOrder(orderId);
 //System.out.println(appointed);
 		if(appointed != null){
-			json.accumulate("appointed", appointed);
+			json.accumulate("appointed", appointed,JsonConfigFactory.getInstance());
+
+System.out.println(appointed.getCredit());
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
 		}else {
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
@@ -246,18 +257,24 @@ System.out.println(order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET
 	
 	@RequestMapping("getfixed")
 	@ResponseBody
-	public String getFixed(String orderId){
+	public String getFixed(Model model,String orderId){
 //System.out.println(orderId);
 		JSONObject json = new JSONObject();
 		OrderFixed fixed = orderCustomerService.getOrderFixedFromOrder(orderId);
 //System.out.println(fixed);
 		if(fixed != null){
-			json.accumulate("fixed", fixed);
-//			System.out.println(fixed.getCompanyType());
+			json.accumulate("fixed", fixed,JsonConfigFactory.getInstance());
+			
+			
+			System.out.println(fixed.getCredit());
+			System.out.println(json.get("fixed")); 
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
+//			model.addAttribute(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
 		}else {
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
+//			model.addAttribute(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
 		}
+//		System.out.println(model);
 		return json.toString();
 	}
 	

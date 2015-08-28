@@ -191,6 +191,7 @@
 				   		if(jsonData.result == "success"){
 // 				   			alert("获取成功");
 // 							alert(jsonData.appointed);
+// alert(jsonData.appointed.credit);
 				   			var date = new Date(jsonData.appointed.applicantTime.time).Format("yyyy-MM-dd hh:mm:ss");
 				   			$("#credit2").val(jsonData.appointed.credit);
 				   			$("#limitDate2").val(jsonData.appointed.limitDate);
