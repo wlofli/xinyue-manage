@@ -266,8 +266,8 @@ System.out.println(appointed.getCredit());
 			json.accumulate("fixed", fixed,JsonConfigFactory.getInstance());
 			
 			
-			System.out.println(fixed.getCredit());
-			System.out.println(json.get("fixed")); 
+//			System.out.println(fixed.getCredit());
+//			System.out.println(json.get("fixed")); 
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
 //			model.addAttribute(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
 		}else {
@@ -497,7 +497,7 @@ System.out.println(orderAppointed.getId());
 System.out.println(name);
 		JSONObject json = new JSONObject();
 		try {
-			CreditManager creditManager = orderService.getCreditManager(name);
+			CreditManager creditManager = orderService.getCreditManagerByName(name);
 			json.accumulate("manager", creditManager);
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
 		} catch (Exception e) {

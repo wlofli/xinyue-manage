@@ -264,7 +264,7 @@
 							minLength: 0
 					   });
 				   }else{
-					   alert("fail");
+					   alert("信贷经理获取失败");
 				   }
 			   }
 		  });

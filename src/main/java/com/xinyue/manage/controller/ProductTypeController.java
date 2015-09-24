@@ -22,7 +22,7 @@ import com.xinyue.manage.util.CommonFunction;
 import com.xinyue.manage.util.GlobalConstant;
 
 /**
- * 
+ * 产品类型 productType
  * @author wenhai.you
  * @2015年5月28日
  * @上午9:11:45
@@ -34,6 +34,13 @@ public class ProductTypeController {
 	@Autowired
 	private ProductTypeService ptbiz;
 	
+	/**
+	 * ywh 产品类型列表 
+	 * @param model
+	 * @param info
+	 * @param req
+	 * @return
+	 */
 	@RequestMapping("/list")
 	public String show(Model model , ProductTypeInfo info , HttpServletRequest req){
 		//权限取得
@@ -49,22 +56,21 @@ public class ProductTypeController {
 		if (!ret_auth) {
 			return "redirect:/errors/fail_authority.html";
 		}
-		info.setFstart((info.getFpage()-1)*info.getPageSize());
-		PageData<ProductType> pfirst = new PageData<ProductType>(
-			ptbiz.findTypeFirst(info), 
-			ptbiz.getTypeFirstCount(), info.getFpage());
 		
-		info.setSstart((info.getSpage()-1)*info.getPageSize());
-		PageData<ProductType> psecond = new PageData<ProductType>(
-				ptbiz.findTypeSecond(info), 
-				ptbiz.getTypeSecondCount(), info.getSpage());
+		model.addAttribute("pfirst", ptbiz.findFirstPagedata(info));
+		model.addAttribute("psecond",  ptbiz.findSecondPagedata(info));
 		
-		model.addAttribute("pfirst", pfirst);
-		model.addAttribute("psecond", psecond);
 		model.addAttribute("info", info);
 		return "screens/product/protypelist";
 	}
 	
+	
+	/**
+	 * ywh 跳转到编辑页面
+	 * @param model
+	 * @param productid
+	 * @return
+	 */
 	@RequestMapping("/toedit")
 	public String addProductType(Model model ,String productid){
 		if(!GlobalConstant.isNull(productid)){
@@ -81,6 +87,12 @@ public class ProductTypeController {
 		return "screens/product/protypeedit";
 	}
 	
+	/**
+	 * ywh 跳转到二级分类
+	 * @param model
+	 * @param producttypeid
+	 * @return
+	 */
 	@RequestMapping("/tosecond")
 	public String addProduct(Model model ,String producttypeid){
 		
@@ -90,6 +102,13 @@ public class ProductTypeController {
 		return "screens/product/secondedit";
 	}
 	
+	/**
+	 * ywh 保存产品类型
+	 * @param model
+	 * @param ptype
+	 * @param req
+	 * @return
+	 */
 	@RequestMapping("/save")
 	public @ResponseBody String saveProductType(Model model , ProductType ptype , HttpServletRequest req){
 		
@@ -100,6 +119,12 @@ public class ProductTypeController {
 		return "success";
 	}
 	
+	/**
+	 * ywh 删除产品分类 
+	 * @param id
+	 * @param req
+	 * @return
+	 */
 	@RequestMapping("/del")
 	@ResponseBody
 	public String delProductType(@RequestBody String id , HttpServletRequest req){
@@ -113,7 +138,12 @@ public class ProductTypeController {
 		}
 	}
 	
-	
+	/**
+	 * ywh 启用产品分类 
+	 * @param id
+	 * @param req
+	 * @return
+	 */
 	@RequestMapping("/enable")
 	@ResponseBody
 	public String enable(@RequestBody String id , HttpServletRequest req){
@@ -125,6 +155,12 @@ public class ProductTypeController {
 		return "success";
 	}
 	
+	/**
+	 * ywh 禁用产品分类
+	 * @param id
+	 * @param req
+	 * @return
+	 */
 	@RequestMapping("/unenable")
 	@ResponseBody
 	public String unenable(@RequestBody String id, HttpServletRequest req){

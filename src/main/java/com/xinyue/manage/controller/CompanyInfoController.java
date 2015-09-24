@@ -335,14 +335,14 @@ public class CompanyInfoController {
 		
 		//申请人信息
 		Applicant applicant = new Applicant();
-		if (companyDetail.containsKey("applicant_id")) {
+		if (companyDetail.containsKey("applicant_id") && !companyDetail.get("applicant_id").equals("")) {
 			applicant = companyInfoService.editApplicantInfoById(companyDetail.get("applicant_id"));
 		}
 		model.addAttribute("applicationInfo", applicant);
 		
 		// 企业基本信息
 		CompanyBase companyBase = new CompanyBase();
-		if (companyDetail.containsKey("license_id")) {
+		if (companyDetail.containsKey("license_id") && !companyDetail.get("license_id").equals("")) {
 			companyBase = companyInfoService
 					.editCompanyBaseInfoById(companyDetail.get("license_id"));
 		}
@@ -354,15 +354,14 @@ public class CompanyInfoController {
 		BusinessInfos businessInfos = new BusinessInfos();
 		// 上传资料信息
 		List<Document> documentList = new ArrayList<Document>();
-		if (companyDetail.containsKey("member_id")) {
+		if (companyDetail.containsKey("member_id") && !companyDetail.get("member_id").equals("")) {
 			holdInfos = companyInfoService.editHoldInfoById(companyDetail
 					.get("member_id"));
 
 			businessInfos = companyInfoService.editBusinessInfoById(companyDetail
 					.get("member_id"));
 
-//			documentList = companyInfoService.editDocumentInfoById(companyDetail
-//					.get("member_id"));
+			documentList = companyInfoService.editDocuments(companyDetail.get("member_id"));
 		}
 
 		model.addAttribute("holdInfos", holdInfos);
@@ -371,7 +370,7 @@ public class CompanyInfoController {
 
 		// 公司治理信息
 		Control control = new Control();
-		if (companyBase != null) {
+		if (companyBase != null && !companyBase.getControlInfo().equals("")) {
 			control = companyInfoService.editControlInfoById(companyBase
 					.getControlInfo());
 		}
@@ -379,14 +378,14 @@ public class CompanyInfoController {
 
 		// 抵押物与负债
 		RealEstate realEstate = new RealEstate();
-		if (companyDetail.containsKey("estate_id")) {
+		if (companyDetail.containsKey("estate_id") && !companyDetail.get("estate_id").equals("")) {
 			realEstate = companyInfoService.editRealEstateInfoById(companyDetail
 					.get("estate_id"));
 		}
 		model.addAttribute("estateInfo", realEstate);
 
 		Debt debt = new Debt();
-		if (companyDetail.containsKey("debt_id")) {
+		if (companyDetail.containsKey("debt_id") && !companyDetail.get("debt_id").equals("")) {
 			debt = companyInfoService.editDebtInfoById(companyDetail
 					.get("debt_id"));
 		}

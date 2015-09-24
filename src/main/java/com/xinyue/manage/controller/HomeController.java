@@ -98,71 +98,71 @@ public class HomeController {
 			request.setAttribute("errmsg", e.getMessage());
 			return "screens/login";
 		}
-		HttpSession session = request.getSession();
-		
-		
-		HashMap<String, int[]> leftMenu = new HashMap<>();
-
-		leftMenu.clear();
-		String rootMenu = "";
-		int[] leafMenu = null;
-		
-		for (int i = 0; i < 11; i++) {
-			switch (i) {
-			case 0:
-				rootMenu = "a";
-				leafMenu = new int[]{1,1};
-				break;
-			case 1:
-				rootMenu = "b";
-				leafMenu = new int[8];
-				for (int j = 0; j < leafMenu.length; j++) {
-					leafMenu[j] = 1;
-				}
-				break;
-			case 2:
-				rootMenu = "c";
-				leafMenu = new int[]{1};
-				break;
-			case 3:
-				rootMenu = "d";
-				leafMenu = new int[]{1};
-				break;
-			case 4:
-				rootMenu = "e";
-				leafMenu = new int[]{1,1};
-				break;
-			case 5:
-				rootMenu = "f";
-				leafMenu = new int[]{1};
-				break;
-			case 6:
-				rootMenu = "g";
-				leafMenu = new int[]{1};
-				break;
-			case 7:
-				rootMenu = "h";
-				leafMenu = new int[]{1};
-				break;
-			case 8:
-				rootMenu = "i";
-				leafMenu = new int[]{1,1};
-				break;
-			case 9:
-				rootMenu = "j";
-				leafMenu = new int[]{1};
-				break;
-			case 10:
-				rootMenu = "k";
-				leafMenu = new int[]{1};
-				break;
-			default:
-				break;
-			}
-			leftMenu.put(rootMenu, leafMenu);
-		}
-		
-		session.setAttribute("leftMenu", leftMenu);
+//		HttpSession session = request.getSession();
+//		
+//		
+//		HashMap<String, int[]> leftMenu = new HashMap<>();
+//
+//		leftMenu.clear();
+//		String rootMenu = "";
+//		int[] leafMenu = null;
+//		
+//		for (int i = 0; i < 11; i++) {
+//			switch (i) {
+//			case 0:
+//				rootMenu = "a";
+//				leafMenu = new int[]{1,1};
+//				break;
+//			case 1:
+//				rootMenu = "b";
+//				leafMenu = new int[8];
+//				for (int j = 0; j < leafMenu.length; j++) {
+//					leafMenu[j] = 1;
+//				}
+//				break;
+//			case 2:
+//				rootMenu = "c";
+//				leafMenu = new int[]{1};
+//				break;
+//			case 3:
+//				rootMenu = "d";
+//				leafMenu = new int[]{1};
+//				break;
+//			case 4:
+//				rootMenu = "e";
+//				leafMenu = new int[]{1,1};
+//				break;
+//			case 5:
+//				rootMenu = "f";
+//				leafMenu = new int[]{1};
+//				break;
+//			case 6:
+//				rootMenu = "g";
+//				leafMenu = new int[]{1};
+//				break;
+//			case 7:
+//				rootMenu = "h";
+//				leafMenu = new int[]{1};
+//				break;
+//			case 8:
+//				rootMenu = "i";
+//				leafMenu = new int[]{1,1};
+//				break;
+//			case 9:
+//				rootMenu = "j";
+//				leafMenu = new int[]{1};
+//				break;
+//			case 10:
+//				rootMenu = "k";
+//				leafMenu = new int[]{1};
+//				break;
+//			default:
+//				break;
+//			}
+//			leftMenu.put(rootMenu, leafMenu);
+//		}
+//		
+//		session.setAttribute("leftMenu", leftMenu);
 //		model.addAttribute("leftMenu", leftMenu);
 		
 		return "screens/main";
