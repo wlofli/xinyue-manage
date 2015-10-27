@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.xinyue.manage.beans.CustomerInfo;
 import com.xinyue.manage.beans.InvitationMemberInfo;
 import com.xinyue.manage.beans.PageData;
+import com.xinyue.manage.beans.QuestionBean;
 import com.xinyue.manage.beans.SearchCreditManager;
+import com.xinyue.manage.beans.SearchCustomer;
 import com.xinyue.manage.beans.SearchMoneyAccount;
 import com.xinyue.manage.beans.SelectInfo;
 import com.xinyue.manage.beans.SuccessCaseSearch;
@@ -22,13 +25,18 @@ import com.xinyue.manage.model.AuthenticationCM;
 import com.xinyue.manage.model.Consumption;
 import com.xinyue.manage.model.CreditManager;
 import com.xinyue.manage.model.Order;
+import com.xinyue.manage.model.OrderTrack;
 import com.xinyue.manage.model.Recharge;
 import com.xinyue.manage.model.Reward;
 import com.xinyue.manage.model.SuccessCase;
 import com.xinyue.manage.model.WithdrawMoney;
+import com.xinyue.manage.service.AnswerService;
 import com.xinyue.manage.service.CreditManagerService;
 import com.xinyue.manage.service.FundService;
+import com.xinyue.manage.service.OrderService;
+import com.xinyue.manage.service.OrderTrackService;
 import com.xinyue.manage.service.OrganizationService;
+import com.xinyue.manage.service.ProductService;
 import com.xinyue.manage.service.RewardService;
 import com.xinyue.manage.service.SelectService;
 import com.xinyue.manage.service.SuccessCaseService;
@@ -62,6 +70,15 @@ public class CreditManagerController {
 	
 	@Resource
 	private RewardService rewardService;
+	
+	@Resource
+	private ProductService productService;
+	
+	@Resource
+	private OrderService orderService;
+	
+	@Resource
+	private OrderTrackService orderTrackService;
 	
 	private String managerId = "";
 	
@@ -227,24 +244,24 @@ public class CreditManagerController {
 	 * @return
 	 */
 	@RequestMapping(value="/detail/iu")
-	public String inviteUserCM(HttpServletRequest request,Model model,String managerId) {
+	public String inviteUserCM(HttpServletRequest request,Model model) {
 		
 		clearSession(request);
 		
 		//标题选择
-		selectTitle(request, managerId, "invite_user");
+		selectTitle(request, getManagerId(), "invite_user");
 		
 		// 普通会员推荐人数
 		int invitationMemberCount = creditManagerService
-				.getInvitationMemberCount(managerId);
+				.getInvitationMemberCount(getManagerId());
 		request.getSession().setAttribute("invitationMemberCount", invitationMemberCount);
-		getInvitationMemberInfo(request, managerId, 1);
+		getInvitationMemberInfo(request, getManagerId(), 1);
 		
 		// 信贷经理推荐人数
 		int invitationManagerCount = creditManagerService
-				.getInvitationManagerCount(managerId);
+				.getInvitationManagerCount(getManagerId());
 		request.getSession().setAttribute("invitationManagerCount", invitationManagerCount);
-		getInvitationManagerInfo(request, managerId, 1);
+		getInvitationManagerInfo(request, getManagerId(), 1);
 		
 		return "screens/creditManager/creditManagerInviteUser";
 	}
@@ -277,17 +294,18 @@ public class CreditManagerController {
 	 * @return
 	 */
 	@RequestMapping(value="/detail/ma")
-	public String moneyAccount(HttpServletRequest request,Model model,String managerId) {
+	public String moneyAccount(HttpServletRequest request,Model model) {
 		
+		clearSession(request);
 		//标题选择
-		selectTitle(request, managerId, "money_account");
-		
+		selectTitle(request, getManagerId(), "money_account");
+		model.addAttribute("tab", "1");
 		//统括信息
 //		MoneyOutline moneyOutline = creditManagerService.getMoneyAccountByManagerId(managerId);
 //		request.getSession().setAttribute("moneyOutline", moneyOutline);
 		
 		SearchMoneyAccount searchMoneyAccount = new SearchMoneyAccount();
-		searchMoneyAccount.setManagerId(managerId);
+		searchMoneyAccount.setManagerId(getManagerId());
 		model.addAttribute("searchMoneyAccount", searchMoneyAccount);
 		
 		//消费记录
@@ -305,12 +323,81 @@ public class CreditManagerController {
 		return "screens/creditManager/creditManagerMoneyAccount";
 	}
 	
+	/**
+	 * 客户信息
+	 * @param request
+	 * @param model
+	 * @param managerId
+	 * @return
+	 */
 	@RequestMapping(value="/detail/ci")
-	public String customerInfo(HttpServletRequest request,Model model,String managerId) {
+	public String customerInfo(HttpServletRequest request,Model model) {
 		
+		clearSession(request);
 		
+		selectTitle(request, getManagerId(), "customer_info");
+		
+		//检索条件
+		SearchCustomer searchCustomer = new SearchCustomer();
+		searchCustomer.setManagerId(getManagerId());
+		model.addAttribute("searchCustomer", searchCustomer);
+		
+		//产品信息
+		List<SelectInfo> products = productService.findProductsManagerId(getManagerId());
+		request.getSession().setAttribute("products", products);
+		
+		//订单状态
+		List<SelectInfo> orderStatus = selectService.findSelectByType(GlobalConstant.ORDER_STATUS);
+		request.getSession().setAttribute("orderStatus", orderStatus);
+		
+		//领取方式
+		List<SelectInfo> orderTypes = selectService.findSelectByType(GlobalConstant.ORDER_TYPE);
+		request.getSession().setAttribute("orderTypes", orderTypes);
+		
+		//全部订单
+		getCustomerInfoAll(request,searchCustomer);
+		//系统推送
+		
+		//人工推送
 		
 		return "screens/creditManager/creditManagerCustomerInfo";
+	}
+	
+	/**
+	 * 客户信息查询
+	 * @param request
+	 * @param model
+	 * @param searchCustomer
+	 * @return
+	 */
+	@RequestMapping(value="/customer/search",method=RequestMethod.POST)
+	public String customerInfoPage(HttpServletRequest request,Model model,SearchCustomer searchCustomer) {
+		
+		getCustomerInfoAll(request, searchCustomer);
+		model.addAttribute("searchCustomer", searchCustomer);
+		
+		return "screens/creditManager/creditManagerCustomerInfo";
+	}
+	
+	/**
+	 * 客户信息跟踪
+	 * @param request
+	 * @param model
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="/detail/ci/track")
+	public String customerTrack(HttpServletRequest request,Model model,String id) {
+		
+		//订单详情
+		CustomerInfo customerInfo = orderService.getOrderTrackByOrderId(id);
+		model.addAttribute("customerInfo", customerInfo);
+		
+		//跟踪记录
+		 List<OrderTrack> orderTracks = orderTrackService.getOrderTrackList(id, "1", 0, 0);
+		 model.addAttribute("orderTracks", orderTracks);
+		 
+		return "screens/creditManager/creditManagerCustomerInfoTrack";
 	}
 	
 	/**
@@ -321,11 +408,11 @@ public class CreditManagerController {
 	 * @return
 	 */
 	@RequestMapping(value="/detail/sc")
-	public String successCase(HttpServletRequest request,Model model,String managerId) {
+	public String successCase(HttpServletRequest request,Model model) {
 		
 		clearSession(request);
 		//标题选择
-		selectTitle(request, managerId, "success_case");
+		selectTitle(request, getManagerId(), "success_case");
 		
 		successCaseRecords(model,1);
 		
@@ -370,13 +457,13 @@ public class CreditManagerController {
 	 * @return
 	 */
 	@RequestMapping(value="/detail/sr")
-	public String serverRating(HttpServletRequest request,Model model,String managerId) {
+	public String serverRating(HttpServletRequest request,Model model) {
 		
 		clearSession(request);
 		//标题选择
-		selectTitle(request, managerId, "server_rating");
+		selectTitle(request, getManagerId(), "server_rating");
 		
-		int serverStar = creditManagerService.getServerStar(managerId);
+		int serverStar = creditManagerService.getServerStar(getManagerId());
 		request.getSession().setAttribute("star", serverStar);
 		
 		getServerRating(model,1,0);
@@ -436,6 +523,20 @@ public class CreditManagerController {
 		}
 		
 		return "screens/creditManager/creditManagerMoneyAccount";
+	}
+	
+	/**
+	 * 全部订单
+	 * @param request
+	 * @param searchCustomer
+	 */
+	private void getCustomerInfoAll(HttpServletRequest request,
+			SearchCustomer searchCustomer) {
+		
+		List<CustomerInfo> allInfo = orderService.getCustomerInfoByCondition(searchCustomer);
+		int count = orderService.getCustomerInfoCountByCondition(searchCustomer);
+		PageData<CustomerInfo> allPageData = new PageData<>(allInfo, count, searchCustomer.getPage());
+		request.getSession().setAttribute("allPageData", allPageData);
 	}
 	
 	/**
@@ -535,6 +636,11 @@ public class CreditManagerController {
 		request.getSession().removeAttribute("rewardPageData");
 		request.getSession().removeAttribute("withdrawMoneyPageData");
 		request.getSession().removeAttribute("consumptionPageData");
+		request.getSession().removeAttribute("products");
+		request.getSession().removeAttribute("orderTypes");
+		request.getSession().removeAttribute("orderStatus");
+		request.getSession().removeAttribute("allPageData");
+		request.getSession().removeAttribute("title");
 	}
 
 	/**
@@ -566,11 +672,11 @@ public class CreditManagerController {
 		
 		// 信贷经理推荐
 		List<InvitationMemberInfo> managerInfos = creditManagerService
-				.getInvitationManagerInfo(managerId, 1);
-		int managerRecords = creditManagerService
+				.getInvitationManagerInfo(managerId, page);
+		int count = creditManagerService
 				.getInvitationManagerRecords(managerId);
 		PageData<InvitationMemberInfo> managerPageData = new PageData<>(
-				managerInfos, managerRecords, 1);
+				managerInfos, count, page);
 		request.getSession().setAttribute("managerPageData", managerPageData);
 	}
 		
@@ -622,7 +728,6 @@ public class CreditManagerController {
 	private void selectTitle(HttpServletRequest request,String managerId,String title) {
 		//信贷经理ID
 		setManagerId(managerId);
-//		model.addAttribute("managerId", managerId);
 		request.getSession().setAttribute("title", title);
 	}
 
@@ -639,4 +744,62 @@ public class CreditManagerController {
 	public void setManagerId(String managerId) {
 		this.managerId = managerId;
 	}
+	
+	//ywh start
+	@Resource
+	private AnswerService abiz;
+	/**
+	 * 后台  信贷经理 客户问答 新越网问题
+	 * @param req
+	 * @param model
+	 * @param managerId
+	 * @return
+	 */
+	@RequestMapping("/detail/xans")
+	public String answerx(HttpServletRequest req , Model model){
+		//标题选择
+		String createid = getManagerId();
+		selectTitle(req , createid , "customer_question");
+		
+		String index = req.getParameter("index");
+		if(GlobalConstant.isNull(index)){
+			QuestionBean myanswer = abiz.getMyAnswer(createid);
+			req.getSession().setAttribute("myanswer", myanswer);
+			
+			QuestionBean recentanswer = abiz.getRecentlyAnswer(createid);
+			req.getSession().setAttribute("recentanswer", recentanswer);
+		}
+		
+		//新越平台问题
+		model.addAttribute("xanswerpage", abiz.findAdminXPossAnswer(createid, "1", req.getParameter("topage")));
+		return "screens/creditManager/creditquestx";
+	}
+	
+	/**
+	 * 后台  信贷经理 客户问答 机构问题
+	 * @param req
+	 * @param model
+	 * @param managerId
+	 * @return
+	 */
+	@RequestMapping("/detail/jans")
+	public String answerj(HttpServletRequest req , Model model){
+		//标题选择
+		String createid = getManagerId();
+		selectTitle(req , createid, "customer_question");
+		
+		
+		String index = req.getParameter("index");
+		if(GlobalConstant.isNull(index)){
+			QuestionBean myanswer = abiz.getMyAnswer(createid);
+			req.getSession().setAttribute("myanswer", myanswer);
+			
+			QuestionBean recentanswer = abiz.getRecentlyAnswer(createid);
+			req.getSession().setAttribute("recentanswer", recentanswer);
+		}
+		//新越平台问题
+		model.addAttribute("janswerpage", abiz.findAdminXPossAnswer(createid, "2", req.getParameter("topage")));
+		return "screens/creditManager/creditquestj";
+	}
+	//ywh over
 }

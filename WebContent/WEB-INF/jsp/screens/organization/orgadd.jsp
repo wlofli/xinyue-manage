@@ -10,9 +10,10 @@
 	
 	<title>新越网管理系统_机构管理_添加</title>
 	<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+	
+	<%@ include file="../../commons/common.jsp" %>
+	<%@ include file="../../commons/validate.jsp" %>
 	<%@ include file="../../commons/editPlugin.jsp" %>
-<%@ include file="../../commons/common.jsp" %>
-<%@ include file="../../commons/validate.jsp" %>
 	
 	<script type="text/javascript">
 		function after(node){
@@ -63,6 +64,96 @@
 			$("#addpter"+(num-1)).after(xml);
 		}
 		
+function changeSelect(type,val){
+			
+			switch (type) {
+			case "p":
+				var selected = $("#p_id option:selected").val();
+				
+				$("#c_id").empty();
+				var option= $("<option/>");
+				option.attr("value","");
+				option.html("请选择");
+				$("#c_id").append(option);
+				$("#z_id").empty();
+				var option1= $("<option/>");
+				option1.attr("value","");
+				option1.html("请选择");
+				$("#z_id").append(option1);
+				
+				if(selected != 0){
+					$.ajax({
+						url:"${ctx}/city/pulldown?type=tc&id="+selected,
+						success:function(data){
+							var jsonData = eval(data);
+							for(var i=0;i<jsonData.length;i++){
+								var city=jsonData[i];
+								option= $("<option/>");
+								option.attr("value",city.key);
+								option.html(city.value);
+								$("#c_id").append(option);
+							};
+							if(val != ""){
+								$("#c_id").val(val);
+							}
+						}
+					});
+				}
+				break ;
+			case "c":
+				var selected = $("#c_id option:selected").val();
+				$("#z_id").empty();
+				var option= $("<option/>");
+				option.attr("value","");
+				option.html("请选择");
+				$("#z_id").append(option);
+				
+				if(selected != 0){
+					$.ajax({
+						url:"${ctx}/city/pulldown?type=tz&id="+selected,
+						success:function(data){
+							var jsonData = eval(data);
+							for(var i=0;i<jsonData.length;i++){
+								var zone=jsonData[i];
+								option= $("<option/>");
+								option.attr("value",zone.key);
+								option.html(zone.value);
+								$("#z_id").append(option);
+							};
+							if(val != ""){
+								$("#z_id").val(val);
+							}
+						}
+					});
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	
+		function getZones(cityData,zoneData){
+			$("#z_id").empty();
+			var option= $("<option/>");
+			option.attr("value","0");
+			option.html("请选择");
+			$("#z_id").append(option);
+			$.ajax({
+				url:"${ctx}/city/pulldown?type=tz&id="+cityData,
+				success:function(data){
+					var jsonData = eval(data);
+					for(var i=0;i<jsonData.length;i++){
+						var zone=jsonData[i];
+						option= $("<option/>");
+						option.attr("value",zone.key);
+						option.html(zone.value);
+						$("#z_id").append(option);
+					};
+					$("#z_id").val(zoneData);
+				}
+			});
+			
+		}
 		
 		function orgAdd(){
 			if(!$("#organization_add").valid()){
@@ -71,27 +162,38 @@
 			var fields  = $("#organization_add").serializeArray();  
 			var l = [];
 			var o = {};
+			var d = {};
 			var n=0;
 			jQuery.each( fields, function(i, field){  
 			  var f = field.name;
-			  var i = f.charAt(f.indexOf('[')+1);
-			  if(i!=n){
-				  n = i;
-				  l.push(o);
-				  o= {};
-			  }
 			
-			  o[f.substring(f.indexOf(']')+2)] = field.value || '';
+			  var s = f.indexOf('[');
+			
+			  if(s != -1){
+				  var i = f.charAt(s+1);
+				  
+				  if(i!=n){
+					  n = i;
+					  
+					  l.push(d);
+					  
+					  d= {};
+				  }
+				 
+				  d[f.substring(f.indexOf(']')+2)] = field.value || '';
+			  }else{
+				  o[f] = field.value || '';
+			  }
 			  
 			}); 
-			l.push(o);
-			
+			l.push(d);
+			o["linkman"] = l;
 			$.ajax({
 				url:"${ctx}/organization/addorg",
 				type:"post",
 				dataType:"json",      
-	            contentType:"application/json", 
-				data:JSON.stringify(l),
+	            contentType:"application/json;charset=UTF-8", 
+				data:JSON.stringify(o),
 				success:function(data){
 					if(data != 'fail'){
 						alert("添加成功");
@@ -103,21 +205,7 @@
 			});
 		}
 		
-		$.fn.serializeObject = function(){
-			var o = {};
-			var a = this.serializeArray();
-			$.each(a , function(){
-				if(o[this.name]){
-					if(!o[this.name].push){
-						o[this.name] = [o[ths.name]];
-					}
-					o[this.name].push(this.value || '');
-				}else{
-					o[this.name] = this.value || '';
-				}
-			});
-			return o;
-		}
+		
 		
 	</script>
 	
@@ -130,27 +218,40 @@
 		<form action="${ctx }/organization/addOrg" id="organization_add" >
 			<div>
 				<span>机构类型：</span>
-				<m:select cssSelect="t1" name="orgedit[0].genre" items="${dic_org }" textProperty="dicVal" valueProperty="dicKey" required="true"></m:select>
-				<div class="clear"></div>
-			</div>
-			<div>
-				<span>机构编号：</span>
-				<input type="text" name="orgedit[0].number" class="t1" required="true" type="number"/>
+				<m:select cssSelect="t1" name="genre" items="${orgtype }" textProperty="name" valueProperty="id" required="true"></m:select>
 				<div class="clear"></div>
 			</div>
 			<div>
 				<span>机构名称：</span>
-				<input type="text" name="orgedit[0].name" class="t1" required="true"/>
+				<input type="text" name="name" class="t1" required="true"/>
+				<div class="clear"></div>
+			</div>
+			<div>
+				<span>所属地区：</span>
+				<m:select name="provinceid" cssSelect="t2" id="p_id" params="p" items="${provinces }" valueProperty="key" textProperty="value"></m:select>
+				
+				<m:select name="cityid" cssSelect="t2" id="c_id" params="c"></m:select>
+				<input type="hidden" name="cid"/>
+				
+				<m:select name="zoneid" cssSelect="t2" required="true" id="z_id"></m:select>
+				<input type="hidden" name="zid">
+				
 				<div class="clear"></div>
 			</div>
 			<div>
 				<span>联系地址：</span>
-				<input type="text" name="orgedit[0].site" class="t1" required="true"/>
+				<input type="text" name="site" class="t1" required="true"/>
 				<div class="clear"></div>
 			</div>
 			<div>
 				<span>邮编：</span>
-				<input type="text" name="orgedit[0].postcode" class="t1"/>
+				<input type="text" name="postcode" class="t1"/>
+				<div class="clear"></div>
+			</div>
+			<div>
+				<span>是否推荐：</span>
+				<span class="dx"><input type="radio" name="status" value="0"  />是</span>
+				<span class="dx"><input type="radio" name="status" value="1" checked="checked"/>否</span>
 				<div class="clear"></div>
 			</div>
 			<div id="addpter0">
@@ -161,7 +262,7 @@
 				</div>
 				<div>
 					<span>姓名：</span>
-					<input type="text" name="orgedit[0].linkman" class="t1" required="true"/>
+					<input type="text" name="orgedit[0].name" class="t1" required="true"/>
 					<div class="clear"></div>
 				</div>
 				<div>

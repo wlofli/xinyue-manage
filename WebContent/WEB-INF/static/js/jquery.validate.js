@@ -314,7 +314,8 @@ $.extend( $.validator, {
 		remote: "Please fix this field.",
 		email: "Please enter a valid email address.",
 		url: "Please enter a valid URL.",
-		telphone:"Pleanse enter a valid TELPHONE.",
+		telphone:"Please enter a valid telphone.",
+		mobile:"Please enter a valid mobile.",
 		date: "Please enter a valid date.",
 		dateISO: "Please enter a valid date ( ISO ).",
 		number: "Please enter a valid number.",
@@ -371,7 +372,7 @@ $.extend( $.validator, {
 			$( this.currentForm )
 				.validateDelegate( ":text, [type='password'], [type='file'], select, textarea, " +
 					"[type='number'], [type='search'] ,[type='tel'], [type='url'], " +
-					"[type='email'], [type='datetime'], [type='date'], [type='month'], " +
+					"[type='email'], [type='datetime'], [type='date'], [type='month'], [type='mobile'], " +
 					"[type='week'], [type='time'], [type='datetime-local'],[type='xints'], [type='telphone'], " +
 					"[type='range'], [type='color'], [type='radio'], [type='checkbox']",
 					"focusin focusout keyup", delegate)
@@ -929,6 +930,7 @@ $.extend( $.validator, {
 		email: { email: true },
 		url: { url: true },
 		telphone: { telphone: true},
+		mobile: { mobile:true},
 		date: { date: true },
 		dateISO: { dateISO: true },
 		number: { number: true },
@@ -1138,7 +1140,7 @@ $.extend( $.validator, {
 			// Retrieved 2014-01-14
 			// If you have a problem with this implementation, report a bug against the above spec
 			// Or use custom methods to implement your own email validation
-			return this.optional( element ) || /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test( value );
+			return this.optional( element ) || /^(\w)+(\.\w+)*@(\w)+((\.\w+)+)$/.test( value );
 		},
 
 		// http://jqueryvalidation.org/url-method/
@@ -1148,6 +1150,9 @@ $.extend( $.validator, {
 		},
 		telphone:function(value , element){
 			return this.optional(element) || /^(((\d{3,4}-)?\d{7,8}(-\d{1,4})?)|(\d{11})|((1[3587][0-9]{1})+\d{8}))$/.test(value);
+		},
+		mobile:function(value , element){
+			return this.optional(element) || /^(1[3587][0-9]{1})+\d{8}$/.test(value);
 		},
 		// http://jqueryvalidation.org/date-method/
 		date: function( value, element ) {

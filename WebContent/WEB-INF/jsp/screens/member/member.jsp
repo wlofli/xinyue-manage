@@ -135,7 +135,7 @@
 								</c:otherwise>
 							</c:choose>	
 							<c:if test="${authorities.member_update == 1}">						
-							<a href="javascript:void(0)" onclick="document.location.href='${ctx}/member/edit?editid=${member.id }'">修改</a>
+							<a href="javascript:void(0)" onclick="document.location.href='${ctx}/member/detail?memberid=${member.id }'">查看</a>
 							</c:if>
 							<c:if test="${authorities.member_delete == 1}">
 							<a href="javascript:void(0)" onclick="del('${member.id}')" class="del">删除</a>

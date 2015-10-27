@@ -1,10 +1,10 @@
 <%@page import="com.xinyue.authe.AutheManage"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-  <%@ include file="../../commons/common.jsp" %>
-   <%@ include file="../../commons/validate.jsp" %>
-  	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %> 
-  <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<%@ include file="../../commons/common.jsp" %>
+<%@ include file="../../commons/validate.jsp" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %> 
+<%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <script src="${ctx }/js/jquery-ui.min.js" type="text/javascript" ></script>
@@ -214,6 +214,7 @@
 				   		$("#creditName2").val(jsonData.manager.realName);
 				   		$("#tel2").val(jsonData.manager.tel);
 				   		$("#org2").val(jsonData.manager.organization);
+				   		$("#blank2").val(jsonData.manager.organizationName);
 				   		
 			   	   }else{
 			   		   alert(jsonData.message);
@@ -392,7 +393,9 @@
 	<input type="hidden" name="manageId" id="appointid2"/>
 	<div><span>信贷经理姓名：</span><input type="text" id="creditName2" name="creditName" class="t1 required"/><div class="clear"></div></div>
 	<div><span>手机号：</span><input  type="text" id="tel2" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
-	<div><span>所属机构：</span><input  type="text" id="org2" name="blank" class="t1 required"/><div class="clear"></div></div>
+	<div><span>所属机构：</span><input  type="hidden" id="org2" name="blank" class="t1 required"/>
+	 	                     <input  type="text"     id="blank2" name="blankName" class="t1 required"/>
+	<div class="clear"></div></div>
 	<div><span>获得价格(元)：</span><input type="text" name="price" class="t1 required number" /><div class="clear"></div></div>
 	
 	

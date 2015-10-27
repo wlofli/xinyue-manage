@@ -8,9 +8,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>新越网后台管理系统_会员中心_编辑会员</title>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<%@ include file="../../commons/editPlugin.jsp" %>
 <%@ include file="../../commons/common.jsp" %>
 <%@ include file="../../commons/validate.jsp" %>
 <script type="text/javascript">
@@ -35,7 +34,7 @@ $(function(){
 		<s:form commandName="memberedit" id="member_edit" method="post" action="">
 			<div>
 				<span>用户名：</span>
-				<s:hidden path="id"/>
+				<s:hidden path="id" id="member_id"/>
 				<s:hidden path="memberid" id="member_edit_memberid"/>
 				<s:input path="loginName" class="t1" required="true"/>
 			</div>
@@ -52,21 +51,15 @@ $(function(){
 				<s:input path="company" class="t1" required="true"/>
 			</div>
 			<div>
-				<span>省：</span>
+				<span>地区：</span>
 				<s:select path="provinceid" class="t2" id="provinceS" onchange="changeSelect('p','')" required="true">
 					<s:option value="">请选择</s:option>
 					<s:options items="${provinces}" itemLabel="value" itemValue="key"/>
 				</s:select>
-			</div>
-			<div>
-				<span>市：</span>
 				<s:select path="cityid" class="t2" id="cityS" onchange="changeSelect('c','')" required="true">
 					<s:option value="">请选择</s:option>
 				</s:select>
 				<s:hidden path="cityids" id="c_id"/>
-			</div>
-			<div>	
-				<span>区：</span>
 				<s:select path="zoneid" class="t2" id="zoneS" required="true">
 					<s:option value="">请选择</s:option>
 				</s:select>
@@ -77,8 +70,22 @@ $(function(){
 				<s:input path="address" class="t1" required="true"/>
 			</div>
 			<div>
+				<span>会员类型：</span>
+				<s:select path="memberid" class="t1" required="true">
+					<s:option value="">请选择</s:option>
+					<s:option value="1">QQ会员</s:option>
+					<s:option value="2">新越网会员</s:option>
+					<s:option value="3">微信会员</s:option>
+					<s:option value="4">微博会员</s:option>
+					<s:option value="5">税务CA会员</s:option>
+					<s:option value="6">地税会员</s:option>
+					<s:option value="7">国税VPDN会员</s:option>
+				</s:select>
+			</div>
+			<div><span>合作账户名：</span><input type="text" class="t1" /><span class="zs">该项为必填项</span><div class="clear"></div></div>
+			<div>
 				<input type="button" value="提 交" class="tj_btn" onclick="save()"/>
-				<input type="button" value="取消" class="tj_btn" onclick="history.back()"/>
+				<input type="button" value="取消" class="tj_btn tj_btn2" onclick="history.back()"/>
 			</div>
 		</s:form>
 	</div>
@@ -184,24 +191,28 @@ function save(){
 			success:function(data){
 				if(data == "success"){
 					alert("保存成功");
-
-					if($("#member_edit_memberid").val() == ""){
-						document.location.href="${ctx}/member/list";
-					}else if($("#member_edit_memberid").val() == "1"){
-						document.location.href="${ctx}/member/qlist";
-					}else if($("#member_edit_memberid").val() == "2"){
-						document.location.href="${ctx}/member/xlist";
-					}else if($("#member_edit_memberid").val() == "3"){
-						document.location.href="${ctx}/member/wxlist";
-					}else if($("#member_edit_memberid").val() == "4"){
-						document.location.href="${ctx}/member/wblist";
-					}else if($("#member_edit_memberid").val() == "5"){
-						document.location.href="${ctx}/member/slist";
-					}else if($("#member_edit_memberid").val() == "6"){
-						document.location.href="${ctx}/member/dlist";
-					}else if($("#member_edit_memberid").val() == "7"){
-						document.location.href="${ctx}/member/glist";
+					if($("#member_id").val() == ""){
+						if($("#member_edit_memberid").val() == ""){
+							document.location.href="${ctx}/member/list";
+						}else if($("#member_edit_memberid").val() == "1"){
+							document.location.href="${ctx}/member/qlist";
+						}else if($("#member_edit_memberid").val() == "2"){
+							document.location.href="${ctx}/member/xlist";
+						}else if($("#member_edit_memberid").val() == "3"){
+							document.location.href="${ctx}/member/wxlist";
+						}else if($("#member_edit_memberid").val() == "4"){
+							document.location.href="${ctx}/member/wblist";
+						}else if($("#member_edit_memberid").val() == "5"){
+							document.location.href="${ctx}/member/slist";
+						}else if($("#member_edit_memberid").val() == "6"){
+							document.location.href="${ctx}/member/dlist";
+						}else if($("#member_edit_memberid").val() == "7"){
+							document.location.href="${ctx}/member/glist";
+						}
+					}else{
+						document.location.href='${ctx}/member/detail?editid=${member.id }'
 					}
+					
 					
 				}else{
 					alert("保存失败");

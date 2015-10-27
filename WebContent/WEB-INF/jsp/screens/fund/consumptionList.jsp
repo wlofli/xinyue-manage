@@ -48,7 +48,7 @@ function search(){
 <sf:options items="${type }" itemLabel="value" itemValue="key"/>
 </sf:select>
 </li>
-<li><input type="button" class="s_btn" value="查询" onchange="search()"/></li>
+<li><input type="button" class="s_btn" value="查询" onclick="search()"/></li>
 </ul>
 </sf:form>
 </div>
@@ -78,7 +78,7 @@ function search(){
 <td colspan="2"><a href="${ctx }/fund/consumption/detail?id=${list.orderId}">${list.orderId }</a></td>
 <td colspan="2">${list.customerPhone }</td>
 <td colspan="2">${list.customerName }</td>
-<td colspan="1">-${list.payAward }</td>
+<td colspan="1">-${list.consumptionAmount }</td>
 <td colspan="1">-${list.otherPayAmount }</td>
 <td colspan="2">${list.consumptionType }</td>
 <td colspan="2">${list.sericalNumber }</td>

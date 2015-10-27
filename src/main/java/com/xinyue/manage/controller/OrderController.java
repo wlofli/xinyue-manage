@@ -1,7 +1,6 @@
 package com.xinyue.manage.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,7 +8,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -17,10 +15,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xinyue.authe.AutheManage;
+import com.xinyue.manage.beans.OrderInfo;
 import com.xinyue.manage.beans.PageInfo;
 import com.xinyue.manage.beans.SelectInfo;
 import com.xinyue.manage.model.Applicant;
@@ -30,17 +30,23 @@ import com.xinyue.manage.model.Control;
 import com.xinyue.manage.model.CreditManager;
 import com.xinyue.manage.model.Debt;
 import com.xinyue.manage.model.Document;
+import com.xinyue.manage.model.FastProduct;
+import com.xinyue.manage.model.FastProductApplicant;
+import com.xinyue.manage.model.FastProductCompany;
 import com.xinyue.manage.model.Hold;
 import com.xinyue.manage.model.Order;
 import com.xinyue.manage.model.OrderAppointed;
 import com.xinyue.manage.model.OrderAuction;
 import com.xinyue.manage.model.OrderFixed;
 import com.xinyue.manage.model.OrderLowPrice;
+import com.xinyue.manage.model.OrderTrack;
 import com.xinyue.manage.model.RealEstate;
 import com.xinyue.manage.plugin.JsonConfigFactory;
 import com.xinyue.manage.service.CompanyInfoService;
+import com.xinyue.manage.service.FastProductService;
 import com.xinyue.manage.service.OrderCustomerService;
 import com.xinyue.manage.service.OrderService;
+import com.xinyue.manage.service.OrderTrackService;
 import com.xinyue.manage.service.SelectService;
 import com.xinyue.manage.util.CommonFunction;
 import com.xinyue.manage.util.GlobalConstant;
@@ -58,8 +64,11 @@ public class OrderController {
 	@Autowired
 	private ApplicationContext ctx;
 	
-	@Resource
+	@Autowired
 	private OrderService orderService;
+	
+	@Resource
+	private FastProductService fastProductService;
 	
 	@Resource
 	private CompanyInfoService companyInfoService;
@@ -70,14 +79,14 @@ public class OrderController {
 	@Resource
 	private SelectService selectService;
 	
+	@Resource
+	private OrderTrackService orderTrackService;
 	
 	
-	@RequestMapping("auditeorderlist")
+	
+	@RequestMapping(value={"auditeorderlist"})
 	public String getAuditeList(HttpServletRequest request,@ModelAttribute Order order, Model model, int index,
 			@RequestParam(value="list",required=false)List<String> statusList,@RequestParam(value="block",required=false)String block){
-//System.out.println(order.getStatus());
-System.out.println(statusList);	
-System.out.println(block);
 		//权限操作
 		List<String> authList = new ArrayList<String>();
 		authList.add(GlobalConstant.ORDER_AUDITE_UNCHECK);
@@ -106,28 +115,8 @@ System.out.println(block);
 	}
 	
 	
-//	@RequestMapping("ajax/auditeorderlist")
-//	public @ResponseBody String getAuditeListJson(@ModelAttribute Order order, Model model, int index){
-//		JSONObject jsonObject = new JSONObject();
-//		List<Order> list = orderService.getListByPage(order, GlobalConstant.PAGE_SIZE, index);
-//		jsonObject.accumulate("list", list);
-//		CommonFunction cf = new CommonFunction();
-//		
-//		// 分页传值
-//		int countAll = orderService.getCount(order);
-//
-//		cf.pageList(countAll, index + 1);
-////		jsonObject.accumulate("page", pageInfo);
-//		
-//		
-//		return jsonObject.toString();
-//	}
-	
-	
-	
-	
 	@RequestMapping("list")
-	public String getListByPage(@ModelAttribute("order")Order order,Model model, int index){
+	public String getListByPage(@ModelAttribute("order")Order order,Model model, @RequestParam(defaultValue="0")int index){
 		List<Order> list = orderService.getListByPage(order, GlobalConstant.PAGE_SIZE, index);
 		
 		model.addAttribute("orderlist", list);
@@ -145,18 +134,8 @@ System.out.println(block);
 		return "screens/order/OrderList";
 	}
 	
-	
-	
-//	@RequestMapping("listjson")
-//	public @ResponseBody List<Order> getList(@ModelAttribute("order")Order order, int index){
-//		List<Order> list = orderService.getListByPage(order, GlobalConstant.PAGE_SIZE, index);
-//		return list;
-//	}
-	
-	
 	@RequestMapping("turnauditedetail")
 	public String turnAuditedetail(Model model, String id, String status){
-//System.out.println(status);
 		Order order = orderService.getOrder(id);
 		model.addAttribute("order", order);
 		model.addAttribute("auditestatus", status);//useless
@@ -191,15 +170,11 @@ System.out.println(block);
 		}
 	}
 	
-	
 	@RequestMapping("turndetail")
 	public String turnDetail(Model model, String id){
 		Order order = orderService.getOrder(id);
 		
 		model.addAttribute("order", order);
-//System.out.println(order.getStatus());	
-//System.out.println(order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET_CHINESE) 
-//		|| order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_CHINESE));
 		if(order.getStatus() != null && (order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET_CHINESE) 
 				|| order.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_CHINESE))){
 			if(order.getOrderType() != null){
@@ -207,7 +182,6 @@ System.out.println(block);
 				case GlobalConstant.ORDER_TYPE_FIXED_CHINESE:
 					OrderFixed orderFixed  = orderCustomerService.getOrderFixed(order.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
 					model.addAttribute("fixed",orderFixed);
-					System.out.println(orderFixed.getCredit());
 					break;
 				case GlobalConstant.ORDER_TYPE_AUCTION_CHINESE:
 					OrderAuction orderAuction = orderCustomerService.getOrderAuction(order.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
@@ -234,19 +208,13 @@ System.out.println(block);
 		
 	}
 	
-	
 	@RequestMapping("getappointed")
 	@ResponseBody
 	public String getAppointed(String orderId){
 		JSONObject json = new JSONObject();
-		
-//System.out.println(orderId);
 		OrderAppointed appointed = orderCustomerService.getOrderAppointedFromOrder(orderId);
-//System.out.println(appointed);
 		if(appointed != null){
 			json.accumulate("appointed", appointed,JsonConfigFactory.getInstance());
-
-System.out.println(appointed.getCredit());
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
 		}else {
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
@@ -258,115 +226,93 @@ System.out.println(appointed.getCredit());
 	@RequestMapping("getfixed")
 	@ResponseBody
 	public String getFixed(Model model,String orderId){
-//System.out.println(orderId);
 		JSONObject json = new JSONObject();
 		OrderFixed fixed = orderCustomerService.getOrderFixedFromOrder(orderId);
-//System.out.println(fixed);
 		if(fixed != null){
 			json.accumulate("fixed", fixed,JsonConfigFactory.getInstance());
-			
-			
-//			System.out.println(fixed.getCredit());
-//			System.out.println(json.get("fixed")); 
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
-//			model.addAttribute(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
 		}else {
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
-//			model.addAttribute(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);
 		}
-//		System.out.println(model);
 		return json.toString();
 	}
 	
 	
-	/**
-	 * 
-	 * add by lzc
-	 * date: 2015年6月23日
-	 * @param request
-	 * @param model
-	 * @param id 订单的id
-	 * @return
-	 * 
-	 * 修改自companyInfo的scanDetail(Model, String)方法
-	 */
 	@RequestMapping("turnapplicantdata")
-	public String turnApplicantData(HttpServletRequest request,Model model ,String id){
-		Order order = orderService.getOrder(id);
-		if(order != null){
-		//企业相关信息id获取
-			HashMap<String, String> companyDetail = companyInfoService.getDetailIdByMemberId(order.getMemberId());
-			if(companyDetail != null){
-				//申请人信息
-				Applicant applicant = new Applicant();
-				if (companyDetail.containsKey("applicant_id")) {
-					applicant = companyInfoService.getApplicantInfoById(companyDetail.get("applicant_id"));
-				}
-				model.addAttribute("applicantInfo", applicant);
-				
-				//企业基本信息
-				CompanyBase companyBase = null;
-				if (companyDetail.containsKey("license_id")) {
-					companyBase = companyInfoService.getCompanyBaseInfoById(companyDetail.get("license_id"));
-				}
-				model.addAttribute("companyInfo", companyBase);
-				
-				//公司控股信息 
-				List<Hold> holdList = null;
-				//基本经营信息
-				List<Business> businessList = null;
-				
-				
-				//上传资料信息
-				List<Document> documentList = new ArrayList<Document>();
-				if (companyDetail.containsKey("member_id")) {
-					holdList = companyInfoService.getHoldInfoById(companyDetail.get("member_id"));
-					
-					businessList = companyInfoService.getBusinessInfoById(companyDetail.get("member_id"));
-					
-					//modify by lzc 加入订单有关的document 
-					
-					documentList = orderService.getDocumentInfoById(order.getId());
-				}
-				if (holdList == null || holdList.size() == 0) {
-					holdList = new ArrayList<Hold>();
-					Hold hold = new Hold();
-					holdList.add(hold);
-				}
-				if (businessList == null || businessList.size() == 0) {
-					businessList = new ArrayList<Business>();
-					Business business = new Business();
-					businessList.add(business);
-				}
-				model.addAttribute("holdList", holdList);
-				model.addAttribute("businessList", businessList);
-				model.addAttribute("documentList", documentList);
-				
-				//公司治理信息
-				Control control = null;
-				if (companyBase != null) {
-					control = companyInfoService.getControlInfoById(companyBase.getControlInfo());
-				}
-				model.addAttribute("controlinfo", control);
-				
-				//抵押物与负债
-				RealEstate realEstate = new RealEstate();
-				if (companyDetail.containsKey("estate_id")) {
-					realEstate = companyInfoService.getRealEstateInfoById(companyDetail.get("estate_id"));
-				}
-				model.addAttribute("estateInfo", realEstate);
-				
-				Debt debt = new Debt();
-				if (companyDetail.containsKey("debt_id")) {
-					debt = companyInfoService.getDebtInfoById(companyDetail.get("debt_id"));
-				}
-				model.addAttribute("debtInfo", debt);
-			}
+	public String turnApplicantDetail(Model model ,String id){
+		Order order = orderService.getOrderInfo(id);
+
+		Applicant applicant = new Applicant();
+		applicant = companyInfoService.getApplicantInfoById(order.getApplicantInfo());
+		model.addAttribute("applicantInfo", applicant);
 		
-		}
+		CompanyBase companyBase = companyInfoService.getCompanyBaseInfoById(order.getLicenseInfo());
+		model.addAttribute("companyInfo", companyBase);
+		
+		
+		List<Hold> holdList = companyInfoService.getHoldByOrderId(order.getId());
+		model.addAttribute("holdList", holdList);		
+		
+		List<Business> businesseList = companyInfoService.getBusinessInfoById(order.getId());
+		model.addAttribute("businessList", businesseList);
+		
+		List<Document> documentList = new ArrayList<Document>();
+		documentList = orderService.getDocumentInfoById(order.getId());
+		model.addAttribute("documentList", documentList);
+
+				
+		RealEstate realEstate = companyInfoService.getRealEstateInfoById(order.getRealEstate());
+		model.addAttribute("estateInfo", realEstate);
+		
+		Debt debt = companyInfoService.getDebtInfoById(order.getDebtInfo());
+		model.addAttribute("debtInfo", debt);
+		
+				
+		Control control = companyInfoService.getControlInfoById(order.getControlInfo());
+		model.addAttribute("controlinfo", control);
+		
 		return "screens/companyInfo/companyDetail";
 	}
 	
+	
+	@RequestMapping("track/list")
+	public String trackList(String id,  Model model){
+		Order order = orderService.getOrder(id);
+		String customerId = new String();
+		String orderType = new String();
+		if(order.getOrderType() != null){
+			switch (order.getOrderType()) {
+			case GlobalConstant.ORDER_TYPE_FIXED_CHINESE:
+				OrderFixed orderFixed  = orderCustomerService.getOrderFixed(order.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				customerId = orderFixed.getId();
+				orderType = GlobalConstant.ORDER_TYPE_FIXED;
+				break;
+			case GlobalConstant.ORDER_TYPE_AUCTION_CHINESE:
+				OrderAuction orderAuction = orderCustomerService.getOrderAuction(order.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				customerId = orderAuction.getId();
+				orderType = GlobalConstant.ORDER_TYPE_AUCTION;
+				break;
+			case GlobalConstant.ORDER_TYPE_LOWPRICE_CHINESE:
+				OrderLowPrice orderLowPrice = orderCustomerService.getOrderLowPrice(order.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				customerId = orderLowPrice.getId();
+				orderType = GlobalConstant.ORDER_TYPE_LOWPRICE;
+				break;
+			case GlobalConstant.ORDER_TYPE_APPOINTED_CHINESE:
+				OrderAppointed orderAppointed = orderCustomerService.getOrderAppointed(order.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				customerId = orderAppointed.getId();
+				orderType = GlobalConstant.ORDER_TYPE_APPOINTED;
+				break;
+			default:
+				break;
+			}
+		}
+		OrderInfo info = orderTrackService.getOrderInfo(customerId, orderType);
+		//目前不需要分页展示
+		List<OrderTrack> tracklList = orderTrackService.getOrderTrackList(info.getId(), info.getType(),0 ,0);
+		model.addAttribute("order", info);
+		model.addAttribute("tracklist", tracklList);
+		return "screens/order/orderTrackList";
+	}
 	
 	@RequestMapping("updatestatuslist")
 	public @ResponseBody String updateOrderStatus(HttpServletRequest request,@ModelAttribute("list")List<String> idList){
@@ -381,7 +327,6 @@ System.out.println(appointed.getCredit());
 	
 	@RequestMapping("update")
 	public @ResponseBody String updateOrder(HttpServletRequest request,@ModelAttribute("order")Order order){
-//System.out.println(order.getStatus());	
 		try {
 			order.setModifiedId(AutheManage.getUsername(request));
 			orderService.updateOrder(order);
@@ -390,7 +335,6 @@ System.out.println(appointed.getCredit());
 			return GlobalConstant.RET_FAIL;
 		}
 		return GlobalConstant.RET_SUCCESS;
-//		return "redirect:/order/auditeorderlist?index=0";
 	}
 	
 	
@@ -412,7 +356,6 @@ System.out.println(appointed.getCredit());
 	
 	@RequestMapping("addauction")
 	public @ResponseBody String addAuction(String id,@ModelAttribute("auction")OrderAuction orderAuction, HttpServletRequest request){
-System.out.println("in");
 		orderAuction.setType(GlobalConstant.ORDER_CUSTOMER_TYPE);
 		orderAuction.setCreatedId(AutheManage.getUsername(request));
 		orderAuction.setModifiedId(AutheManage.getUsername(request));
@@ -427,7 +370,7 @@ System.out.println("in");
 		return GlobalConstant.RET_SUCCESS;
 	}
 	
-	@RequestMapping("addlowprice")
+	@RequestMapping(value="addlowprice", method=RequestMethod.POST)
 	public @ResponseBody String addLowPrice(String id,@ModelAttribute("lowprice")OrderLowPrice orderLowPrice, HttpServletRequest request){
 		orderLowPrice.setType(GlobalConstant.ORDER_CUSTOMER_TYPE);
 		orderLowPrice.setCreatedId(AutheManage.getUsername(request));
@@ -446,8 +389,6 @@ System.out.println("in");
 	
 	@RequestMapping("addappoint")
 	public @ResponseBody String addAppointed(String id,@ModelAttribute("appoint")OrderAppointed orderAppointed, HttpServletRequest request){
-System.out.println(id);	
-System.out.println(orderAppointed.getId());
 		orderAppointed.setType(GlobalConstant.ORDER_CUSTOMER_TYPE);
 		orderAppointed.setCreatedId(AutheManage.getUsername(request));
 		orderAppointed.setModifiedId(AutheManage.getUsername(request));
@@ -494,7 +435,6 @@ System.out.println(orderAppointed.getId());
 	@RequestMapping("getmanageinfo")
 	@ResponseBody
 	public String getManageInfo(String name){
-System.out.println(name);
 		JSONObject json = new JSONObject();
 		try {
 			CreditManager creditManager = orderService.getCreditManagerByName(name);
@@ -506,6 +446,52 @@ System.out.println(name);
 			json.accumulate(GlobalConstant.RET_MESSAGE, "用户姓名出错");
 		}
 		return json.toString();
+	}
+	
+	
+	/**机构管理订单详情
+	 * add by lzc     date: 2015年10月9日
+	 * @param orderId
+	 * @param orderType 1订单2快速申贷
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("getorgdetail")
+	public String getOrgDetail(String orderId, String orderType, Model model){
+		if(orderType.equals("1")){//订单
+			Order order = orderService.getOrderInfo(orderId);
+			model.addAttribute("order", order);
+			return "screens/organization/orderDetail";
+		}else {//快速申贷
+			FastProduct fastProduct = fastProductService.getFastProduct(orderId);
+			model.addAttribute("fspdt", fastProduct);
+			if(fastProduct != null && fastProduct.getType().equals("2")){
+				FastProductApplicant applicant = fastProductService.getApplicant(fastProduct.getApplicantFastId());
+				FastProductCompany company  = fastProductService.getCompany(fastProduct.getCompanyFastId());
+				model.addAttribute("applicant", applicant);
+				model.addAttribute("company", company);
+			}
+			return "screens/organization/fastDetail";
+		}
+	}
+	
+	@RequestMapping("getorgedit")
+	public String getOrgEdit(String orderId, String orderType, Model model){
+		if(orderType.equals("1")){//订单
+			Order order = orderService.getOrderInfo(orderId);
+			model.addAttribute("order", order);
+			return "screens/organization/orderEdit";
+		}else {//快速申贷
+			FastProduct fastProduct = fastProductService.getFastProduct(orderId);
+			model.addAttribute("fspdt", fastProduct);
+			if(fastProduct != null && fastProduct.getType().equals("2")){
+				FastProductApplicant applicant = fastProductService.getApplicant(fastProduct.getApplicantFastId());
+				FastProductCompany company  = fastProductService.getCompany(fastProduct.getCompanyFastId());
+				model.addAttribute("applicant", applicant);
+				model.addAttribute("company", company);
+			}
+			return "screens/organization/fastEdit";
+		}
 	}
 	
 	

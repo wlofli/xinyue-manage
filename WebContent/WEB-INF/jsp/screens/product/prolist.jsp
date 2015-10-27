@@ -10,8 +10,11 @@
 <title>新越网后台管理系统_贷款产品列表</title>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <%@ include file="../../commons/common.jsp" %>
+	<%@ include file="../../commons/validate.jsp" %>
+	<%@ include file="../../commons/editPlugin.jsp" %>
 <script type="text/javascript">
 	function pro_search(){
+		$("#pinfo_topage").val(0);
 		$("#product_form").submit();
 	}
 	
@@ -54,7 +57,10 @@
 			alert("选中的状态有不是待上架的");
 			return;
 		}
-		
+		if(param.length == 0){
+			alert("未选中数据");
+			return;
+		}
 		$.ajax({
 			type:"POST",
 			contentType:"application/json;charset=UTF-8",
@@ -90,6 +96,10 @@
 		});	
 		if(!b){
 			alert("选中的状态有不是上架中的");
+			return;
+		}
+		if(param.length == 0){
+			alert("未选中数据");
 			return;
 		}
 		$.ajax({
@@ -144,9 +154,9 @@
 				</li>
 				<li>
 					<span>所属银行或贷款机构：</span>
-					<s:select path="bank" class="s1">
+					<s:select path="org" class="s1">
 						<s:option value="">请选择</s:option>
-						<s:options itemLabel="name" itemValue="id" items="${product_bank }"/>
+						<s:options itemLabel="value" itemValue="key" items="${orginfo }"/>
 					</s:select>
 				</li>
 				<li>
@@ -195,12 +205,17 @@
 							<td colspan="3">${pro.name }</td>
 							<td colspan="3">${pro.code }</td>
 							<td colspan="3">${pro.type.name }</td>
-							<td colspan="4">${pro.bank.name }</td>
+							<td colspan="4">${pro.org.name }</td>
 							<td colspan="3">${pro.credit }</td>
 							<td colspan="3">${pro.area }</td>
 							<td colspan="3">${pro.addTime }</td>
 							<td colspan="2">${pro.status.dicVal }</td>
-							<td colspan="3"><a href="javascript:void(0)" onclick="document.location.href='${ctx}/product/todetail/${pro.id}'">详情</a></td>
+							<td colspan="3">
+								<a href="javascript:void(0)" onclick="document.location.href='${ctx}/product/todetail/${pro.id}'">详情</a>
+								<c:if test="${authorities.product_update == 1}">
+									<a href="javascript:void(0)" onclick="document.location.href='${ctx}/product/edit/${pro.id}'">修改</a>
+								</c:if>
+							</td>
 						</tr>
 					</c:forEach>
 				</tbody>
@@ -216,7 +231,7 @@
 				<Li><a href="javascript:void(0)" onclick="unshelve()">批量下架</a></Li>
 				</c:if>
 			</ul>
-			<m:page url="${ctx }/product/list?pinfo.topage=" pageData="${prodata }"></m:page>
+			<m:page url="${ctx }/product/list" pageData="${prodata }"></m:page>
 		</div>
 	</div> 
 </div> 

@@ -10,9 +10,9 @@
 	
 	<title>新越网管理系统_机构管理_编辑</title>
 	<c:set var="ctx" value="${pageContext.request.contextPath}"/>
+	<%@ include file="../../commons/common.jsp" %>
+	<%@ include file="../../commons/validate.jsp" %>
 	<%@ include file="../../commons/editPlugin.jsp" %>
-<%@ include file="../../commons/common.jsp" %>
-<%@ include file="../../commons/validate.jsp" %>
 	
 	<script type="text/javascript">
 		function after(node){
@@ -64,34 +64,152 @@
 		}
 		
 		
+		$(function(){
+			var cval = "${org.cid}";
+			
+			var zval = "${org.zid}";
+			
+			if($("#p_id").val() != ""){
+				changeSelect("p",cval);
+			}
+			if (cval != "") {
+		 		getZones(cval,zval);
+			}
+		});
+		
+		function changeSelect(type,val){
+			
+			switch (type) {
+			case "p":
+				var selected = $("#p_id option:selected").val();
+				
+				$("#c_id").empty();
+				var option= $("<option/>");
+				option.attr("value","");
+				option.html("请选择");
+				$("#c_id").append(option);
+				$("#z_id").empty();
+				var option1= $("<option/>");
+				option1.attr("value","");
+				option1.html("请选择");
+				$("#z_id").append(option1);
+				
+				if(selected != 0){
+					$.ajax({
+						url:"${ctx}/city/pulldown?type=tc&id="+selected,
+						success:function(data){
+							var jsonData = eval(data);
+							for(var i=0;i<jsonData.length;i++){
+								var city=jsonData[i];
+								option= $("<option/>");
+								option.attr("value",city.key);
+								option.html(city.value);
+								$("#c_id").append(option);
+							};
+							if(val != ""){
+								$("#c_id").val(val);
+							}
+						}
+					});
+				}
+				break ;
+			case "c":
+				var selected = $("#c_id option:selected").val();
+				$("#z_id").empty();
+				var option= $("<option/>");
+				option.attr("value","");
+				option.html("请选择");
+				$("#z_id").append(option);
+				
+				if(selected != 0){
+					$.ajax({
+						url:"${ctx}/city/pulldown?type=tz&id="+selected,
+						success:function(data){
+							var jsonData = eval(data);
+							for(var i=0;i<jsonData.length;i++){
+								var zone=jsonData[i];
+								option= $("<option/>");
+								option.attr("value",zone.key);
+								option.html(zone.value);
+								$("#z_id").append(option);
+							};
+							if(val != ""){
+								$("#z_id").val(val);
+							}
+						}
+					});
+				}
+				break;
+			default:
+				break;
+			}
+		}
+	
+		function getZones(cityData,zoneData){
+			$("#z_id").empty();
+			var option= $("<option/>");
+			option.attr("value","0");
+			option.html("请选择");
+			$("#z_id").append(option);
+			$.ajax({
+				url:"${ctx}/city/pulldown?type=tz&id="+cityData,
+				success:function(data){
+					var jsonData = eval(data);
+					for(var i=0;i<jsonData.length;i++){
+						var zone=jsonData[i];
+						option= $("<option/>");
+						option.attr("value",zone.key);
+						option.html(zone.value);
+						$("#z_id").append(option);
+					};
+					$("#z_id").val(zoneData);
+				}
+			});
+			
+		}
+		
 		function orgAdd(){
 			if(!$("#organization_add").valid()){
 				return;
 			}
 			var fields  = $("#organization_add").serializeArray();  
+			//alert(JSON.stringify(fields));
 			var l = [];
 			var o = {};
+			var d = {};
 			var n=0;
 			jQuery.each( fields, function(i, field){  
 			  var f = field.name;
-			  var i = f.charAt(f.indexOf('[')+1);
-			  if(i!=n){
-				  n = i;
-				  l.push(o);
-				  o= {};
-			  }
 			
-			  o[f.substring(f.indexOf(']')+2)] = field.value || '';
+			  var s = f.indexOf('[');
+			
+			  if(s != -1){
+				  var i = f.charAt(s+1);
+				  
+				  if(i!=n){
+					  n = i;
+					  
+					  l.push(d);
+					  
+					  d= {};
+				  }
+				 
+				  d[f.substring(f.indexOf(']')+2)] = field.value || '';
+			  }else{
+				  o[f] = field.value || '';
+			  }
 			  
 			}); 
-			l.push(o);
+			l.push(d);
+			o["linkman"] = l;
+			
 			
 			$.ajax({
 				url:"${ctx}/organization/addorg",
 				type:"post",
-				dataType:"json",      
-	            contentType:"application/json", 
-				data:JSON.stringify(l),
+				dataType:"json",
+				contentType:'application/json;charset=UTF-8',
+				data:JSON.stringify(o),
 				success:function(data){
 					if(data != 'fail'){
 						alert("保存成功");
@@ -103,21 +221,6 @@
 			});
 		}
 		
-		$.fn.serializeObject = function(){
-			var o = {};
-			var a = this.serializeArray();
-			$.each(a , function(){
-				if(o[this.name]){
-					if(!o[this.name].push){
-						o[this.name] = [o[ths.name]];
-					}
-					o[this.name].push(this.value || '');
-				}else{
-					o[this.name] = this.value || '';
-				}
-			});
-			return o;
-		}
 		
 	
 	</script>
@@ -126,37 +229,49 @@
 
 <body> 
 <div class="c_right">
-	<div class="c_r_bt"><h1><img src="${ctx }/images/jg_tb1.png" alt="添加机构"/><span>添加机构</span></h1></div>
+	<div class="c_r_bt"><h1><img src="${ctx }/images/jg_tb1.png" alt="添加机构"/><span>修改机构</span></h1></div>
 	<div class="c_form">
 		<form action="${ctx }/organization/addOrg" id="organization_add">
-			<c:set var="orget" value="${orgList.orgedit[0] }"></c:set>
-			<input type="hidden" name="orgedit[0].id" value="${orget.id }">
+			<input type="hidden" name="id" value="${org.id }">
 			<div>
 				<span>机构类型：</span>
-				<m:select name="orgedit[0].genre" items="${dic_org }" value="${orget.genre }" cssSelect="t1" textProperty="dicVal" valueProperty="dicKey" required="true"></m:select>
-				<div class="clear"></div>
-			</div>
-			<div>
-				<span>机构编号：</span>
-				<input type="text" name="orgedit[0].number" class="t1" value="${orget.number }" required="true" type="number"/>
+				<m:select name="genre" items="${orgtype }" value="${org.genre }" cssSelect="t1" textProperty="name" valueProperty="id" required="true"></m:select>
 				<div class="clear"></div>
 			</div>
 			<div>
 				<span>机构名称：</span>
-				<input type="text" name="orgedit[0].name" class="t1" value="${orget.name }" required="true"/>
+				<input type="text" name="name" class="t1" value="${org.name }" required="true"/>
 				<div class="clear"></div>
 			</div>
 			<div>
+				<span>所属地区：</span>
+					<m:select name="provinceid" cssSelect="t2" id="p_id" params="p" value="${org.provinceid }" items="${provinces }" valueProperty="key" textProperty="value"></m:select>
+					
+					<m:select name="cityid" cssSelect="t2" id="c_id" value="${org.cityid }" params="c"></m:select>
+					<input type="hidden" name="cid"/>
+					
+					<m:select name="zoneid" cssSelect="t2" required="true" value="${org.zoneid }" id="z_id"></m:select>
+					<input type="hidden" name="zid">
+					
+					<div class="clear"></div>
+				</div>
+			<div>
 				<span>联系地址：</span>
-				<input type="text" name="orgedit[0].site" class="t1" value="${orget.site }" required="true"/>
+				<input type="text" name="site" class="t1" value="${org.site }" required="true"/>
 				<div class="clear"></div>
 			</div>
 			<div>
 				<span>邮编：</span>
-				<input type="text" name="orgedit[0].postcode" class="t1" value="${orget.postcode }"/>
+				<input type="text" name="postcode" class="t1" value="${org.postcode }"/>
 				<div class="clear"></div>
 			</div>
-			<c:forEach items="${orgList.orgedit }" varStatus="vs" var="orgedit">
+			<div>
+				<span>是否推荐：</span>
+				<span class="dx"><input type="radio" name="status" value="0" <c:if test="${org.status == 0 }">checked="checked"</c:if> />是</span>
+				<span class="dx"><input type="radio" name="status" value="1"<c:if test="${org.status == 1 }">checked="checked"</c:if>/>否</span>
+				<div class="clear"></div>
+			</div>
+			<c:forEach items="${org.linkman }" varStatus="vs" var="orgedit">
 				
 					<c:set var="i" value="${vs.index }"></c:set>
 						<c:if test="${vs.last}" var="flag">
@@ -177,7 +292,7 @@
 						</c:if>
 						<div>
 							<span>姓名：</span>
-							<input type="text" name="orgedit[${i }].linkman" class="t1" value="${orgedit.linkman }" required="true"/>
+							<input type="text" name="orgedit[${i }].name" class="t1" value="${orgedit.name }" required="true"/>
 							<div class="clear"></div>
 						</div>
 						<div>

@@ -75,7 +75,7 @@ public class NewController {
 	
 	
 	
-	private void getNewTypeList(){
+	private synchronized void getNewTypeList(){
 		if(getNewtypes() == null){
 			setNewtypes(newService.getAllNewTypeList());
 		}
@@ -91,7 +91,7 @@ public class NewController {
 	
 	
 	//导致新闻城市无法实时刷新
-	private void getSustationList(){
+	private synchronized void getSustationList(){
 		if(getSubstations() == null){
 			setSubstations(newService.getAllSubstationList());
 		}
@@ -99,7 +99,6 @@ public class NewController {
 
 	@RequestMapping(value={"/addnew","/updatenew"})
 	public @ResponseBody String addOrUpdateNew(Model model, @ModelAttribute("newinfo")NewInfo newInfo,HttpServletRequest request){
-//System.out.println(newInfo.getSubstationList());
 		if(newInfo.getSubstationList() == null)
 			return GlobalConstant.RET_FAIL;
 		

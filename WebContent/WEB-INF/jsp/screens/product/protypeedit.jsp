@@ -8,10 +8,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<%@ include file="../../commons/editPlugin.jsp" %>
+
 <%@ include file="../../commons/common.jsp" %>
 <%@ include file="../../commons/validate.jsp" %>
-
+<%@ include file="../../commons/editPlugin.jsp" %>
 </head>
 <body>
 <div class="c_right">

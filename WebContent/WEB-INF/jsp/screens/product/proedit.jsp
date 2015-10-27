@@ -8,65 +8,171 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>新越网后台管理系统_贷款产品管理_添加贷款产品</title>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
-<link href="${ctx }/css/style.css" type="text/css" rel="stylesheet" />
-<link href="${ctx }/css/jquery-ui.min.css" type="text/css" rel="stylesheet" />
-<script src="${ctx}/js/jquery-1.11.3.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="${ctx }/js/kindeditor-min.js"></script>
-<script type="text/javascript" src="${ctx }/js/zh_CN.js"></script> 
-<script type="text/javascript" src="${ctx }/js/jquery-ui.min.js"></script>
-<script type="text/javascript" src="${ctx }/js/jquery.validate.js"></script>
-<script type="text/javascript" src="${ctx }/js/jquery.metadata.js"></script>
-<script type="text/javascript" src="${ctx }/js/messages_zh.min.js"></script>
-<script type="text/javascript" src="${ctx }/js/My97DatePicker.4.8/WdatePicker.js" runat="server"></script>
+<%@ include file="../../commons/common.jsp" %>
+<%@ include file="../../commons/validate.jsp" %>
+<%@ include file="../../commons/editPlugin.jsp" %>
+<script type="text/javascript">
+function changeSelect(type,val){
+	
+	switch (type) {
+	case "p":
+		var selected = $("#p_id option:selected").val();
+		
+		$("#c_id").empty();
+		var option= $("<option/>");
+		option.attr("value","");
+		option.html("请选择");
+		$("#c_id").append(option);
+		$("#z_id").empty();
+		var option1= $("<option/>");
+		option1.attr("value","");
+		option1.html("请选择");
+		$("#z_id").append(option1);
+		
+		if(selected != 0){
+			$.ajax({
+				url:"${ctx}/city/pulldown?type=tc&id="+selected,
+				success:function(data){
+					var jsonData = eval(data);
+					for(var i=0;i<jsonData.length;i++){
+						var city=jsonData[i];
+						option= $("<option/>");
+						option.attr("value",city.key);
+						option.html(city.value);
+						$("#c_id").append(option);
+					};
+					if(val != ""){
+						$("#c_id").val(val);
+					}
+				}
+			});
+		}
+		break ;
+	case "c":
+		var selected = $("#c_id option:selected").val();
+		$("#z_id").empty();
+		var option= $("<option/>");
+		option.attr("value","");
+		option.html("请选择");
+		$("#z_id").append(option);
+		
+		if(selected != 0){
+			$.ajax({
+				url:"${ctx}/city/pulldown?type=tz&id="+selected,
+				success:function(data){
+					var jsonData = eval(data);
+					for(var i=0;i<jsonData.length;i++){
+						var zone=jsonData[i];
+						option= $("<option/>");
+						option.attr("value",zone.key);
+						option.html(zone.value);
+						$("#z_id").append(option);
+					};
+					if(val != ""){
+						$("#z_id").val(val);
+					}
+				}
+			});
+		}
+		break;
+	default:
+		break;
+	}
+}
 
-
-<script>
-	var editor;
-	KindEditor.ready(function(K) {
-		editor = K.create('textarea[name="content"]', {
-			allowFileManager : true
-		});
-		K('input[name=getHtml]').click(function(e) {
-			alert(editor.html());
-		});
-		K('input[name=isEmpty]').click(function(e) {
-			alert(editor.isEmpty());
-		});
-		K('input[name=getText]').click(function(e) {
-			alert(editor.text());
-		});
-		K('input[name=selectedHtml]').click(function(e) {
-			alert(editor.selectedHtml());
-		});
-		K('input[name=setHtml]').click(function(e) {
-			editor.html('<h3>Hello KindEditor</h3>');
-		});
-		K('input[name=setText]').click(function(e) {
-			editor.text('<h3>Hello KindEditor</h3>');
-		});
-		K('input[name=insertHtml]').click(function(e) {
-			editor.insertHtml('<strong>插入HTML</strong>');
-		});
-		K('input[name=appendHtml]').click(function(e) {
-			editor.appendHtml('<strong>添加HTML</strong>');
-		});
-		K('input[name=clear]').click(function(e) {
-			editor.html('');
-		});
+function getZones(cityData,zoneData){
+	$("#z_id").empty();
+	var option= $("<option/>");
+	option.attr("value","0");
+	option.html("请选择");
+	$("#z_id").append(option);
+	$.ajax({
+		url:"${ctx}/city/pulldown?type=tz&id="+cityData,
+		success:function(data){
+			var jsonData = eval(data);
+			for(var i=0;i<jsonData.length;i++){
+				var zone=jsonData[i];
+				option= $("<option/>");
+				option.attr("value",zone.key);
+				option.html(zone.value);
+				$("#z_id").append(option);
+			};
+			$("#z_id").val(zoneData);
+		}
 	});
+	
+}
+
+function upload(){
+	var type = "";
+	var fileVal = $("#pro_upload_file").val();
+	if(fileVal == null || fileVal == ""){
+		alert("请选择文件");
+		return;
+	}
+	if (fileVal != "") {
+		type = fileVal.split(".");
+	}
+	
+	$.ajaxFileUpload({
+		url:'${ctx}/product/upload',
+		fileElementId:'pro_upload_file',
+		secureuri:true,
+		data:{'suffix':type[1]},
+		dataType:'json',
+		type:'post',
+		success:function(data){
+		
+			if(data != 'fail'){
+				alert("上传成功");
+				$("#pro_logo_value").val(data.name);
+				$("#pro_logo").attr("src" , data.path);
+			}
+		}
+	});
+}
+
+$(function(){
+	var cval = "${pro.cid}";
+	
+	var zval = "${pro.zid}";
+	
+	if($("#p_id").val() != ""){
+		changeSelect("p",cval);
+	}
+	if (cval != "") {
+ 		getZones(cval,zval);
+	}
+});
 </script>
 </head>
 <body>
 
 <div class="c_right">
-	<div class="c_r_bt"><h1><img src="${ctx }/images/cp_tb1.png" alt="添加贷款产品"/><span>添加贷款产品</span></h1></div>
+	<div class="c_r_bt"><h1><img src="${ctx }/images/cp_tb1.png" alt="修改贷款产品"/><span>修改贷款产品</span></h1></div>
 	<div class="c_form">
 		<s:form commandName="pro" method="post" id="pro_edit_form">
+			<s:hidden path="id"/>
 			<div>
 				<span>产品名称：</span>
 				<s:input path="name" class="t1" required="true"/>
+			</div>
+			<div>
+				<span>产品图片：</span>
+				<c:choose>
+					<c:when test="${empty pro.logo }">
+						<img src="${ctx }/images/f2.jpg" id="pro_logo" class="dp_img"/>
+					</c:when>
+					<c:otherwise>
+						<img src="${showpath}pro/${pro.logo}" id="pro_logo" width="200px" height="75px"/>
+					</c:otherwise>
+				</c:choose>		
+				<s:hidden path="logo" id="pro_logo_value" required="true"/>		
+				<span class="t5" ><input type="file" name="file" id="pro_upload_file" style="border:0;required:true"/></span>
+				<input type="button" onclick="upload()" style="cursor: pointer;" class="t4" value="上传" />
+				<div class="clear"></div>
 			</div>
 			<div>
 				<span>产品分类：</span>
@@ -77,9 +183,9 @@
 			</div>
 			<div>
 				<span>所属银行：</span> 
-				<s:select path="bank.id" class="t1" required="true">
+				<s:select path="org.id" class="t1" required="true">
 					<s:option value="">请选择</s:option>
-					<s:options items="${product_bank }" itemLabel="name" itemValue="id"/>
+					<s:options items="${orginfo }" itemLabel="value" itemValue="key"/>
 				</s:select>
 			</div>
 			<div>
@@ -87,8 +193,34 @@
 				<s:input path="credit" class="t1" type="xints" required="true"/>
 			</div>
 			<div>
+				<span>月利率：</span>
+				<s:input path="interestFrom" class="t2"/><span class="dw">% &nbsp;--</span>
+				<s:input path="interestTo" class="t2"/><span class="dw">%</span>
+				<div class="clear"></div>
+			</div>
+			<div>
+				<span>贷款期限：</span>
+				<s:input path="periodFrom" class="t2"/><span class="dw">个月 &nbsp;--</span>
+				<s:input path="periodTo" class="t2"/><span class="dw">个月</span>
+				<div class="clear"></div>
+			</div>
+			<div>
 				<span>适用地区：</span>
-				<s:input path="area" class="t1" required="true"/>
+				<s:select path="provinceid" class="t2 required" id="p_id" onchange="changeSelect('p' , '')">
+					<s:option value="">选择省</s:option>
+					<s:options items="${provinces }" itemLabel="value" itemValue="key"/>
+				</s:select>
+				<s:select path="cityid" class="t2" id="c_id" onchange="changeSelect('c' , '')">
+					<s:option value="">选择市</s:option>
+				</s:select>
+				<s:select path="zoneid" class="t2" id="z_id">
+					<s:option value="">区/县</s:option>
+				</s:select>
+				<div class="clear"></div></div>
+			<div>
+				<span>是否推荐：</span>
+				<span class="dx"><s:radiobutton path="recommend" value="0"/>是 </span>
+				<span class="dx"><s:radiobutton path="recommend" checked="true" value="1"/>否 </span>
 			</div>
 			<div>
 				<span>产品基本信息：</span>
@@ -114,12 +246,17 @@
 								<tr id="pro_file${vs.count }">
 									<td colspan="3">${file.fileName }</td>
 									<td colspan="1">${file.fileType }</td>
-									<td colspan="1"><a href="javascript:void(0)" onclick="del(${vs.count} , '${file.id }')" class="del">删除</a></td>
+									<td colspan="1"><a href="javascript:void(0)" onclick="dels(${vs.count} , '${file.id }')" class="del">删除</a></td>
 								</tr>
 							</c:forEach>
 						</tbody>
 					</table>
 				</div>
+			</div>
+			<div>
+				<span>选项列表：</span>
+				<div class="t1 ys_n"><a href="javascript:show1()">选项列表设置</a></div>
+				<div class="clear"></div>
 			</div>
 			<div>
 				<span>上架时间：</span>
@@ -133,7 +270,7 @@
 			</div>
 			<div>
 				<input type="button" value="保存" class="tj_btn" onclick="save()"/>
-				<input type="button" value="删 除" class="tj_btn tj_btn2" onclick="delpro()"/>
+				<input type="button" value="返回" class="tj_btn" onclick="history.back()"/>
 			</div>
 		</s:form>
 	</div>
@@ -154,10 +291,22 @@
 	    </form>
 	</div>
 </div>
+<div id="login1">
+   <div class="login1">
+       <div class="bt"><h1>选项列表</h1><a href="javascript:hide1()"><img src="${ctx }/images/close.png" /></a><div class="clear"></div></div>
+       <div class="nr" style="margin-bottom:50px;">
+        <form action="${ctx }/product/saveOption" method="post" id="option_form">
+        	
+        </form>
+       </div>
+       <div class="btn"><a href="javascript:void(0)" onclick="saveOption()">保存</a><a href="javascript:void(0)" onclick="javascript:hide1()">取消</a></div>
+  </div>
+</div>
 <div id="over" style="min-height:1300px;"></div>
 <script type="text/javascript">
 	var login=document.getElementById("login");
 	var over=document.getElementById("over");
+	var login1=document.getElementById("login1");
 	
 	function show(){
 	   login.style.display = "block";
@@ -168,14 +317,14 @@
 	   over.style.display = "none";
 	}
 	
-	function del(node , id){
+	function dels(node , id){
 		
 		$.ajax({
 			url:'${ctx}/productFile/del',
 			type:'post',
 			contentType:'application/json',
 			dataType:'json',
-			data:id,
+			data:JSON.stringify(id),
 			success:function(data){
 				if(data!="success"){
 					alert("删除失败");
@@ -325,10 +474,12 @@
 				var data = {};
 				data["id"] = field.value;
 				datas["type"] = data;
-			}else if(field.name=="bank.id"){
+			}else if(field.name=="org.id"){
 				var data = {};
 				data["id"] = field.value;
-				datas["bank"] = data;
+				datas["org"] = data;
+			}else if(field.name=="content"){
+				datas[field.name] = editor.html();
 			}else{
 				datas[field.name] = field.value;
 			}
@@ -352,6 +503,46 @@
     		}
     	});
     }
+    
+    function show1(){
+   	 
+   	 $.ajax({
+   		 url:'${ctx}/product/editOption',
+   		 type:'post',
+   		 data:{'productid':$("#pro_id").val()},
+   		 dataType:'html',
+   		 success:function(data){
+   			 
+   			 $("#option_form").html(data);
+   			 contentCheck();
+   			 login1.style.display = "block";
+   	    	 over.style.display = "block";
+   		 }
+   	 }); 
+   }
+    
+   function hide1(){
+       login1.style.display = "none";
+       over.style.display = "none";
+   }
+    
+    
+   function saveOption(){
+   	$.ajax({
+  		 url:'${ctx}/product/saveOption',
+  		 type:'post',
+  		 data:$("#option_form").serialize(),
+  		 dataType:'json',
+  		 success:function(data){
+  			 
+  			 if(data == 'success'){
+  				 alert("保存成功");
+  			 }else{
+  				 alert("保存失败"); 
+  			 }
+  		 }
+  	 }); 		
+   }
 </script>
 </body>
 

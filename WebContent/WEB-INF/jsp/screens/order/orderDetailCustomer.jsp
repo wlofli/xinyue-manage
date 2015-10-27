@@ -232,7 +232,7 @@
 				   		$("#creditName2").val(jsonData.manager.realName);
 				   		$("#tel2").val(jsonData.manager.tel);
 				   		$("#org2").val(jsonData.manager.organization);
-				   		
+				   		$("#blank2").val(jsonData.manager.organizationName);
 			   	   }else{
 			   		   alert(jsonData.message);
 			   	   }
@@ -416,7 +416,9 @@
 	<input type="hidden" name="manageId" id="appointid2"/>
 	<div><span>信贷经理姓名：</span><input type="text" id="creditName2" name="creditName" class="t1 required"/><div class="clear"></div></div>
 	<div><span>手机号：</span><input  type="text" id="tel2" name="creditPhone" class="t1 required"/><div class="clear"></div></div>
-	<div><span>所属机构：</span><input  type="text" id="org2" name="blank" class="t1 required"/><div class="clear"></div></div>
+	<div><span>所属机构：</span><input  type="hidden" id="org2" name="blank" class="t1 required"/>
+							 <input  type="text"     id="blank2" name="blankName" class="t1 required"/>
+	<div class="clear"></div></div>
 	<div><span>获得价格(元)：</span><input type="text" name="price" class="t1 required number" /><div class="clear"></div></div>
 	
 <div class="bt"><span>推送信息确认</span></div>

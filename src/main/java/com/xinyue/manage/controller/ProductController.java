@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xinyue.authe.AutheManage;
+import com.xinyue.manage.beans.PageData;
 import com.xinyue.manage.beans.ProductInfo;
 import com.xinyue.manage.beans.SelectInfo;
 import com.xinyue.manage.model.Product;
@@ -262,12 +263,52 @@ public class ProductController {
 	 * @param req
 	 * @return
 	 */
-	@RequestMapping("/del")
-	public String del(String productid , HttpServletRequest req){
+	@RequestMapping(value = "/delPro" , method={RequestMethod.POST})
+	@ResponseBody
+	public String del(@RequestBody List<String> productid , HttpServletRequest req){
 		boolean b = pbiz.delPro(productid, AutheManage.getUsername(req));
 		if(b){
 			return "success";
 		}
 		return "fail";
+	}
+	
+	
+	/**
+	 * ywh 店铺设置 产品列表
+	 * @param model
+	 * @param pinfo
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping("/orgprolist")
+	public String orglist(Model model, ProductInfo pinfo , HttpServletRequest req){
+		
+		//权限取得
+		List<String> authList = new ArrayList<String>();
+		authList.add(GlobalConstant.PRODUCT_HELP_ADD);
+		authList.add(GlobalConstant.PRODUCT_HELP_DELETE);
+		authList.add(GlobalConstant.PRODUCT_HELP_UPDATE);
+		authList.add(GlobalConstant.PRODUCT_HELP_SHELVE);
+		authList.add(GlobalConstant.PRODUCT_HELP_UNSHELVE);
+		
+		CommonFunction cf = new CommonFunction();
+		boolean ret_auth = cf.getAuth(model,req, authList, "贷款产品列表");
+		if (!ret_auth) {
+			return "redirect:/errors/fail_authority.html";
+		}
+		//pinfo.setOrg(orgid);
+		//产品
+		PageData<Product> pdata = pbiz.findProductPageByOrgid(pinfo);
+		model.addAttribute("orgpro", pdata);
+		model.addAttribute("pinfo", pinfo);
+		//产品类型
+		model.addAttribute("product_type", ptbiz.findProductTypeList());
+		//产品状态
+		model.addAttribute("product_status", sbiz.findSelectByCode("product_status"));	
+		//标题 目的是显示标签
+		model.addAttribute("title", "product");
+		model.addAttribute("orgid", pinfo.getOrg());
+		return "screens/organization/shoppro";
 	}
 }

@@ -45,9 +45,6 @@
 				<s:hidden path="id"/>
 				<s:input path="name" class="t1" required="true"/></div>
 			<div>
-				<span>分类编号：</span>
-				<s:input path="number" class="t1" required="true" type="number"/></div>
-			<div>
 				<input type="button" value="提 交" onclick="save()" class="tj_btn tj_btn3" />
 				<input type="button" value="取消" onclick="history.back()" class="tj_btn tj_btn2" /></div>
 		</s:form>

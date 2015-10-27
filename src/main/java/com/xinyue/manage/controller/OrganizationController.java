@@ -19,16 +19,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xinyue.authe.AutheManage;
+import com.xinyue.manage.beans.EmailBean;
 import com.xinyue.manage.beans.OrganizationInfo;
 import com.xinyue.manage.beans.PageData;
+import com.xinyue.manage.beans.QuestionBean;
+import com.xinyue.manage.beans.RecommendMember;
+import com.xinyue.manage.beans.SearchCreditManager;
 import com.xinyue.manage.beans.SelectInfo;
+import com.xinyue.manage.beans.ShowAnswer;
+import com.xinyue.manage.model.Answer;
+import com.xinyue.manage.model.AuthenticationCM;
+import com.xinyue.manage.model.CreditManager;
 import com.xinyue.manage.model.Organization;
 import com.xinyue.manage.model.OrganizationType;
+import com.xinyue.manage.model.Question;
 import com.xinyue.manage.model.Select;
+import com.xinyue.manage.model.SuccessCase;
 import com.xinyue.manage.service.CityService;
+import com.xinyue.manage.service.CommonService;
+import com.xinyue.manage.service.CreditManagerService;
 import com.xinyue.manage.service.OrganizationService;
 import com.xinyue.manage.service.OrganizationTypeService;
 import com.xinyue.manage.service.SelectService;
+import com.xinyue.manage.service.SuccessCaseService;
 import com.xinyue.manage.util.CommonFunction;
 import com.xinyue.manage.util.GlobalConstant;
 
@@ -46,6 +59,12 @@ public class OrganizationController {
 	
 	@Resource
 	private SelectService sbiz;
+	
+	@Resource
+	private SuccessCaseService successCaseService;
+	
+	@Resource
+	private CreditManagerService creditManagerService;
 	
 	/**
 	 * ywh 机构禁用
@@ -238,11 +257,16 @@ public class OrganizationController {
 	 * @param orgid
 	 * @return
 	 */
-	@RequestMapping("/shop/{orgid}")
-	public String shopshow(Model model,  @PathVariable String orgid){
+	@RequestMapping("/shop")
+	public String shopshow(HttpServletRequest req , Model model, String orgid){
 		model.addAttribute("shop", orgbiz.findShop(orgid));
 		//显示图片路径
-				model.addAttribute("showpath", orgbiz.SHOW_PATH);
+		model.addAttribute("showpath", orgbiz.SHOW_PATH);
+		
+		//标题
+		model.addAttribute("title", "shop");
+		//机构id
+		model.addAttribute("orgid", orgid);
 		return "screens/organization/shopset";
 	}
 	
@@ -268,7 +292,7 @@ public class OrganizationController {
 		//机构类型
 		model.addAttribute("org_type", otbiz.findTypes());
 		//城市分站信息
-		model.addAttribute("city", orgbiz.findAll());
+		model.addAttribute("city", orgbiz.findAllStation());
 		//擅长业务
 		model.addAttribute("ptype", orgbiz.findProductTypeByList());
 		//省
@@ -300,11 +324,15 @@ public class OrganizationController {
 	 * @param orgid
 	 * @return
 	 */
-	@RequestMapping("/shopcontent/{orgid}")
-	public String shopcontent(Model model,  @PathVariable String orgid){
+	@RequestMapping("/shopcontent")
+	public String shopcontent(HttpServletRequest req , Model model, String orgid){
 		//店铺信息
 		model.addAttribute("shop", orgbiz.findShop(orgid));
+		//标题
+		model.addAttribute("title", "content");
 		
+		//机构id
+		model.addAttribute("orgid", orgid);
 		return "screens/organization/shopcontent";
 	}
 	/**
@@ -406,4 +434,240 @@ public class OrganizationController {
 		model.addAttribute("dic", dic);
 		return "screens/organization/orglist";
 	}
+	
+	
+	/**
+	 * ywh 店铺问题
+	 * @param model
+	 * @param qbean
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping("/quest")
+	public String findQuest(Model model ,  QuestionBean qbean , HttpServletRequest req){
+		//qbean.setOrgid(orgid);
+		PageData<Question> questpage = orgbiz.findOrgQuest(qbean);
+		
+		model.addAttribute("questpage", questpage);
+		// 叶签
+		model.addAttribute("title", "quest");
+		//查询条件
+		model.addAttribute("qbean", qbean);
+		//叶签
+		model.addAttribute("orgid", qbean.getOrgid());
+		return "screens/organization/shopquest";
+	}
+	
+	/**
+	 * ywh 店铺问题详情
+	 * @param model
+	 * @param qbean
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping("/quest/detail")
+	public String findQuestDetail(Model model , QuestionBean qbean , HttpServletRequest req){
+		
+		PageData<ShowAnswer> answerpage = orgbiz.findOrgAnswer(qbean.getQuestid(), qbean.getTopage());
+		model.addAttribute("answerpage", answerpage);
+		//显示问题内容
+		ShowAnswer answer = answerpage.getData().get(0);
+		model.addAttribute("answer", answer);
+		//查询条件
+		model.addAttribute("qbean", qbean);
+		//信贷经理
+		model.addAttribute("credit", orgbiz.getAllCredit());
+		//省
+		List<SelectInfo> provinces = cityService.getAllProvince();
+		model.addAttribute("provinces", provinces);
+		//用于回答
+		Answer questanswer = new Answer();
+		questanswer.setQuestid(answer.getId());
+		model.addAttribute("questanswer", questanswer);
+		return "screens/organization/shopquestxq";
+	}
+	
+	/**
+	 * ywh 添加问题
+	 * @param answer
+	 * @return
+	 */
+	@RequestMapping("/addAnswer")
+	@ResponseBody
+	public String answer(Answer answer){
+		boolean b = orgbiz.addAnswer(answer);
+		if(b){
+			return "success";
+		}else{
+			return "fail";
+		}
+		
+	}
+	
+	
+	@RequestMapping("/delQuest")
+	@ResponseBody
+	public String delQuest(HttpServletRequest req , @RequestBody List<String> questids){
+		boolean b = orgbiz.delQuest(questids, AutheManage.getUsername(req));
+		if(b){
+			return "success";
+		}
+		return "fail";
+	}
+	
+	/**
+	 * 信贷
+	 * @param model
+	 * @param sc
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping("/credit")
+	public String findCredit(Model model ,  SearchCreditManager sc , HttpServletRequest req){
+		model.addAttribute("creditpage", orgbiz.findCreditByOrgid(sc));
+		model.addAttribute("sc", sc);
+		// 星级
+		List<SelectInfo> stars = sbiz
+			.findSelectByType(GlobalConstant.STAR_LEVEL);
+		model.addAttribute("stars", stars);
+		// 省
+		List<SelectInfo> provinces = sbiz.findProvince();
+		model.addAttribute("provinces", provinces);
+		//机构id
+		model.addAttribute("orgid", sc.getOrgid());
+		
+		return "screens/organization/orgcredit";
+	}
+	
+	@RequestMapping("/email")
+	@ResponseBody
+	public String emailMember(List<String> email , String content , HttpServletRequest req){
+		List<String> erroremail = new ArrayList<String>();
+		for (String e : email) {
+			boolean result = new EmailBean().sendMail(e, "网站登录地址", content);
+			if(!result){
+				erroremail.add(e);
+			}
+		}
+		if(erroremail.size() == 0){
+			return "success";
+		}else{
+			return erroremail.toString();
+		}
+	}
+	@Resource
+	private CommonService cbiz;
+	@RequestMapping("/tel")
+	@ResponseBody
+	public String telMember(List<String> tel , String content , HttpServletRequest req){
+		List<String> errortel = new ArrayList<String>();
+		for (String t : tel) {
+			boolean result = cbiz.sendCodeByPhone(t , content);
+			if(!result){
+				errortel.add(t);
+			}
+		}
+		if(errortel.size() == 0){
+			return "success";
+		}else{
+			return errortel.toString();
+		}
+	}
+	
+	@RequestMapping("/creditdetail")
+	public String creditdetail(HttpServletRequest request,Model model,String managerid){
+			
+		//基本信息
+		CreditManager creditManager = creditManagerService.getCreditManagerById(managerid);
+		model.addAttribute("creditManager", creditManager);
+		
+		//认证信息
+		AuthenticationCM authenticationCM = creditManagerService.getAuthenticationById(managerid);
+		model.addAttribute("authenticationCM", authenticationCM);
+		
+		//图片路径
+		String showPath = CommonFunction.getValue("down.path");
+		model.addAttribute("showPath", showPath);
+		
+		
+		return "screens/organization/creditdetail";
+	}
+	
+	/**
+	 * 机构管理-店铺设置-成功案例
+	 * @param request
+	 * @param model
+	 * @param orgid 机构id
+	 * @return
+	 */
+	@RequestMapping(value="/success/case")
+	public String orgSucccessCase(HttpServletRequest request,Model model,String orgid) {
+		
+		//标题
+		model.addAttribute("title", "suc");
+		model.addAttribute("orgid", orgid);
+		
+		//列表
+		List<SuccessCase> cases = successCaseService.getSuccessCasesByOrgId(orgid,1);
+		int count = successCaseService.getSuccessCasesCountByOrgId(orgid);
+		PageData<SuccessCase> scPageData = new PageData<>(cases, count, 1);
+		model.addAttribute("scPageData", scPageData);
+		
+		return "screens/organization/shopSuccessCase";
+	}
+	
+	/**
+	 * 成功案例启用/屏蔽
+	 * @param code
+	 * @param type 0:启用;1:屏蔽
+	 * @return
+	 */
+	@RequestMapping(value="/success/case/publish",method=RequestMethod.POST)
+	public @ResponseBody boolean successCasePublish(String code,String type) {
+		
+		boolean ret = false;
+		//更新
+		ret = successCaseService.updateOrgSuccessCaseUseFlag(code,type);
+		
+		return ret;
+	}
+	
+	/**
+	 * 成功案例删除
+	 * @param code
+	 * @return
+	 */
+	@RequestMapping(value="/success/case/delete",method=RequestMethod.POST)
+	public boolean successCaseDelete(String code) {
+		boolean ret = false;
+		
+		ret = successCaseService.deleteSuccessCaseByIds(code);
+		
+		return ret;
+	}
+	
+	/**
+	 * 成功案例翻页
+	 * @param request
+	 * @param model
+	 * @param toPage
+	 * @return
+	 */
+	@RequestMapping(value="/success/case/page",method=RequestMethod.POST)
+	public String successCasePage(HttpServletRequest request,Model model,int toPage,String orgid) {
+		
+		//标题
+		model.addAttribute("title", "suc");
+		model.addAttribute("orgid", orgid);
+
+		// 列表
+		List<SuccessCase> cases = successCaseService.getSuccessCasesByOrgId(orgid, toPage);
+		int count = successCaseService.getSuccessCasesCountByOrgId(orgid);
+		PageData<SuccessCase> scPageData = new PageData<>(cases, count, toPage);
+		model.addAttribute("scPageData", scPageData);
+		
+		return "screens/organization/shopSuccessCase";
+	}
+	
+	
 }

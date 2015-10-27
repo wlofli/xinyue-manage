@@ -60,8 +60,6 @@ function cancel(){
 <div><span>审核状态：</span>
 <span class="dx1"><input name="status" checked="checked" value="2" type="radio" />审核通过</span>
 <span class="dx1"><input name="status" value="4" type="radio" />审核不通过</span><div class="clear"></div></div>
-<!-- <div><span>审核时间：</span> -->
-<!-- <input type="text" class="t1" disabled="disabled" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /><div class="clear"></div></div> -->
 <div><span>审核人员：</span>
 <input type="text" name="auditePerson" value="<%=AutheManage.getUsername(request) %>" readonly="readonly"  class="t1" />
 <div class="clear"></div></div>
@@ -91,10 +89,8 @@ function cancel(){
 	<form action="${ctx }/fund/withdraw/update" id="form" method="post">
 	<input type="hidden" name="id" value="${ob.id }" />
 	<div><span>付款状态：</span>
-<!-- 	<span class="dx1"><input type="radio" checked="checked" name="fk" />待付款</span> -->
 	<span class="dx1"><input value="3" type="radio" checked="checked" name="status" />成功付款</span><div class="clear"></div>
 	</div>
-<!-- 	<div><span>付款时间：</span><input type="text" disabled="disabled" class="t1" onclick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /><div class="clear"></div></div> -->
 	<div><span>付款人员：</span><input type="text" name="payPerson" value="<%=AutheManage.getUsername(request) %>" readonly="readonly" class="t1" /><div class="clear"></div></div>
 	<div><span>备注：</span><textarea name="payRemark" class="qxsz qxsz2" ></textarea><span class="zs">该项为必填项</span><div class="clear"></div></div>
 	<div>

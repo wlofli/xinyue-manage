@@ -41,6 +41,10 @@
 			}else{
 				param.push(node);
 			}
+			if(param.length == 0){
+				alert("请选中数据");
+				return;
+			}
 			$.ajax({
 				url:'${ctx}/organization/toenable',
 				data:JSON.stringify(param),
@@ -65,6 +69,10 @@
 				param = node;
 			}else{
 				param.push(node);
+			}
+			if(param.length == 0){
+				alert("请选中数据");
+				return;
 			}
 			$.ajax({
 				url:'${ctx}/organization/todisable',
@@ -92,6 +100,10 @@
 					id_all.push(this.value);
 				}
 			});	
+			if(id_all.length == 0){
+				alert("请选中数据");
+				return;
+			}
 			if(node == 'enable'){
 				enable(id_all , topage);
 			}else if(node == 'disable'){
@@ -146,7 +158,7 @@
 					<span>机构类型：</span>
 					<s:select path="genre" class="s1">
 						<s:option value="0">请选择</s:option>
-						<s:options items="${dic}" itemLabel="dicVal" itemValue="dicKey"/>
+						<s:options items="${dic}" itemLabel="name" itemValue="id"/>
 					</s:select>
 				</li>
 				<li>
@@ -173,7 +185,7 @@
 	</div>
 	<div class="c_table"  >
 		<div class="c_table" style="overflow-x:scroll;">
-			<table cellpadding="0" cellspacing="0">
+			<table class="table4" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
 						<td colspan="1">序号</td>
@@ -193,12 +205,12 @@
 					<c:forEach items="${org_data.data }" var="org" varStatus="vs">
 						<tr>
 							<td colspan="1">
-								<input type="checkbox" name="ck_org_all" value="${org.number }"/>
+								<input type="checkbox" name="ck_org_all" value="${org.id }"/>
 								<span><c:out value="${vs.count + (org_data.currentPage-1)*10}" /></span></td>
 							<td colspan="4">${org.name }</td>
 							<td colspan="2">${org.genre }</td>
 							<td colspan="2">${org.number }</td>
-							<td colspan="1">${org.linkman }</td>
+							<td colspan="1">${org.linkName }</td>
 							<td colspan="1">${org.sex }</td>
 							<td colspan="1">${org.position }</td>
 							<td colspan="3">${org.telphone }</td>
@@ -214,19 +226,21 @@
 								</c:choose>
 							</td>
 							<td colspan="4">
-								<a href="javascript:void(0)" onclick="document.location.href='${ctx}/organization/todetail/${org.number }'">详情</a>
+								<a href="javascript:void(0)" onclick="document.location.href='${ctx}/organization/todetail/${org.id }'">详情</a>
+								<a href="javascript:void(0)" onclick="document.location.href='${ctx}/organization/shop?orgid=${org.id}'">店铺设置</a>
 								<c:if test="${authorities.organ_update == 1}">
-								<a href="javascript:void(0)" onclick="document.location.href='${ctx}/organization/toupdate/${org.number }'">修改</a>
+								<a href="javascript:void(0)" onclick="document.location.href='${ctx}/organization/toupdate/${org.id }'">修改</a>
 								</c:if>
+								
 								<c:choose>
 									<c:when test="${org.status==0 }">
 										<c:if test="${authorities.organ_disable == 1}">
-										<a href="javascript:void(0)" onclick="disable('${org.number }',${org_data.currentPage})">屏蔽</a>
+										<a href="javascript:void(0)" onclick="disable('${org.id }',${org_data.currentPage})">屏蔽</a>
 										</c:if>
 									</c:when>
 									<c:otherwise>
 										<c:if test="${authorities.organ_enable == 1}">
-										<a href="javascript:void(0)" onclick="enable('${org.number }',${org_data.currentPage})">启用</a>
+										<a href="javascript:void(0)" onclick="enable('${org.id }',${org_data.currentPage})">启用</a>
 										</c:if>
 									</c:otherwise>
 								</c:choose>

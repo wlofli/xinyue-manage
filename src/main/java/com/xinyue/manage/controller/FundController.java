@@ -6,13 +6,10 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.websocket.Session;
 
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,7 +22,6 @@ import com.xinyue.manage.beans.SelectInfo;
 import com.xinyue.manage.model.Consumption;
 import com.xinyue.manage.model.Recharge;
 import com.xinyue.manage.model.Reward;
-import com.xinyue.manage.model.User;
 import com.xinyue.manage.model.WithdrawMoney;
 import com.xinyue.manage.service.FundService;
 import com.xinyue.manage.service.RewardService;
@@ -56,7 +52,6 @@ public class FundController {
 		List<Recharge> recharges  = fundService.getRechargesBySearch(searchReward, 
 				index * GlobalConstant.PAGE_SIZE, GlobalConstant.PAGE_SIZE);
 		int count = fundService.countRechargesBySearch(searchReward);
-//System.out.println(recharges.get(0).getRechargeAmount());
 		model.addAttribute("list", recharges);
 		Double sum  = fundService.sumRechargeAmountByCondition(null);
 		model.addAttribute("sum", sum);
@@ -82,7 +77,6 @@ public class FundController {
 	@RequestMapping("recharge/add")
 	@ResponseBody
 	public String rechargeAdd(Recharge recharge , HttpServletRequest request){
-//System.out.println(AutheManage.getUsername(request));
 		try {
 			fundService.addRecharge(recharge, AutheManage.getUsername(request));
 		} catch (Exception e) {
@@ -105,8 +99,6 @@ public class FundController {
 		List<Consumption> consumptions = fundService
 				.getConsumptionByCondition(index * GlobalConstant.PAGE_SIZE, GlobalConstant.PAGE_SIZE, searchReward);
 		model.addAttribute("list", consumptions);
-//System.out.println(consumptions.get(0).getConsumptionTime());
-		
 		Double sum = fundService.sumConsumptionByCondition(null);
 		
 		model.addAttribute("sum", sum);
@@ -134,7 +126,6 @@ public class FundController {
 	@RequestMapping("withdraw/list")
 	public String withdrawList(@ModelAttribute("search")SearchReward searchReward,
 			@RequestParam(defaultValue="0")int index, Model model, HttpServletRequest request){
-System.out.println(searchReward.getStatus());
 		CommonFunction cf = new CommonFunction();
 		//权限取得
 		List<String> authList = new ArrayList<String>();
@@ -182,7 +173,6 @@ System.out.println(searchReward.getStatus());
 	@RequestMapping("withdraw/update")
 	@ResponseBody
 	public String updateWithdraw(WithdrawMoney withdrawMoney, HttpSession session){
-System.out.println(withdrawMoney.getAuditePerson());
 		try {
 			rewardService.updateWithdraw(withdrawMoney);
 		} catch (Exception e) {
@@ -225,19 +215,13 @@ System.out.println(withdrawMoney.getAuditePerson());
 				model.addAttribute("zoneList", zoneList);
 			}
 		}
-		
-		
 		model.addAttribute("status", status);
 		model.addAttribute("source", source);
-		
 		int count = rewardService.countRewardListBycondition(searchReward);
 		CommonFunction cf = new CommonFunction();
 		PageInfo pageInfo = new PageInfo();
 		pageInfo = cf.pageList(count, index + 1);
 		model.addAttribute("page", pageInfo);
-		
-		
-		
 		return "screens/fund/rewardList";
 	}
 	

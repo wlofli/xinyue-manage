@@ -2338,7 +2338,8 @@ background : #FF7000;
 	max-height:370px;
 	overflow-y:scroll;
 	line-height:50px;
-	padding-top:10px;  }
+	padding-top:10px;
+	padding-bottom:50px;  }
 .login1 .nr table{
 	width:95%;
 	min-width:300px;
@@ -2366,7 +2367,8 @@ background : #FF7000;
 	width:90%;
 	height:50px;
 	line-height:50px; 
-	margin:0px auto; }
+	margin:0px auto;
+	overflow:hidden;}
 #login1 .login1 .nr .t_div2{
 	height:auto;
 	overflow:hidden;

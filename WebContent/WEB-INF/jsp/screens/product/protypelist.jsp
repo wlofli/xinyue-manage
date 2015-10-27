@@ -50,7 +50,7 @@
 				data:JSON.stringify(node),
 				contentType:'application/json',
 				dataType:'json',
-				url:'${ctx}/productType/enable',
+				url:'${ctx}/productType/unenable',
 				success:function(data){
 					if(data == 'success'){
 						alert("启用成功");
@@ -66,7 +66,7 @@
 				data:JSON.stringify(node),
 				contentType:'application/json',
 				dataType:'json',
-				url:'${ctx}/productType/unenable',
+				url:'${ctx}/productType/enable',
 				success:function(data){
 					if(data == 'success'){
 						alert("屏蔽成功");
@@ -118,7 +118,7 @@
 								<a href="javascript:void(0)" onclick="document.location.href='${ctx}/productType/tosecond?producttypeid=${typefirst.id }'">添加子类</a>
 								</c:if>
 								<c:choose>
-									<c:when test="${typefirst.status == '1' }">
+									<c:when test="${typefirst.status == '0' }">
 										<c:if test="${authorities.product_type_disable == 1}">
 										<a href="javascript:void(0)" onclick="enabled('${typefirst.id}' , '${typefirst.status }')">屏蔽</a>
 										</c:if>
@@ -158,7 +158,7 @@
 							<a href="javascript:void(0)" onclick="del('${typesecond.id}')" class="del">删除</a>
 							</c:if>
 									<c:choose>
-										<c:when test="${typesecond.status == '1' }">
+										<c:when test="${typesecond.status == '0' }">
 											<c:if test="${authorities.product_type_disable == 1}">
 											<a href="javascript:void(0)" onclick="enabled('${typesecond.id}' , '${typesecond.status }')">屏蔽</a>
 											</c:if>

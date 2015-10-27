@@ -14,18 +14,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xinyue.authe.AutheManage;
+import com.xinyue.manage.beans.OrderInfo;
 import com.xinyue.manage.beans.PageInfo;
 import com.xinyue.manage.beans.SelectInfo;
 import com.xinyue.manage.model.FastProduct;
+import com.xinyue.manage.model.FastProductApplicant;
+import com.xinyue.manage.model.FastProductCompany;
 import com.xinyue.manage.model.OrderAppointed;
 import com.xinyue.manage.model.OrderAuction;
 import com.xinyue.manage.model.OrderFixed;
 import com.xinyue.manage.model.OrderLowPrice;
+import com.xinyue.manage.model.OrderTrack;
 import com.xinyue.manage.service.FastProductService;
 import com.xinyue.manage.service.OrderCustomerService;
+import com.xinyue.manage.service.OrderTrackService;
 import com.xinyue.manage.service.SelectService;
 import com.xinyue.manage.util.CommonFunction;
 import com.xinyue.manage.util.GlobalConstant;
@@ -43,12 +49,16 @@ public class FastProductController {
 	@Resource
 	private SelectService selectService;
 	
+	@Resource
+	private OrderTrackService orderTrackService;
+	
 	@RequestMapping("/list")
 	public String fastProductList(Model model, @ModelAttribute("fastproduct")FastProduct fastProduct, int index){
+	
 		model.addAttribute("fastproductlist", fastProductService.getListByPage(fastProduct, index, GlobalConstant.PAGE_SIZE));
 		PageInfo pageInfo = new PageInfo();
 		CommonFunction cf = new CommonFunction();
-		
+	
 		// 分页传值
 		int countAll = fastProductService.countFastProduct(fastProduct);
 
@@ -63,13 +73,112 @@ public class FastProductController {
 	}
 	
 	
+	@RequestMapping("/list/product")
+	public String fastProductListWithProduct(Model model, @ModelAttribute("fastproduct")FastProduct fastProduct, 
+			@RequestParam(defaultValue = "0")int index){
+		
+		model.addAttribute("fastproductlist", fastProductService.getListWithProduct(fastProduct, index, GlobalConstant.PAGE_SIZE));
+		PageInfo pageInfo = new PageInfo();
+		CommonFunction cf = new CommonFunction();
+		
+		// 分页传值
+		int countAll = fastProductService.countListWithProduct(fastProduct);
+
+		pageInfo = cf.pageList(countAll, index + 1);
+		model.addAttribute("page", pageInfo);
+	
+		model.addAttribute("status", fastProductService.getStatus(GlobalConstant.ORDER_STATUS));
+		model.addAttribute("ordertype", fastProductService.getStatus(GlobalConstant.ORDER_TYPE));
+		model.addAttribute("orderstatus",fastProductService.getStatus(GlobalConstant.ORDER_GET_STATUS));
+		
+		return "screens/fastProduct/withProductList";
+	}
+	
+	@RequestMapping("track/list")
+	public String trackList(String id,  Model model){
+		FastProduct fastproduct = fastProductService.getFastProduct(id);
+		String customerId = new String();
+		String orderType = new String();
+		if(fastproduct.getOrderType() != null){
+			switch (fastproduct.getOrderType()) {
+			case GlobalConstant.ORDER_TYPE_FIXED_CHINESE:
+				OrderFixed orderFixed  = orderCustomerService.getOrderFixed(fastproduct.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				customerId = orderFixed.getId();
+				orderType = GlobalConstant.ORDER_TYPE_FIXED;
+				break;
+			case GlobalConstant.ORDER_TYPE_AUCTION_CHINESE:
+				OrderAuction orderAuction = orderCustomerService.getOrderAuction(fastproduct.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				customerId = orderAuction.getId();
+				orderType = GlobalConstant.ORDER_TYPE_AUCTION;
+				break;
+			case GlobalConstant.ORDER_TYPE_LOWPRICE_CHINESE:
+				OrderLowPrice orderLowPrice = orderCustomerService.getOrderLowPrice(fastproduct.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				customerId = orderLowPrice.getId();
+				orderType = GlobalConstant.ORDER_TYPE_LOWPRICE;
+				break;
+			case GlobalConstant.ORDER_TYPE_APPOINTED_CHINESE:
+				OrderAppointed orderAppointed = orderCustomerService.getOrderAppointed(fastproduct.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				customerId = orderAppointed.getId();
+				orderType = GlobalConstant.ORDER_TYPE_APPOINTED;
+				break;
+			default:
+				break;
+			}
+		}
+		OrderInfo info = orderTrackService.getOrderInfo(customerId, orderType);
+		//目前不需要分页展示
+		List<OrderTrack> tracklList = orderTrackService.getOrderTrackList(info.getId(), info.getType(),0 ,0);
+		model.addAttribute("order", info);
+		model.addAttribute("tracklist", tracklList);
+		return "screens/order/orderTrackList";
+	}
+	
+	
+	@RequestMapping("/product/detail")
+	public String productDetail(Model model, String id){
+		FastProduct fastProduct = fastProductService.getFastProduct(id);
+		if(fastProduct.getType().equals("2")){
+			FastProductApplicant applicant = fastProductService.getApplicant(fastProduct.getApplicantFastId());
+			FastProductCompany company  = fastProductService.getCompany(fastProduct.getCompanyFastId());
+			model.addAttribute("applicant", applicant);
+			model.addAttribute("company", company);
+		}
+		model.addAttribute("fspdt", fastProduct);
+		if(fastProduct.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_CHINESE)
+				|| fastProduct.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET_CHINESE)){
+			if (fastProduct.getOrderType() != null) {
+				switch (fastProduct.getOrderType()) {
+				case GlobalConstant.ORDER_TYPE_FIXED_CHINESE:
+					OrderFixed orderFixed  = orderCustomerService.getOrderFixed(fastProduct.getId(),GlobalConstant.FASUPRODUCT_CUSTOMER_TYPE);
+					model.addAttribute("fixed",orderFixed);
+					break;
+				case GlobalConstant.ORDER_TYPE_AUCTION_CHINESE:
+					OrderAuction orderAuction = orderCustomerService.getOrderAuction(fastProduct.getId(),GlobalConstant.FASUPRODUCT_CUSTOMER_TYPE);
+					model.addAttribute("auction", orderAuction);
+					break;
+				case GlobalConstant.ORDER_TYPE_LOWPRICE_CHINESE:
+					OrderLowPrice orderLowPrice = orderCustomerService.getOrderLowPrice(fastProduct.getId(),GlobalConstant.FASUPRODUCT_CUSTOMER_TYPE);
+					model.addAttribute("lowprice", orderLowPrice);
+					break;
+				case GlobalConstant.ORDER_TYPE_APPOINTED_CHINESE:
+					OrderAppointed orderAppointed = orderCustomerService.getOrderAppointed(fastProduct.getId(),GlobalConstant.FASUPRODUCT_CUSTOMER_TYPE);
+					model.addAttribute("appointed", orderAppointed);
+					break;
+				default:
+					break;
+				}
+			}
+			return "screens/fastProduct/withProductCustomer";
+		}
+		return "screens/fastProduct/withProductDetail";
+	}
+	
 	@RequestMapping(value={"turnupdate"})
 	public String turnFastProductEdit(Model model,String id){
 		FastProduct fastProduct = fastProductService.getFastProduct(id);
 		model.addAttribute("fspdt", fastProduct);
 		if(fastProduct.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_CHINESE) 
 				|| fastProduct.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET_CHINESE)){
-System.out.println(fastProduct.getOrderType());
 			if(fastProduct.getOrderType() != null){
 				switch (fastProduct.getOrderType()) {
 					case GlobalConstant.ORDER_TYPE_FIXED_CHINESE:
@@ -92,7 +201,7 @@ System.out.println(fastProduct.getOrderType());
 						break;
 				}
 			}
-			getOrderDetailSelectInfo(model);
+//			getOrderDetailSelectInfo(model);
 			return "screens/fastProduct/fastProductOrderEdit";
 		}else {
 			return "screens/fastProduct/fastProductEdit";
@@ -102,8 +211,6 @@ System.out.println(fastProduct.getOrderType());
 	
 	@RequestMapping(value={"update"})
 	public @ResponseBody String  updateFastProduct(@ModelAttribute("fspdt")FastProduct fastProduct,HttpServletRequest request){
-//System.out.println(fastProduct.getStatus());
-//System.out.println(fastProduct.getRemark());
 		try {
 			fastProductService.updateFastProductStatus(fastProduct,AutheManage.getUsername(request));
 		} catch (Exception e) {
@@ -146,7 +253,6 @@ System.out.println(fastProduct.getOrderType());
 	@RequestMapping("addauction")
 	public @ResponseBody String addAuction(String id,@ModelAttribute("auction")OrderAuction orderAuction, 
 			HttpServletRequest request){
-//System.out.println("in");
 		orderAuction.setType(GlobalConstant.FASUPRODUCT_CUSTOMER_TYPE);
 		orderAuction.setCreatedId(AutheManage.getUsername(request));
 		orderAuction.setModifiedId(AutheManage.getUsername(request));
@@ -219,9 +325,7 @@ System.out.println(fastProduct.getOrderType());
 	@ResponseBody
 	public String getAppointed(String orderId){
 		JSONObject json = new JSONObject();
-System.out.println(orderId);
 		OrderAppointed appointed = orderCustomerService.getOrderAppointedFromFastProduct(orderId);
-//System.out.println(appointed);
 		if(appointed != null){
 			json.accumulate("appointed", appointed);
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
@@ -235,13 +339,10 @@ System.out.println(orderId);
 	@RequestMapping("getfixed")
 	@ResponseBody
 	public String getFixed(String orderId){
-System.out.println(orderId);
 		JSONObject json = new JSONObject();
 		OrderFixed fixed = orderCustomerService.getOrderFixedFromFastProduct(orderId);
-System.out.println(fixed);
 		if(fixed != null){
 			json.accumulate("fixed", fixed);
-//			System.out.println(fixed.getCompanyType());
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_SUCCESS);
 		}else {
 			json.accumulate(GlobalConstant.RET_JSON_RESULT, GlobalConstant.RET_FAIL);

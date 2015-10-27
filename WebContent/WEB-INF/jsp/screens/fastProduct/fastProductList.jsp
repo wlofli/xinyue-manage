@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>  
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
 <%@ include file="../../commons/common.jsp"%>
@@ -157,7 +157,7 @@
 <td colspan="4">${list.company }</td>
 <td colspan="2">${list.areaProvince }${list.areaCity }${list.areaZone }</td>
 <td colspan="2">${list.receiver }</td>
-<td colspan="2"><fmt:formatDate value="${list.modifiedTime }" type="date"/></td>
+<td colspan="2"><fmt:formatDate value="${list.receiveTime }" type="date"/></td>
 <td colspan="2">${list.status }</td>
 <td colspan="2">${list.orderType }</td>
 <td colspan="2">${list.orderStatus }</td>
