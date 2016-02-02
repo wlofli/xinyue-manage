@@ -51,17 +51,18 @@
 // 					});	
 // 				}
 				
-				function pub(){
+				function pub(status){
 					var box = [];
 					$("input[name='ckbx']").each(function(){
 						if(this.checked){
 							box.push(this.value);
 						}
 					});
-					publish(box);
+					publish(box , status);
 				}
 				
-				function publish(node){
+				
+				function publish(node , status){
 					
 					if(node instanceof Array){
 						if(node.length == 0){
@@ -69,13 +70,24 @@
 						}else{
 							$.ajax({
 								type:"post",
-								url:"${ctx}/new/publishnewinfo?list="+node + "&status=0",
+								url:"${ctx}/new/publishnewinfo?list="+node + "&status="+status,
 								success:function(data){
 									if(data == "success"){
-										alert("发布成功");
+										if(status == 0){
+											alert("发布成功");
+										}else{
+											alert("下架成功");
+										}
+										
 										getList();
-									}else
-										alert("发布失败");
+									}else{
+										if(status == 0){
+											alert("发布失败");
+										}else{
+											alert("下架失败");
+										}
+									}
+										
 								}
 							});
 						}
@@ -84,17 +96,19 @@
 				
 				
 				function deleteSingle(id){
-					$.ajax({
-						type:"post",
-						url:"${ctx}/new/deletenew?id="+id,
-						success:function(data){
-							if(data == "success"){
-								alert("删除成功");
-								getList();
-							}else
-								alert("删除失败");
-						}
-					});
+					if(confirm("确认要删除数据?")){
+						$.ajax({
+							type:"post",
+							url:"${ctx}/new/deletenew?id="+id,
+							success:function(data){
+								if(data == "success"){
+									alert("删除成功");
+									getList();
+								}else
+									alert("删除失败");
+							}
+						});
+					}
 				}
 				
 				function del(){
@@ -112,17 +126,19 @@
 						if(node.length == 0){
 							alert("未选中数据");
 						}else{
-							$.ajax({
-								type:"post",
-								url:"${ctx}/new/publishnewinfo?list="+node + "&status=1",
-								success:function(data){
-									if(data == "success"){
-										alert("删除成功");
-										getList();
-									}else
-										alert("删除失败");
-								}
-							});
+							if(confirm("确认要删除数据?")){
+								$.ajax({
+									type:"post",
+									url:"${ctx}/new/publishnewinfo?list="+node + "&status=1",
+									success:function(data){
+										if(data == "success"){
+											alert("删除成功");
+											getList();
+										}else
+											alert("删除失败");
+									}
+								});
+							}
 						}
 					}
 				}
@@ -225,8 +241,11 @@
 									<c:when test="${list.status==1}">
 										已经发布
 									</c:when>
-									<c:otherwise>
+									<c:when test="${list.status == 0 }">
 										未发布
+									</c:when>
+									<c:otherwise>
+										已下架
 									</c:otherwise>
 								</c:choose>
 								</td>
@@ -242,7 +261,8 @@
 			<div class="page">
 				<ul class="btn">
 					<Li><a href="javascript:selAll()">全选</a></Li>
-					<Li><a href="javascript:pub()">发布</a></Li>
+					<Li><a href="javascript:pub(0)">发布</a></Li>
+					<Li><a href="javascript:pub(2)">下架</a></Li>
 					<Li class="del"><a href="javascript:del()">删除</a></Li>
 				</ul>
 				

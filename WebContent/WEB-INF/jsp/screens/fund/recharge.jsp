@@ -123,8 +123,8 @@
 </div>
 </div> 
 <div id="login">
-     <div class="login1">
-     <div class="bt"><h1>确定提示框</h1><a href="javascript:checkcancel()"><img src="../images/close.png" /></a><div class="clear"></div></div>
+     <div class="login1" style="height:auto; min-height:200px;">
+     <div class="bt"><h1>确定提示框</h1><a href="javascript:checkcancel()"><img src="${ctx }/images/close.png" /></a><div class="clear"></div></div>
      <div class="nr">
      <p>&nbsp;&nbsp;&nbsp;&nbsp;您确定充值 <strong id="amount"> 200 </strong> 元到手机号为 <strong id="phone"> 135XXXXX </strong> 的 <strong id="name"> XXX </strong> 信贷经理账户吗？</p>
      </div>

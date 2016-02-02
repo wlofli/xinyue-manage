@@ -10,7 +10,7 @@
 <body>
 <div class="c_right">
 	<div class="c_r_bt">
-		<h1><img src="../images/qy_tb1.png" alt="企业信息列表"/><span>企业信息列表</span></h1>
+		<h1><img src="${ctx }/images/qy_tb1.png" alt="企业信息列表"/><span>企业信息列表</span></h1>
 		<c:if test="${authorities.company_export == 1}">
 		<a href="${ctx}/company/export">企业资料导出</a>
 		</c:if>
@@ -557,7 +557,7 @@ function useOrForbid(tab,id,choose){
 
 function scanDetail(tab,id){
 	var code = chooseItem(tab, id);
-	document.location.href = "${ctx}/company/scan/detail?code="+code;
+	document.location.href = "${ctx}/company/scan/detail?topage=0&code="+code;
 }
 
 function editDetail(tab,id){

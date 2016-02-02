@@ -257,7 +257,8 @@ public class OrderController {
 		model.addAttribute("businessList", businesseList);
 		
 		List<Document> documentList = new ArrayList<Document>();
-		documentList = orderService.getDocumentInfoById(order.getId());
+		//ywh modify 2015-12-18
+		documentList = orderService.getDocumentInfoById(order.getMemberId());
 		model.addAttribute("documentList", documentList);
 
 				
@@ -270,7 +271,9 @@ public class OrderController {
 				
 		Control control = companyInfoService.getControlInfoById(order.getControlInfo());
 		model.addAttribute("controlinfo", control);
-		
+		//ywh modify 2015-12-18
+		model.addAttribute("ss", "page");
+		model.addAttribute("showpath", CommonFunction.getValue("down.path"));
 		return "screens/companyInfo/companyDetail";
 	}
 	
@@ -280,7 +283,7 @@ public class OrderController {
 		Order order = orderService.getOrder(id);
 		String customerId = new String();
 		String orderType = new String();
-		if(order.getOrderType() != null){
+		if(!GlobalConstant.isNull(order)&&order.getOrderType() != null){//modify ywh 2015-12-28
 			switch (order.getOrderType()) {
 			case GlobalConstant.ORDER_TYPE_FIXED_CHINESE:
 				OrderFixed orderFixed  = orderCustomerService.getOrderFixed(order.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
@@ -307,10 +310,12 @@ public class OrderController {
 			}
 		}
 		OrderInfo info = orderTrackService.getOrderInfo(customerId, orderType);
-		//目前不需要分页展示
-		List<OrderTrack> tracklList = orderTrackService.getOrderTrackList(info.getId(), info.getType(),0 ,0);
-		model.addAttribute("order", info);
-		model.addAttribute("tracklist", tracklList);
+		//目前不需要分页展示 //ywh modify 2015-12-18
+		if(!GlobalConstant.isNull(info)){
+			List<OrderTrack> tracklList = orderTrackService.getOrderTrackList(info.getId(), info.getType(),0 ,0);
+			model.addAttribute("order", info);
+			model.addAttribute("tracklist", tracklList);
+		}
 		return "screens/order/orderTrackList";
 	}
 	

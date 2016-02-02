@@ -52,9 +52,7 @@ function comparPsw(type){
 	}
 }
 function updatePsw(){
-	if (falg) {
 		$("#pswForm").submit();
-	}
 }
 function goBack(){
 	document.location.href = "${ctx}/welcome";
@@ -65,26 +63,30 @@ function goBack(){
 <div class="c_right">
 	<div class="c_r_bt"><h1><img src="${ctx}/images/qx_tb1.png" alt="修改密码"/><span>修改密码</span></h1></div>
 	<div class="c_form">
-		<sf:form action="${ctx}/user/changepsw" commandName="passwordInfo" method="post" id="pswForm">
+		<form action="${ctx}/updatepsw"  method="post" id="pswForm">
 			<div>
 				<span>原始密码:</span>
-				<sf:password path="oldPsw" class="t1" id="old_P"/><div class="clear"></div>
-				<sf:hidden path="userName" id="user_N"/>
+				<input type="password" name="oldpwd" class="t1" id="old_P"/><div class="clear"></div>
+			
 			</div>
 			<div>
 				<span>新密码:</span>
-				<sf:password path="newPsw" class="t1" id="new_P" onblur="comparPsw(1)"/><div class="clear"></div>
+				<input type="password" name="newpwd" class="t1" id="new_P"/><div class="clear"></div>
 			</div>
 			<div>
 				<span>确认密码:</span>
-				<sf:password path="confirmPsw" class="t1" id="con_P" onblur="comparPsw(2)"/><div class="clear"></div>
+				<input type="password" name="newpwd2" class="t1" id="con_P"/><div class="clear"></div>
+			</div>
+			<div>
+				<span>${errmsg }</span>
+			
 			</div>
 			<div>
 				<input type="button" class="tj_btn" value="修改" onclick="updatePsw()"/>
 				<input type="button" class="tj_btn" value="返回" onclick="goBack()"/>
 				<div class="clear"></div>
 			</div>
-		</sf:form>
+		</form>
 	</div>
 </div> 
 </body>

@@ -96,6 +96,10 @@ function forPublish(type){
 			pubCode = pubCode + $("#hid_code_"+i).val() + "~";
 		}
 	}
+	if(pubCode == ''){
+		alert("未选中数据");
+		return ;
+	}
 	pubCode = encodeURI(encodeURI(pubCode));
 	
 	$.ajax({
@@ -120,17 +124,23 @@ function delhelper(id){
 			}
 		}
 	}else{
-		delCode = $("#hid_"+id).val();
+		delCode = $("#hid_code_"+id).val();
 	}
 	
+	if(delCode == ''){
+		alert("未选中数据");
+		return ;
+	}
 	delCode = encodeURI(encodeURI(delCode));
-	$.ajax({
-		url:"${ctx}/help/delete?code="+delCode,
-		success:function(data){
-			alert("删除成功");
-			document.location.href="${ctx}/help/list?index=${page.nowPage-1}";
-		}
-	});
+	if(confirm("确认要删除数据?")){
+		$.ajax({
+			url:"${ctx}/help/delete?code="+delCode,
+			success:function(data){
+				alert("删除成功");
+				document.location.href="${ctx}/help/list?index=${page.nowPage-1}";
+			}
+		});
+	}
 }
 function changePage(page){
 	var index = page - 1;

@@ -53,7 +53,9 @@ import com.xinyue.manage.service.CompanyInfoService;
 import com.xinyue.manage.service.SelectService;
 import com.xinyue.manage.util.CommonFunction;
 import com.xinyue.manage.util.GlobalConstant;
-
+/**
+ * modify 2015-11-30 ywh scanDetail
+ */
 @Controller
 @RequestMapping("/company")
 public class CompanyInfoController {
@@ -180,8 +182,11 @@ public class CompanyInfoController {
 		return ret;
 	}
 	
+	/**
+	 * modify :ywh 2015-11-30 添加分页
+	 */
 	@RequestMapping("/scan/detail")
-	public String scanDetail(Model model,String code) {
+	public String scanDetail(Model model,String code , int topage) {
 		
 		try {
 			code = URLDecoder.decode(code,"UTF-8");
@@ -197,7 +202,8 @@ public class CompanyInfoController {
 		if (companyDetail.containsKey("applicant_id")) {
 			applicant = companyInfoService.getApplicantInfoById(companyDetail.get("applicant_id"));
 		}
-		model.addAttribute("applicationInfo", applicant);
+		//ywh modify 2015-12-18 
+		model.addAttribute("applicantInfo", applicant);
 		
 		//企业基本信息
 		CompanyBase companyBase = null;
@@ -212,12 +218,14 @@ public class CompanyInfoController {
 		List<Business> businessList = null;
 		//上传资料信息
 		List<Document> documentList = new ArrayList<Document>();
+		int total = 0;
 		if (companyDetail.containsKey("member_id")) {
 			holdList = companyInfoService.getHoldInfoById(companyDetail.get("member_id"));
 			
 			businessList = companyInfoService.getBusinessInfoById(companyDetail.get("member_id"));
 			
-			documentList = companyInfoService.getDocumentInfoById(companyDetail.get("member_id"),0);
+			documentList = companyInfoService.getDocumentInfoById(companyDetail.get("member_id"),topage*10);
+			total = companyInfoService.getDocumentCount();
 		}
 		if (holdList == null || holdList.size() == 0) {
 			holdList = new ArrayList<Hold>();
@@ -231,12 +239,13 @@ public class CompanyInfoController {
 		}
 		model.addAttribute("holdList", holdList);
 		model.addAttribute("businessList", businessList);
-		model.addAttribute("documentList", documentList);
+		PageData<Document> dc = new PageData<Document>(documentList, total, topage+1);
+		model.addAttribute("documentList", dc);
 		
 		//公司治理信息
 		Control control = null;
 		if (companyBase != null) {
-			control = companyInfoService.getControlInfoById(companyBase.getControlInfo());
+			control = companyInfoService.getControlInfoById(companyDetail.get("control_id"));
 		}
 		model.addAttribute("controlinfo", control);
 		
@@ -252,7 +261,7 @@ public class CompanyInfoController {
 			debt = companyInfoService.getDebtInfoById(companyDetail.get("debt_id"));
 		}
 		model.addAttribute("debtInfo", debt);
-		
+		model.addAttribute("showpath", CommonFunction.getValue("down.path"));
 //		//评价信息
 //		Rating rating = new Rating();
 //		if (companyDetail.containsKey("rating_id")) {
@@ -260,7 +269,7 @@ public class CompanyInfoController {
 //		}
 //		model.addAttribute("ratingInfo", rating);
 		
-		
+		model.addAttribute("code", code);
 		
 		
 		return "screens/companyInfo/companyDetail";

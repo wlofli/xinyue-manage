@@ -79,7 +79,7 @@
 					</s:select>
 				</li>
 				<li>
-					<input type="button" class="s_btn" onclick="search()" value="开始检索"/>
+					<input type="button" class="s_btn" onclick="changePage('' , 0)" value="开始检索"/>
 				</li>
 			</ul>
 		</s:form>
@@ -156,7 +156,7 @@
 			<Li><a href="javascript:void(0)" onclick="options(1)">屏蔽</a></Li>
 			</c:if>
 			<c:if test="${authorities.member_delete == 1}">
-			<Li class="del"><a href="javascript:void(0)" onclick="dels()">删除</a></Li>
+			<Li class="del"><a href="javascript:void(0)" onclick="del('-99')">删除</a></Li>
 			</c:if>
 		</ul>
 		<m:page url="${ctx }/member/list" pageData="${memberpage }"></m:page>
@@ -164,12 +164,8 @@
 </div> 
 <script type="text/javascript">
 	
-	function changePage(url ,page){
-		$("#topage").val(page);
-		search();
-	}
 	
-	function search(){
+	function changePage(url , page){
 		
 		if($("#member_type").val() == ""){
 			$("#member_form").attr("action" , "${ctx }/member/list");
@@ -188,7 +184,7 @@
 		}else if($("#member_type").val() == "7"){
 			$("#member_form").attr("action" , "${ctx }/member/glist");
 		}
-		
+		$("#topage").val(page);
 		$("#member_form").submit();
 	}
 	
@@ -208,13 +204,22 @@
 	
 	function del(node){
 		var param = [];
-		param.push(node);
-		optiondel(param);
-	}
-	function optiondel(param){
+		if(node != '-99'){
+			param.push(node);
+		}else{
+			$("input[name='ck_member_all']").each(function(){
+				if(this.checked){
+					param.push(this.value);
+				}
+			});
+		}
+		if(param.length == 0){
+			alert("未选中");
+			return;
+		}
 		if(confirm("确认删除?")){
 			$.ajax({
-				url:'${ctx}/member/delmember',
+				url:'${ctx}/member/delMember',
 				data:JSON.stringify(param),
 				contentType:'application/json',
 				dataType:'json',
@@ -222,7 +227,7 @@
 				success:function(data){
 					if(data=='success'){
 						alert("删除成功");
-						search();
+						changePage('' , 0);
 					}else{
 						alert("删除失败");
 					}
@@ -230,19 +235,7 @@
 			});
 		}
 	}
-	function dels(){
-		var param = [];
-		$("input[name='ck_member_all']").each(function(){
-			if(this.checked){
-				param.push(this.value);
-			}
-		});
-		if(param.length == 0){
-			alert("未选中");
-			return;
-		}
-		optiondel(param);
-	}
+	
 	
 	function options(node){
 		var param = [];
@@ -282,7 +275,7 @@
 				success:function(data){
 					if(data == "success"){
 						alert("启用成功");
-						search();
+						changePage('' , '${memberpage.currentPage}');
 					}else{
 						alert("启用失败");
 					}
@@ -302,7 +295,7 @@
 				success:function(data){
 					if(data == "success"){
 						alert("屏蔽成功");
-						search();
+						changePage('' , '${memberpage.currentPage}');
 					}else{
 						alert("屏蔽失败");
 					}

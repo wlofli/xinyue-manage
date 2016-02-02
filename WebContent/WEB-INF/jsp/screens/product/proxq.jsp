@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>新越网后台管理系统_贷款产品管理_贷款产品详情</title>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <%@ include file="../../commons/common.jsp" %>
 <%@ include file="../../commons/editPlugin.jsp" %>
@@ -57,7 +57,7 @@
 <body>
 
 <div class="c_right">
-	<div class="c_r_bt"><h1><img src="${ctx }/images/cp_tb1.png" alt="添加贷款产品"/><span>添加贷款产品</span></h1></div>
+	<div class="c_r_bt"><h1><img src="${ctx }/images/cp_tb1.png" alt="贷款产品详情"/><span>贷款产品详情</span></h1></div>
 	<div class="c_form">
 		<s:form commandName="pro">
 			<s:hidden path="id" id="pro_id"/>
@@ -82,8 +82,13 @@
 				<div class="clear"></div>
 			</div>
 			<div>
-				<span>贷款最高额度：</span>
+				<span>贷款最高额度(万元)：</span>
 				<span class="dw">${pro.credit}</span>
+				<div class="clear"></div>
+			</div>
+			<div>
+				<span>周期(月)：</span>
+				<span class="dw">${pro.periodFrom}-${pro.periodTo }</span>
 				<div class="clear"></div>
 			</div>
 			<div>
@@ -142,7 +147,7 @@
 			
 			<div>
 				<span>推荐产品：</span>
-				<span class="dw"><c:if test="${pro.recommend }" var="flag">是</c:if><c:if test="${not flag }">否</c:if> </span>
+				<span class="dw"><c:if test="${pro.recommend==0 }" var="flag">是</c:if><c:if test="${not flag }">否</c:if> </span>
 				<div class="clear"></div>
 			</div>
 			<div>
@@ -244,21 +249,21 @@
 	var over=document.getElementById("over");
 	 
 	function show(){
-    	 
-    	 $.ajax({
-    		 url:'${ctx}/product/editOption',
-    		 type:'post',
-    		 data:{'productid':$("#pro_id").val()},
-    		 dataType:'html',
-    		 success:function(data){
-    			 
-    			 $("#option_form").html(data);
-    			 contentCheck();
-    			 login.style.display = "block";
-    	    	 over.style.display = "block";
-    		 }
-    	 }); 
-    }
+	   	
+	   	 $.ajax({
+	   		 url:'${ctx}/product/editOption',
+	   		 type:'post',
+	   		 data:{'productid':$("#pro_id").val()},
+	   		 dataType:'html',
+	   		 success:function(data){
+	   			 
+	   			 $("#option_form").html(data);
+	   			 contentCheck();
+	   			 login.style.display = "block";
+	   	    	 over.style.display = "block";
+	   		 }
+	   	 }); 
+	   }
      
     function hide(){
         login.style.display = "none";
@@ -284,20 +289,23 @@
     }
     
     function del(node){
-    	$.ajax({
-      		 url:'${ctx}/product/delPro',
-      		 type:'post',
-      		 data:JSON.Stringify(node),
-      		 contentType:'application/json',
-      		 dataType:'json',
-      		 success:function(data){
-      			 
-      			 if(data == 'success'){
-      				 alert("保存成功");
-      			 }else{
-      				 alert("保存失败"); 
-      			 }
-      		 }
+    	if(confirm("确认要删除?")){
+    		$.ajax({
+         		 url:'${ctx}/product/delPro',
+         		 type:'post',
+         		 data:JSON.Stringify(node),
+         		 contentType:'application/json',
+         		 dataType:'json',
+         		 success:function(data){
+         			 
+         			 if(data == 'success'){
+         				 alert("保存成功");
+         			 }else{
+         				 alert("保存失败"); 
+         			 }
+         		 }
+       		});
+    	}
     }
 </script>
 </body>

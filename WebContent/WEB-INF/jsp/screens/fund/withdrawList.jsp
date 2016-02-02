@@ -11,7 +11,7 @@
 </head>
 <script type="text/javascript">
 function search(){
-	$("#status").val("");
+	//$("#status").val("");
 	$("#searchForm").submit();
 }
 
@@ -25,6 +25,7 @@ function chagngSort(){
 	$("#searchForm").submit();
 }
 
+
 function tab_item(n){
 	$("#status").val(n);
 // 	alert($("#status").val());
@@ -34,7 +35,7 @@ function tab_item(n){
 </script>
 <body> 
 <div class="c_right">
-<div class="c_r_bt"><h1><img src="../images/qy_tb1.png" alt="提现管理"/>
+<div class="c_r_bt"><h1><img src="${ctx }/images/qy_tb1.png" alt="提现管理"/>
 <span>提现管理</span></h1><span class="hj">- 共有<strong>${allCount }</strong>条提现记录</span></div>
 <div class="c_r_bt1">
 <ul class="menu1" id="menu">

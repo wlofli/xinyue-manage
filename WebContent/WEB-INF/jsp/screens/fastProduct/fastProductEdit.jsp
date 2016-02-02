@@ -40,7 +40,7 @@
 <a href="javascript:getList()">返回</a></div>
 <div class="c_form">
 <div><span>快速申贷订单号：</span><span class="dw"><strong>${fspdt.code }</strong></span><div class="clear"></div></div>
-<div><span>订单提交时间：</span><span class="dw"><fmt:formatDate value="${fspdt.createdTime}" type="both" pattern="yyyy-MM-dd h:m"/></span><div class="clear"></div></div>
+<div><span>订单提交时间：</span><span class="dw"><fmt:formatDate value="${fspdt.createdTime}" type="both" pattern="yyyy-MM-dd H:m"/></span><div class="clear"></div></div>
 <div><span>企业名称：</span><span class="dw">${fspdt.company }</span><div class="clear"></div>
 <span><a href="#undone:需要金辉那边完成再议">企业申请资料</a></span></div>
 <div><span>所在地区：</span><span class="dw">${fspdt.areaProvince }${fspdt.areaCity }${fspdt.areaZone }</span><div class="clear"></div></div>
@@ -52,7 +52,7 @@
 <sf:hidden path="id"/>
 <c:choose>
 <c:when test="${fspdt.status == '新订单' || fspdt.status =='新越网审核中' }">
-	<div><span>审核时间：</span><input type="text" class="t1" readonly="readonly" value="<fmt:formatDate value="${fspdt.taxAuditeTime }" type="both" pattern="yyyy-MM-dd h:m"/>" /><div class="clear"></div></div>
+	<div><span>审核时间：</span><input type="text" class="t1" readonly="readonly" value="<fmt:formatDate value="${fspdt.taxAuditeTime }" type="both" pattern="yyyy-MM-dd H:m"/>" /><div class="clear"></div></div>
 	<div><span>审核人员：</span><input type="text" class="t1" value="<%=AutheManage.getUsername(request) %>" name="taxAuditePerson" readonly="readonly"/><div class="clear"></div></div>
 	<div><span>审核结果：</span><span class=" dx1"><input type="radio" name="status"  value="3"/>审核通过</span>
 							 <span class=" dx1"><input type="radio" name="status" checked="checked"  value="2"/>审核中</span>
@@ -67,8 +67,8 @@
 		<c:if test="${fspdt.taxAuditeStatus == 1 }">审核通过</c:if>
 		<c:if test="${fspdt.taxAuditeStatus == 0 }">审核不通过</c:if></span><div class="clear"></div></div>
 	<div><span>新越网备注：</span><span class="dx2">${fspdt.taxAuditeRemark }</span>
-		<c:if test="${order.status == '机构审核中' }">
-		<span><a href="${ctx }/fastproduct/track/list?id=${order.id}">订单跟踪记录</a></span>
+		<c:if test="${fspdt.status == '机构审核中' }">
+		<span><a href="${ctx }/fastproduct/track/list?id=${fspdt.id}">订单跟踪记录</a></span>
 		</c:if>
 	<div class="clear"></div></div>
 	<div><span>银行审核时间：</span><fmt:formatDate value="${fspdt.blankAuditeTime}" type="date"/><div class="clear"></div></div>
@@ -87,7 +87,7 @@
 		<c:if test="${fspdt.taxAuditeStatus == 0 }">审核不通过</c:if>
 	</span><div class="clear"></div></div>
 	<div><span>新越网备注：</span><span class="dx2">${fspdt.taxAuditeRemark }</span>
-		<span><a href="${ctx }/fastproduct/track/list?id=${order.id}">订单跟踪记录</a></span>
+		<span><a href="${ctx }/fastproduct/track/list?id=${fspdt.id}">订单跟踪记录</a></span>
 	<div class="clear"></div></div>
 	<div><span>机构审核时间：</span><span class="dx2"><fmt:formatDate value="${fspdt.blankAuditeTime }" type="date"/></span><div class="clear"></div></div>
 	<div><span>机构审核人员：</span><span class="dx2">${fspdt.blankAuditePerson }</span><div class="clear"></div></div>
@@ -116,7 +116,7 @@
 <div><span>获客信贷经理：</span><span class="dx2">${fspdt.receiver }</span><div class="clear"></div></div>
 <div><span>信贷经理手机号：</span><span class="dx2">${fspdt.receiverPhone }</span><div class="clear"></div></div>
 <div><span>新越网备注：</span><span class="dx2">${fspdt.taxAuditeRemark }</span>
-	<span><a href="${ctx }/fastproduct/track/list?id=${order.id}">订单跟踪记录</a></span>
+	<span><a href="${ctx }/fastproduct/track/list?id=${fspdt.id}">订单跟踪记录</a></span>
 <div class="clear"></div></div>
 <div><span>机构审核时间：</span><span class="dx2"><fmt:formatDate value="${fspdt.blankAuditeTime }" type="date"/></span><div class="clear"></div></div>
 <div><span>机构审核人员：</span><span class="dx2">${fspdt.blankAuditePerson }</span><div class="clear"></div></div>

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.xinyue.authe.AutheManage;
 import com.xinyue.manage.beans.AnswerTypeBean;
 import com.xinyue.manage.beans.PageData;
 import com.xinyue.manage.model.AnswerType;
@@ -61,7 +62,7 @@ public class AnswerTypeController {
 	public String delAnswerType(HttpServletRequest req , Model model , String atid){
 		
 		try {
-			abiz.delAnswertype(atid);
+			abiz.delAnswertype(atid , String.valueOf(AutheManage.getUser(req).getUid()));
 			return "success";
 		} catch (Exception e) {
 			// TODO: handle exception

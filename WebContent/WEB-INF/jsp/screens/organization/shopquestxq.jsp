@@ -10,6 +10,7 @@
 <title>新越网后台管理系统_问题详情</title>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%@ include file="../../commons/common.jsp"%>
+<%@ include file="../../commons/validate.jsp" %>
 </head>
 <body>
 	<div class="c_right">
@@ -22,7 +23,7 @@
 		<div class="c_wtxq_bt">
 			<p class="bt">问题：${answer.title }</p>
 			<p class="nr">
-				<span>提问者：<strong><c:if test="${empty answer.mqcreateName }" var="flag">匿名</c:if><c:if test="${not flag }">${answer.mqcreateName }</c:if> </strong></span>
+				<span>提问者：<strong><c:if test="${answer.qtype eq 'g' or answer.qtype eq 'm' }" var="mq">${answer.mqcreateName }</c:if><c:if test="${not mq }">匿名</c:if></strong></span>
 				<span>问题分类：<strong>${answer.questTypeName }</strong></span>
 				<span>机构名称：<strong>${answer.oname }</strong></span>
 				<span>提问时间：<strong>${answer.qtime }</strong></span>
@@ -34,9 +35,9 @@
 		<c:if test="${not empty answer.atime }">
 			<c:forEach items="${answerpage.data }" var="quest" varStatus="vs">
 				<div class="c_wtxq_nr">
-					<p class="bt">回答${vs.count+1 }：${quest.acontent }。</p>
+					<p class="bt">回答${vs.count }：${quest.acontent }。</p>
 					<p class="nr">
-						<span>回答者：<strong><c:if test="${quest.atype eq 'm' }">mcreateName</c:if><c:if test="${quest.atype eq 'c' }">ccreateName</c:if></strong></span>
+						<span>回答者：<strong><c:choose><c:when test="${quest.atype eq 'm' or quest.atype eq 'c'}">${quest.answerName }</c:when><c:otherwise>匿名</c:otherwise> </c:choose></strong></span>
 						<span>服务地区：<strong>${quest.address }</strong></span>
 						<span>回答时间：<strong>${quest.atime }</strong></span>
 					</p>
@@ -50,7 +51,7 @@
 
 	</div>
 
-	<div id="login2">
+	<div id="login2" style="width:590px;">
 		<div class="login1">
 			<div class="bt">
 				<h1>我要回答</h1>
@@ -62,24 +63,25 @@
 					<s:hidden path="questid"/>
 					<p class="t_div1">
 						<span>信贷经理：</span>
-						<s:select path="createid" class="t1">
+						<s:select path="createid" cssClass="t1 required">
 							<s:option value="">请选择</s:option>
 							<s:options items="${credit }" itemLabel="dicVal" itemValue="dicKey"/>
 						</s:select>
 					</p>
 					<p class="t_div">
 						<span>所属地区：</span>
-						<s:select path="provinceid" class="t2" onchange="changeSelect()" id="p_id">
+						<s:select path="provinceid" cssClass="t2" onchange="changeSelect()" id="p_id">
 							<s:option value="">选择省</s:option>
 							<s:options items="${provinces }" itemLabel="value" itemValue="key"/>
 						</s:select>
-						<s:select path="cityid" class="t2 required" id="c_id" >
+						<s:select path="cityid" cssClass="t2 required" id="c_id" >
 							<s:option value="">选择市</s:option>
 						</s:select>
+						
 					</p>
 					<p class="t_div1">
 						<span>我要回答：</span>
-						<s:textarea path="acontent" class="te1"/>
+						<s:textarea path="acontent" cssClass="te1 required"/>
 					</p>
 				</s:form>
 			</div>
@@ -144,6 +146,11 @@
 				});
 			}
 		}
+		
+		function changePage(url , topage){
+			document.location.href='${ctx}/organization/quest/detail?questid=${questanswer.questid }&orgid=${orgid}&topage='+topage;
+		}
+		
 	</script>
 </body>
 </html>

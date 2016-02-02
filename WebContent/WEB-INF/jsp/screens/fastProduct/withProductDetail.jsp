@@ -140,7 +140,7 @@
 	<c:if test="${fspdt.taxAuditeStatus == 0 }">审核不通过</c:if>
 </span><div class="clear"></div></div>
 <div><span>获客时间：</span><span class="dx2"><fmt:formatDate value="${fspdt.receiveTime }" type="date"/></span><div class="clear"></div></div>
-<div><span>获客信贷经理：</span><span class="dx2">${fspdt.receiver }</span><div class="clear"></div></div>
+<div><span>获客信贷经理：</span><span class="dx2">${fspdt.receiver }</span><span><a href="${ctx }/fastproduct/track/list?id=${fspdt.id}&type=2">订单跟踪记录</a></span><div class="clear"></div></div>
 <div><span>信贷经理手机号：</span><span class="dx2">${fspdt.receiverPhone }</span><div class="clear"></div></div>
 <div><span>新越网备注：</span><span class="dx2">${fspdt.taxAuditeRemark }</span><div class="clear"></div></div>
 <div><span>机构审核时间：</span><span class="dx2"><fmt:formatDate value="${fspdt.blankAuditeTime }" type="date"/></span><div class="clear"></div></div>

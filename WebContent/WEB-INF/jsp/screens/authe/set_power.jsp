@@ -6,8 +6,8 @@
 <title>新越网后台管理系统_权限管理</title>
 <link href="../css/style.css" type="text/css" rel="stylesheet" />
 <%@ include file="../../commons/common.jsp" %>
-<link type="text/css" rel="stylesheet" href="${ctx}/css/ui.jqgrid.css">
- <link rel="stylesheet" href="${ctx}/css/jquery-ui.min.css">
+<link type="text/css" rel="stylesheet" href="${ctx}/css/ui.jqgrid.css"/>
+ <link rel="stylesheet" href="${ctx}/css/jquery-ui.min.css"/>
  <script src="${ctx}/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="${ctx}/js/grid.locale-cn.js"></script>
 <script type="text/javascript" src="${ctx}/js/jquery.jqGrid.min.js"></script>
@@ -45,20 +45,23 @@
   </tr>
   <tr>
     <td height="88" align="right">权限设置：</td>
-    <td><input name="gid" type="checkbox" value="1"/>权限管理　　
-    <input name="gid" type="checkbox" value="2"/>会员管理　　
-    <input name="gid" type="checkbox" value="3"/>企业信息管理<br />
-      <input name="gid" type="checkbox" value="4"/>企业实名认证
-      <input name="gid" type="checkbox" value="5"/>贷款产品管理
-      <input name="gid" type="checkbox" value="6"/>机构管理<br />
-      <input name="gid" type="checkbox" value="7"/>
-      新闻管理　　
-      <input name="gid" type="checkbox" value="8"/>帮助中心管理
-      <input name="gid" type="checkbox" value="9"/>城市分站管理<br />
-      <input name="gid" type="checkbox" value="10"/>
-      广告位管理　
-      <input name="gid" type="checkbox" value="11"/>友情链接管理
-      <input name="gid" type="checkbox" value="12"/>合作机构管理</td>
+    <td><input name="gid" type="checkbox" value="1"/>权限管理
+<input name="gid" type="checkbox" value="2"/>会员管理
+<input name="gid" type="checkbox" value="3"/>企业信息管理<br/>
+<input name="gid" type="checkbox" value="4"/>企业实名认证管理
+<input name="gid" type="checkbox" value="5"/>贷款产品管理
+<input name="gid" type="checkbox" value="6"/>机构管理<br/>
+<input name="gid" type="checkbox" value="7"/>新闻管理
+<input name="gid" type="checkbox" value="8"/>帮助中心管理
+<input name="gid" type="checkbox" value="9"/>城市分站管理<br/>
+<input name="gid" type="checkbox" value="10"/>广告位管理
+
+<input name="gid" type="checkbox" value="20"/>贷款订单管理
+<input name="gid" type="checkbox" value="21"/>信贷经理管理<br/>
+<input name="gid" type="checkbox" value="22"/>资金管理
+<input name="gid" type="checkbox" value="23"/>问答管理
+<input name="gid" type="checkbox" value="24"/>会员推广管理<br/>
+<input name="gid" type="checkbox" value="11"/>友情链接管理&合作机构管理</td>
   </tr>
   <tr>
     <td height="78" align="right">贷款订单管理：</td>
@@ -123,6 +126,13 @@ function deladmin(id){
    				function(data){
    				if (data.result=="true"){
    					jQuery("#list").trigger("reloadGrid");
+   					//ywh start
+   					alert("删除成功");
+   					//ywh over
+				}else{
+					//ywh start
+					alert("删除失败");
+					//ywh over
 				}
    }, "json");	
           $( this ).dialog( "close" );

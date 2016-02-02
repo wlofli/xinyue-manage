@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -177,20 +178,26 @@ public class HelpCenterController {
 	}
 	
 	@RequestMapping("/type/edit")
-	public String editType(Model model) {
+	public String editType(HttpServletRequest req , Model model , String typeid) {
 		
-		HelpType ht = new HelpType();
-		
-		model.addAttribute("helpType", ht);
+		if(GlobalConstant.isNull(typeid)){
+			HelpType ht = new HelpType();
+			
+			model.addAttribute("helpType", ht);
+		}else{
+			HelpType ht = helpService.findHelpTypeById(typeid);
+			
+			model.addAttribute("helpType", ht);
+		}
 		
 		return "screens/helpCenter/helpTypeEdit";
 	}
 	
 	@RequestMapping(value="/type/submit",method=RequestMethod.POST)
-	public @ResponseBody String saveType(HelpType helpType) {
+	public @ResponseBody String saveType(HttpServletRequest req , HelpType helpType) {
 		
 		String retStr = GlobalConstant.RET_FAIL;
-		
+		helpType.setCreateName(AutheManage.getUsername(req));
 		if (helpService.addHelpType(helpType)) {
 			retStr = GlobalConstant.RET_SUCCESS; 
 		}
@@ -198,4 +205,29 @@ public class HelpCenterController {
 		return retStr;
 	}
 	
+	//you wh start 2015-11-19 以下添加帮助分类
+	@RequestMapping("/helptype/list")
+	public String helptypelist(HttpServletRequest req , Model model , String topage){
+		
+		model.addAttribute("helptypelist", helpService.findHelpType(topage));
+		
+		return "screens/helpCenter/helptype";
+	}
+	
+	@RequestMapping("/helptype/publish")
+	@ResponseBody
+	public boolean publish(HttpServletRequest req , Model model , @RequestBody List<String> ids){
+		
+		
+		return helpService.updateHelpTypePublish(ids, AutheManage.getUsername(req));
+	}
+	
+	@RequestMapping("/helptype/del")
+	@ResponseBody
+	public boolean del(HttpServletRequest req , Model model ,@RequestBody List<String> ids){
+		
+		
+		return helpService.delHelpType(ids, AutheManage.getUsername(req));
+	}
+	//ywh over
 }

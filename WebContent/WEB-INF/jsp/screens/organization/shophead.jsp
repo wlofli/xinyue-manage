@@ -8,9 +8,10 @@
 	<li class="" id="li_product" onclick="document.location.href='${ctx}/product/orgprolist?org=${orgid }'"><a>产品列表</a></li>
 	<li class="" id="li_suc" onclick="document.location.href='${ctx}/organization/success/case?orgid=${orgid}'"><a>成功案例</a></li>
 	<li class="" id="li_quest" onclick="document.location.href='${ctx}/organization/quest?orgid=${orgid }'"><a>贷款咨询问题列表</a></li>
-	<li class="" id="li_order" onclick="document.location.href='${ctx}/organization/shop/${orgid }'"><a>机构订单管理</a></li>
+	<li class="" id="li_order" onclick="document.location.href='${ctx}/organization/order?orgid=${orgid }'"><a>机构订单管理</a></li>
+	<%-- 
 	<li class="" id="li_orgpro" onclick="document.location.href='${ctx}/organization/shop/${orgid }'"><a>机构产品收藏管理</a></li>
-	<li class="" id="li_orgshop" onclick="document.location.href='${ctx}/organization/shop/${orgid }'"><a>机构店铺收藏管理</a></li>
+	<li class="" id="li_orgshop" onclick="document.location.href='${ctx}/organization/shop/${orgid }'"><a>机构店铺收藏管理</a></li>--%>
 	<li class="" id="li_credit" onclick="document.location.href='${ctx}/organization/credit?orgid=${orgid }'"><a>信贷经理列表</a></li>
 </ul>
 

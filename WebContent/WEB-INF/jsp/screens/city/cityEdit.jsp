@@ -13,13 +13,15 @@
         display:none;
 		border:1px #aaa solid;
 		border-radius:2px;
-        height:20%;
-        width:30%;
+        height:100px;
+        width:200px;
         position:absolute;
-        top:40%;
-        left:35%;
+        top:50%;
+        left:50%;
         z-index:2;
 		background:#fff;
+		margin-top:-50px;
+		margin-left:-100px;
 		
     }
     #over
@@ -66,12 +68,15 @@
 		height:0;}
 	  #login .login1 .nr{
 		 width:100%;
-		 height:auto;
+		 height:50px;
 		 line-height:30px;}
 	  #login .login1 .nr p{
 		 font-size:14px;
 		 color:#666;
-		 margin:0 15px;}
+		 margin:0 15px;
+		 text-align:center;
+		 height:30px;
+		 line-height:30px;}
 	  #login .login1 .btn{
 		 height:30px;
 		 padding:10px 0;

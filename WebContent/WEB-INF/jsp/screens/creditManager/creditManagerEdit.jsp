@@ -61,6 +61,12 @@
 					<!--<input type="button" class="t7" value="重新发送(28秒)" />-->
 				</div>
 				<div>
+					<span>是否设为首页推荐：</span>
+					<span class="dx"><input type="radio" name="recommend" value="1" class="c1" />推荐</span>
+					<span class="dx"><input type="radio" name="recommend" value="0" class="c1" checked="checked"/>不推荐</span>
+					<div class="clear"></div>
+				</div>
+				<div>
 					<input type="submit" value="添加" class="tj_btn tj_btn3" />
 				</div>
 			</sf:form>

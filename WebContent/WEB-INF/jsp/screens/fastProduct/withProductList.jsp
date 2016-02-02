@@ -171,7 +171,7 @@
 <td colspan="3">${list.taxAuditeRemark }</td>
 <td colspan="2"><fmt:formatDate value="${list.blankAuditeTime }" type="date"/></td>
 <td colspan="2">${list.blankAuditePerson }</td>
-<td colspan="4" class="cjtd"><a href="${ctx }/fastproduct/product/detail?id=${list.id}">订单详情</a>
+<td colspan="4" class="cjtd"><a href="${ctx }/fastproduct/product/detail?id=${list.id}&type=1">订单详情</a>
 <c:if test="${list.status == '新越网审核通过' || (list.status =='新越网审核通过设为推荐' && list.orderStatus !='无人领取')}">
 <a href="javascript:rmvSingle('${list.id }')" class="del">移除</a>
 </c:if></td>

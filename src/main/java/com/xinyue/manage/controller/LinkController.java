@@ -108,7 +108,7 @@ public class LinkController {
 		}
 		model.addAttribute("searchFriendShip", searchFriendShip);
 		//显示列表
-		List<LinkFriendShip> fsList = linkService.getList(searchFriendShip, index);
+		List<LinkFriendShip> fsList = linkService.getList(searchFriendShip, index*10);
 		
 		model.addAttribute("fsList", fsList);
 		//图片路径

@@ -34,12 +34,12 @@ function getList(){
 </head>
 <body>
 <div class="c_right" >
-<div class="c_r_bt"><h1><img src="../images/cp_tb1.png" alt="订单详情" /><span>订单详情</span></h1>
-<a href="javascript:getList()">返回</a></div>
+<div class="c_r_bt"><h1><img src="${ctx }/images/cp_tb1.png" alt="订单详情" /><span>订单详情</span></h1>
+<a href="javascript:history.back(-1)">返回</a></div>
 <div class="c_form">
 <div><span>订单号：</span><span class="dx2"><strong>${order.code }</strong></span><div class="clear"></div></div>
 <div><span>订单状态：</span><span class="dx2">${order.status }</span><div class="clear"></div></div>
-<div><span>下单时间：</span><span class="dx2"><fmt:formatDate value="${order.createdTime }" type="both" pattern="yyyy-MM-dd h:m"/></span>
+<div><span>下单时间：</span><span class="dx2"><fmt:formatDate value="${order.createdTime }" type="both" pattern="yyyy-MM-dd H:m"/></span>
 <div class="clear"></div></div>
 <div><span>用户名：</span><span class="dx2">${order.linkUserName }</span><div class="clear"></div></div>
 <div><span>申请单位：</span><span class="dx2">${order.companyInfo }</span><span><a href="${ctx }/order/turnapplicantdata?id=${order.id}">企业申请资料</a></span>
@@ -54,7 +54,7 @@ function getList(){
 <sf:hidden path="id" />
 <c:choose>
 <c:when test="${order.status == '新订单' || order.status =='新越网审核中' }">
-	<div><span>审核时间：</span><input type="text" class="t1" readonly="readonly" value="<fmt:formatDate value="${order.taxAuditeTime }" type="both" pattern="yyyy-MM-dd h:m"/>" /><div class="clear"></div></div>
+	<div><span>审核时间：</span><input type="text" class="t1" readonly="readonly" value="<fmt:formatDate value="${order.taxAuditeTime }" type="both" pattern="yyyy-MM-dd H:m"/>" /><div class="clear"></div></div>
 	<div><span>审核人员：</span><input type="text" class="t1" value="<%=AutheManage.getUsername(request) %>" name="taxAuditePerson" readonly="readonly"/><div class="clear"></div></div>
 	<div><span>审核结果：</span><span class=" dx1"><input type="radio" name="status"  value="3"/>审核通过</span>
 							 <span class=" dx1"><input type="radio" name="status" checked="checked"  value="2"/>审核中</span>

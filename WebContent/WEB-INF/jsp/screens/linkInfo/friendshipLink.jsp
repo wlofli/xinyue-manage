@@ -22,8 +22,8 @@ function changeIndex(index,val){
 	}
 	if (val != hidVal) {
 		$.ajax({
-			url:"${ctx}/link/frinendship/change/array?code="+code+"&index="+val,
-			dataType:'POST',
+			url:"${ctx}/link/organization/change/array?code="+code+"&index="+val,
+			type:'POST',
 			success:function(data){
 				if (data == "updateS") {
 					alert("修改序号成功！");
@@ -100,7 +100,8 @@ function changePage(page){
 				<td colspan="3">网址</td>
 				<td colspan="1">所属城市</td>
 				<td colspan="1">链接类型</td>
-				<td colspan="1">状态</td>
+				<td colspan="1">链接状态</td>
+				<td colspan="1">截至日期</td>
 				<td colspan="2">操作</td>
 				</tr>
 			</thead>
@@ -142,6 +143,7 @@ function changePage(page){
 								${list.linkProvince}${list.linkCity}
 						</td>
 						<td colspan="1">${list.linkType}</td>
+						<td colspan="1">${list.linkPublish}</td>
 						<td colspan="1">${list.deadLine}</td>
 						<td colspan="2">
 							<c:if test="${authorities.friendship_update==1}">
@@ -274,14 +276,16 @@ function delfs(id){
 		return;
 	}
 	delCode = encodeURI(encodeURI(delCode));
-	$.ajax({
-		url:"${ctx}/link/frinendship/delete?code="+delCode,
-// 		dataType:"post",
-		success:function(data){
-			alert("删除成功");
-			searchFs();
-		}
-	});
+	if(confirm("确认要删除?")){
+		$.ajax({
+			url:"${ctx}/link/frinendship/delete?code="+delCode,
+//	 		dataType:"post",
+			success:function(data){
+				alert("删除成功");
+				searchFs();
+			}
+		});
+	}
 }
 
 function forPublish(type){
@@ -291,13 +295,14 @@ function forPublish(type){
 			pubCode = pubCode + $("#hid_"+i).val() + "~";
 		}
 	}
-	if (delCode == "") {
+	if (pubCode == "") {
 		alert("未选中对象");
 		return;
 	}
 	pubCode = encodeURI(encodeURI(pubCode));
 	$.ajax({
 		url:"${ctx}/link/frinendship/publish?code="+pubCode+"&type="+type,
+		type:'post',
 		success:function(data){
 			if (type == 'p') {
 				alert("发布成功");

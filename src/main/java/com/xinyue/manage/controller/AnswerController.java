@@ -5,7 +5,6 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +22,6 @@ import com.xinyue.manage.model.Question;
 import com.xinyue.manage.service.AnswerService;
 import com.xinyue.manage.service.CityService;
 import com.xinyue.manage.service.OrganizationService;
-import com.xinyue.manage.service.SelectService;
 import com.xinyue.manage.util.GlobalConstant;
 
 /**
@@ -64,7 +62,7 @@ public class AnswerController {
 		PageData<ShowAnswer> questpage = obiz.findOrgAnswer(qbean.getQuestid(), qbean.getTopage());
 		model.addAttribute("questdetail", questpage);
 		//对分页数据取出第一条数据
-		System.out.println(questpage.getData().size());
+		
 		model.addAttribute("question", questpage.getData().get(0));
 		//条件
 		model.addAttribute("qbean", qbean);

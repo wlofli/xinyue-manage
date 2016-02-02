@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xinyue.authe.AutheManage;
 import com.xinyue.manage.beans.AdvertisingInfo;
-import com.xinyue.manage.beans.PageData;
 import com.xinyue.manage.model.Advertising;
 import com.xinyue.manage.model.Select;
 import com.xinyue.manage.service.AdvertisingService;
@@ -43,7 +42,7 @@ public class AdvertisingController {
 	
 	//首次点击
 	@RequestMapping(value={"/list"})
-	public String findPageData(String adtype , String topage ,HttpServletRequest req, Model model){
+	public String findPageData(AdvertisingInfo advertInfo ,HttpServletRequest req, Model model){
 		//权限取得
 		List<String> authList = new ArrayList<String>();
 		authList.add(GlobalConstant.ADVERT_HELP_ADD);
@@ -61,79 +60,29 @@ public class AdvertisingController {
 		if(!GlobalConstant.isNull(index)){
 			req.getSession().removeAttribute("advertInfo");
 		}
-		AdvertisingInfo advertInfo = (AdvertisingInfo)req.getSession().getAttribute("advertInfo");
-		
-		if(advertInfo == null){
-			advertInfo = new AdvertisingInfo();
-		}
-		
 		/**
 		 * 所有广告
 		 */
-		int currentPage = 1 ;
-		
-		if(!GlobalConstant.isNull(adtype)){
-			
-			int type = Integer.valueOf(adtype);
-			advertInfo.setAdtype(type);
-			if( type == 0){
-				advertInfo.setPageAll(topage);
-			}else if(type == 1){
-				advertInfo.setPageBig(topage);
-			}else if(type == 2){
-				advertInfo.setPageSmall(topage);
-			}else{
-				advertInfo.setPageIn(topage);
-			}
-		}
-		AdvertisingInfo info = new AdvertisingInfo();
-		int total = advertisingService.getAdvertCountByType(info.getTitle());
-		
-		currentPage = GlobalConstant.getCurrentPage(advertInfo.getPageAll(), total);
-		info.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		List<Advertising> advert = advertisingService.getAdvertising(info);
-		PageData<Advertising> pageData = new PageData<Advertising>(advert, total, currentPage);
-		
-		model.addAttribute("advert_all", pageData);
+		advertInfo.setTitle("");
+		model.addAttribute("advert_all", advertisingService.findAdvertisingPage(advertInfo));
 		/**
 		 * 首页大广告
 		 */
-		info = new AdvertisingInfo("首页大广告");
-		total = advertisingService.getAdvertCountByType(info.getTitle());
-		currentPage = GlobalConstant.getCurrentPage(advertInfo.getPageBig(), total);
-		info.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		advert = advertisingService.getAdvertising(info);
-		pageData = new PageData<Advertising>(advert, total, currentPage);
-		
-		model.addAttribute("advert_big", pageData);
+		advertInfo.setTitle("首页大广告");		
+		model.addAttribute("advert_big", advertisingService.findAdvertisingPage(advertInfo));
 		/**
 		 * 首页小广告
 		 */
-		info = new AdvertisingInfo("首页小广告");
-		
-		total = advertisingService.getAdvertCountByType(info.getTitle());
-		currentPage = GlobalConstant.getCurrentPage(advertInfo.getPageSmall(), total);
-		info.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		advert = advertisingService.getAdvertising(info);
-		pageData = new PageData<Advertising>(advert, total, currentPage);
-		
-		model.addAttribute("advert_small", pageData);
+		advertInfo.setTitle("首页小广告");		
+		model.addAttribute("advert_small", advertisingService.findAdvertisingPage(advertInfo));
 		/**
 		 * 内页广告
 		 */
-		info = new AdvertisingInfo("内页广告");
-		total = advertisingService.getAdvertCountByType(info.getTitle());
-		currentPage = GlobalConstant.getCurrentPage(advertInfo.getPageIn(), total);
-		info.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		advert = advertisingService.getAdvertising(info);
+		advertInfo.setTitle("内页广告");
 		
-		
-		pageData = new PageData<Advertising>(advert, total, currentPage);
-		
-		model.addAttribute("advert_in", pageData);
+		model.addAttribute("advert_in", advertisingService.findAdvertisingPage(advertInfo));
 		model.addAttribute("showImage", advertisingService.SHOW_PATH);
-	
-		req.getSession().setAttribute("advertInfo", advertInfo);
+		model.addAttribute("advertInfo", advertInfo);
 		return "screens/advertising/advert";
 	}
 	
@@ -187,7 +136,7 @@ public class AdvertisingController {
 	
 	@RequestMapping("/toUpdate/{id}")
 	public String toUpdate(Model model ,@PathVariable String id){
-		System.out.println(id);
+		
 		Advertising advert = advertisingService.getAdvertById(id);
 		model.addAttribute("advertedit", advert);
 		model.addAttribute("showImage", advertisingService.SHOW_PATH);

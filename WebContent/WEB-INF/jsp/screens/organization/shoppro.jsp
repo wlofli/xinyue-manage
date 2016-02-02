@@ -33,7 +33,7 @@
 							<s:input path="productName" class="s1"/>
 						</li>
 						<li><input type="button" class="s_btn" value="开始检索" onclick="find()"/>
-						<a href="javascript:void(0)" readonly="true">发布新产品</a></li>
+						
 					</ul>
 					
 				</div>
@@ -104,7 +104,7 @@
 								<td colspan="1">${pro.orderNum }</td>
 								<td colspan="1">
 									<c:choose>
-										<c:when test="${pro.recommend}">
+										<c:when test="${pro.recommend==1}">
 											否
 										</c:when>
 										<c:otherwise>
@@ -115,7 +115,7 @@
 								<td colspan="3">
 									<a href="javascript:void(0)" onclick="document.location.href='${ctx}/product/todetail/${pro.id}'">查看详情</a>
 									<c:if test="${authorities.product_update == 1}">
-										<a href="javascript:void(0)" onclick="document.location.href='${ctx}/product/edit/${pro.id}'">编辑</a>
+										<a href="javascript:void(0)" onclick="document.location.href='${ctx}/product/edit?id=${pro.id}&org=${orgid }'">编辑</a>
 									</c:if>
 									<c:if test="${authorities.product_delete == 1}">
 										<a href="javascript:void(0)" onclick="delPro('${pro.id}')">删除</a>
@@ -172,7 +172,7 @@
 				$("input[name='ck_pro_all']").each(function(){
 					if(this.checked){
 						
-						if($(this).parent().parent().next().find("td").eq(7).html() == "待上架"){
+						if($(this).parent().parent().next().find("td").eq(6).html() == "待上架"){
 							param.push(this.value);
 						}else{
 							
@@ -190,7 +190,7 @@
 					alert("未选中数据");
 					return;
 				}
-				return;
+				
 				$.ajax({
 					type:"POST",
 					contentType:"application/json;charset=UTF-8",
@@ -201,7 +201,7 @@
 						
 						if(data == 'success'){
 							alert("上架成功 ");
-							$("#product_form").submit();
+							$("#org_pro_form").submit();
 						}else{
 							alert("上架失败 ");
 						}
@@ -212,7 +212,7 @@
 				var param = [];//存储id
 				$("input[name='ck_pro_all']").each(function(){
 					if(this.checked){
-						if($(this).parent().parent().next().find("td").eq(8).html() == "上架中"){
+						if($(this).parent().parent().next().find("td").eq(6).html() == "上架中"){
 							param.push(this.value);
 						}else{
 							
@@ -230,7 +230,7 @@
 					alert("未选中数据");
 					return;
 				}
-				return;
+				
 				$.ajax({
 					type:'post',
 					url:'${ctx}/product/unshelve',
@@ -240,7 +240,7 @@
 					success:function(data){
 						if(data == 'success'){
 							alert("下架成功 ");
-							$("#product_form").submit();
+							$("#org_pro_form").submit();
 						}else{
 							alert("下架失败 ");
 							
@@ -258,21 +258,23 @@
 					alert("未选中数据");
 					return;
 				}
-				$.ajax({
-					url:'${ctx}/product/delPro',
-					data:JSON.stringify(id_all),
-					contentType:'application/json',
-					dataType:'json',
-					type:'post',
-					success:function(data){
-						if(data == 'success'){
-							alert("删除成功");
-							changePage('' , 0);
-						}else{
-							alert("删除失败");
+				if(confirm("确认要删除?")){
+					$.ajax({
+						url:'${ctx}/product/delPro',
+						data:JSON.stringify(id_all),
+						contentType:'application/json',
+						dataType:'json',
+						type:'post',
+						success:function(data){
+							if(data == 'success'){
+								alert("删除成功");
+								changePage('' , 0);
+							}else{
+								alert("删除失败");
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 		}
 		

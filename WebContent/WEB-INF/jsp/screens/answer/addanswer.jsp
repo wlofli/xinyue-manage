@@ -26,16 +26,16 @@
 					<div class="clear"></div>
 				</div>
 				<div>
-					<span>分类级别：</span><span class="dx1" onclick="yc()"><input
-						type="radio" name="lb" checked="checked" />一级分类</span><span class="dx1"
-						onclick="xs()"><input type="radio" name="lb" />子级分类</span><span
+					<span>分类级别：</span><span class="dx1"><input
+						type="radio" name="lb" checked="checked" onclick="yc()"/>一级分类</span><span class="dx1"
+						><input type="radio" name="lb" onclick="xs()"/>子级分类</span><span
 						class="zs">该项为必填项</span>
 					<div class="clear"></div>
 				</div>
 				<div id="gsfl" style="display: none">
 					<div>
 						<span>归属分类：</span>
-						<s:select path="parentid" class="t1">
+						<s:select path="parentid" class="t1 required">
 							<s:option value="">请选择</s:option>
 							<s:options items="${sbean }" itemLabel="name" itemValue="id"/>
 						</s:select>

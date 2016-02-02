@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xinyue.authe.AutheManage;
-import com.xinyue.manage.beans.PageData;
 import com.xinyue.manage.beans.ProductTypeInfo;
 import com.xinyue.manage.model.ProductType;
 import com.xinyue.manage.service.ProductTypeService;

@@ -154,7 +154,7 @@ $(function(){
 	<div class="c_r_bt"><h1><img src="${ctx }/images/cp_tb1.png" alt="修改贷款产品"/><span>修改贷款产品</span></h1></div>
 	<div class="c_form">
 		<s:form commandName="pro" method="post" id="pro_edit_form">
-			<s:hidden path="id"/>
+			<s:hidden path="id" id="pro_id"/>
 			<div>
 				<span>产品名称：</span>
 				<s:input path="name" class="t1" required="true"/>
@@ -418,35 +418,8 @@ $(function(){
 			return false;
 		}
 		var currentdate = currentDate(); 
-		if(addtime == "" && downtime != ""){
-			if(Date.parse(downtime)<Date.parse(currentdate)){
-				alert("下架时间不能小于当前时间");
-				$("#pro_down_time").focus();
-				return true;
-			}
-			return false;
-		}
-		if(addtime != "" && downtime == ""){
-			if(Date.parse(addtime)<Date.parse(currentdate)){
-				alert("上架时间不能小于当前时间");
-				$("#pro_add_time").focus();
-				return true;
-			}
-			return false;
-		}
-
+		
 		if(addtime != "" && downtime != ""){
-			if(Date.parse(addtime)<Date.parse(currentdate)){
-				alert("上架时间不能小于当前时间");
-				$("#pro_add_time").focus();
-				return true;
-			}
-			if(Date.parse(downtime)<Date.parse(currentdate)){
-				alert("下架时间不能小于当前时间");
-				$("#pro_down_time").focus();
-				return true;
-			}
-
 			if(Date.parse(addtime)>=Date.parse(downtime)){
 				alert("上架时间不能大于下架时间");
 				$("#pro_add_time").focus();
@@ -496,7 +469,12 @@ $(function(){
     		success:function(data){
     			if(data == 'success'){
     				alert("保存成功");
-    				document.location.href="${ctx}/product/list";
+    				if("${org}" != undefined && "${org}" != ""){
+    					document.location.href='${ctx}/product/orgprolist?org=${org }';
+    				}else{
+    					document.location.href="${ctx}/product/list";
+    				}
+    				
     			}else{
     				alert("保存失败");
     			}

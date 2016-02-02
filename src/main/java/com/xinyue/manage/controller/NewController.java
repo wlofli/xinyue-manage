@@ -39,6 +39,10 @@ import com.xinyue.manage.util.GlobalConstant;
  * @author lzc
  * @date 2015年6月26日
  */
+/**
+ * lzc 15-12-02 upload() retPath修改
+ *
+ */
 
 @Controller
 @RequestMapping("/new")
@@ -104,6 +108,7 @@ public class NewController {
 		
 		//新闻类型列表
 		newInfo.setModifiedId(AutheManage.getUsername(request));
+		newInfo.setCreatedId(AutheManage.getUsername(request));
 			if(StringUtils.isEmpty(newInfo.getId())){
 				try {
 					String id = UUID.randomUUID().toString().replaceAll("-", "");
@@ -311,7 +316,9 @@ public class NewController {
 				File uploadFile = new File(TEMP_PATH +  code + "." + suffix);
 				try {
 					FileCopyUtils.copy(file.getBytes(), uploadFile);
-					String retPath = DOWN_PATH + code + "." + suffix;
+					//modified by lzc
+					String retPath = DOWN_PATH;
+					//end
 					return "{'name':'"+code+"."+suffix+"','path':'"+_filterStr(retPath)+"'}";
 					
 				} catch (Exception e) {

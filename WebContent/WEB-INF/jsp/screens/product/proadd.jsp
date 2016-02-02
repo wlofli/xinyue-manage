@@ -349,35 +349,8 @@ function upload(){
 		if(addtime == "" && downtime == ""){
 			return false;
 		}
-		var currentdate = currentDate(); 
-		if(addtime == "" && downtime != ""){
-			if(Date.parse(downtime)<Date.parse(currentdate)){
-				alert("下架时间不能小于当前时间");
-				$("#pro_down_time").focus();
-				return true;
-			}
-			return false;
-		}
-		if(addtime != "" && downtime == ""){
-			if(Date.parse(addtime)<Date.parse(currentdate)){
-				alert("上架时间不能小于当前时间");
-				$("#pro_add_time").focus();
-				return true;
-			}
-			return false;
-		}
 
 		if(addtime != "" && downtime != ""){
-			if(Date.parse(addtime)<Date.parse(currentdate)){
-				alert("上架时间不能小于当前时间");
-				$("#pro_add_time").focus();
-				return true;
-			}
-			if(Date.parse(downtime)<Date.parse(currentdate)){
-				alert("下架时间不能小于当前时间");
-				$("#pro_down_time").focus();
-				return true;
-			}
 
 			if(Date.parse(addtime)>=Date.parse(downtime)){
 				alert("上架时间不能大于下架时间");
@@ -433,7 +406,9 @@ function upload(){
 			}
 			
 		});
+		
 		datas["file"] = s;
+		
     	$.ajax({
     		url:'${ctx}/product/save',
     		type:'post',

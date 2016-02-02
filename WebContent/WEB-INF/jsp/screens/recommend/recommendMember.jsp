@@ -100,7 +100,7 @@ function search(){
 
 <body> 
 <div class="c_right">
-<div class="c_r_bt"><h1><img src="../images/fx_tb1.png" alt="会员推广管理_普通会员推荐列表" /><span>会员推广管理_普通会员推荐列表</span></h1></div>
+<div class="c_r_bt"><h1><img src="${ctx }/images/fx_tb1.png" alt="会员推广管理_普通会员推荐列表" /><span>会员推广管理_普通会员推荐列表</span></h1></div>
 <div class="c_r_bt1">
 <sf:form action="${ctx }/recommend/member/list" commandName="search" id="searchForm" method="post">
 <ul>

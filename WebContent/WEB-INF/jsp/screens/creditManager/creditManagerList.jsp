@@ -72,7 +72,7 @@
 						<sf:hidden path="sortPoint" id="hid_points"/>
 						<sf:hidden path="jumpPage" id="hid_page"/>
 					</li>
-					<li><input type="button" class="s_btn" value="开始检索" /></li>
+					<li><input type="button" class="s_btn" value="开始检索" onclick="changePage(0 , 1)"/></li>
 				</ul>
 			</sf:form>
 		</div>
@@ -267,19 +267,21 @@ function del(id){
 		alert("请选择一条记录");
 		return;
 	}
-	$.ajax({
-		url:"${ctx}/credit/manager/del?managerIds="+managerId,
-		type:"post",
-		success:function(data){
-			if (data) {
-				alert("删除成功");
-				$("#hid_page").val(1);
-				$("#searchForm").submit();
-			}else {
-				alert("删除失败");
+	if(confirm("确认要删除?")){
+		$.ajax({
+			url:"${ctx}/credit/manager/del?managerIds="+managerId,
+			type:"post",
+			success:function(data){
+				if (data) {
+					alert("删除成功");
+					$("#hid_page").val(1);
+					$("#searchForm").submit();
+				}else {
+					alert("删除失败");
+				}
 			}
-		}
-	});
+		});
+	}
 }
 function getSelects(id){
 	var managerId = "";

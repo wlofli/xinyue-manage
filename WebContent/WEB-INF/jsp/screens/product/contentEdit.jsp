@@ -422,38 +422,38 @@ function contentCheck(){
 	
 	
 	//申贷用途
-	if("${productContentInfo.purpose}"){
+	if("${productContentInfo.purpose}" == "true"){
 		$("#id_purpose").attr("checked","checked");
 	}else{
 		$("#id_purpose").removeAttr("checked");
 	}
 	//担保人姓名
-	if("${productContentInfo.collateralname}"){
+	if("${productContentInfo.collateralname}" == "true"){
 		$("#id_collateralname").attr("checked","checked");
 	}else{
 		$("#id_collateralname").removeAttr("checked");
 	}
 	//担保物名称
-	if("${productContentInfo.collateralthinkname}"){
+	if("${productContentInfo.collateralthinkname}" == "true"){
 		$("#id_collateralthinkname").attr("checked","checked");
 	}else{
 		$("#id_collateralthinkname").removeAttr("checked");
 	}
 	//企业电户号
-	if("${productContentInfo.enterpriseno}"){
+	if("${productContentInfo.enterpriseno}" == "true"){
 		$("#id_enterpriseno").attr("checked","checked");
 	}else{
 		$("#id_enterpriseno").removeAttr("checked");
 	}
 	
 	//年度增值税纳额
-	if("${productContentInfo.annualvatamount}"){
+	if("${productContentInfo.annualvatamount}" == "true"){
 		$("#id_annualvatamount").attr("checked","checked");
 	}else{
 		$("#id_annualvatamount").removeAttr("checked");
 	}
 	//年度所得税纳额
-	if("${productContentInfo.annualtaxamount}"){
+	if("${productContentInfo.annualtaxamount}" == "true"){
 		$("#id_annualtaxamount").attr("checked","checked");
 	}else{
 		$("#id_annualtaxamount").removeAttr("checked");

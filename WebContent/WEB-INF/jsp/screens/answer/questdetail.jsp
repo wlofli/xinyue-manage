@@ -21,7 +21,7 @@
 		<div class="c_wtxq_bt">
 			<p class="bt">问题：${question.title }</p>
 			<p class="nr">
-				<span>提问者：<strong><c:if test="${not empty question.mqcreateName }" var="mq">${question.mqcreateName }</c:if><c:if test="${not mq }">匿名</c:if></strong></span>
+				<span>提问者：<strong><c:if test="${question.qtype eq 'g' or question.qtype eq 'm' }" var="mq">${question.mqcreateName }</c:if><c:if test="${not mq }">匿名</c:if></strong></span>
 				<span>手机号：<strong>${question.telphone }</strong></span>
 				<span>所属地区：<strong>${question.address }</strong></span>
 				<span>提问时间：<strong>${question.qtime }</strong></span>
@@ -29,10 +29,10 @@
 			</p>
 			<p class="nr">问题补充：${question.content }</p>
 			<p class="btn">
-				<span><input type="radio" name="status" class="ck" checked="checked" value="2"/>审核通过</span>
-				<span><input type="radio" name="status" class="ck" value="3"/>审核不通过</span>
+				<span><input type="radio" name="status" class="ck" <c:if test="${question.status != 3 }">checked="checked"</c:if> value="2"/>审核通过</span>
+				<span><input type="radio" name="status" class="ck" <c:if test="${question.status eq 3 }">checked="checked"</c:if> value="3"/>审核不通过</span>
 				<span>
-					<m:select cssSelect="s1" items="${answertype }" valueProperty="id" textProperty="name" id="questtype"></m:select>
+					<m:select cssSelect="s1" items="${answertype }" value="${question.questTypeid }" valueProperty="id" textProperty="name" id="questtype"></m:select>
 				</span>
 				<span><input type="button" value="确定" class="ck_btn" onclick="updateQuest('${question.id}')"/></span>
 			</p>
@@ -78,15 +78,17 @@
 				<div class="c_wtxq_nr">
 					<p class="bt">回答<c:out value="${vs.count + (questdetail.currentPage-1)*10}" />：${quest.acontent }</p>
 					<p class="nr">
-						<span>回答者：<strong><c:choose><c:when test="${not empty quest.ccreateName }">${quest.ccreateName }</c:when><c:otherwise>匿名</c:otherwise></c:choose></strong></span>
+						<span>回答者：<strong><c:choose><c:when test="${not empty quest.answerName }">${quest.answerName }</c:when><c:otherwise>匿名</c:otherwise></c:choose></strong></span>
 						<span>服务地区：<strong>${quest.address }</strong></span>
 						<span>回答时间：<strong>${quest.atime }</strong></span>
 					</p>
 					<p class="btn">
-						<a href="javascript:void(0)" onclick="check('${quest.aid}' , 0)">审核通过</a>
-						<a href="javascript:void(0)" onclick="check('${quest.aid}' , 1)">审核不通过</a>
-						<a href="javascript:void(0)" onclick="check('${quest.aid}' , 2)">设为推荐答案</a>
-						<a href="javascript:void(0)" class="del" onclick="check('${quest.aid}' , 3)">删除</a>
+						<input type="hidden" id="astatus${vs.index }" value="${quest.astatus }">
+						<input type="hidden" id="arecommend${vs.index }" value="${quest.recommend }">
+						<a href="javascript:void(0)" onclick="check('${quest.aid}' , 0 , ${vs.index })">审核通过</a>
+						<a href="javascript:void(0)" onclick="check('${quest.aid}' , 1 , ${vs.index })">审核不通过</a>
+						<a href="javascript:void(0)" onclick="check('${quest.aid}' , 2 , ${vs.index })">设为推荐答案</a>
+						<a href="javascript:void(0)" class="del" onclick="check('${quest.aid}' , 3 , ${vs.index })">删除</a>
 					</p>
 				</div>
 			</c:forEach>
@@ -96,7 +98,21 @@
 		</c:if>
 	</div>
 	<script type="text/javascript">
-		function check(node  , option){
+		function check(node  , option , index){
+			if(option == 2){
+				var v = $("#astatus"+index).val();
+				if(v!=2){
+					alert("审核未通过的不能推荐为答案");
+					return;
+				}
+			}else if(option == 1){
+				var v = $("#arecommend"+index).val();
+				if(v==1){
+					alert("推荐为答案的,不能设置为审核未通过");
+					return;
+				}
+			}
+			
 			$.ajax({
 				url:'${ctx}/answer/check',
 				type:'post',
@@ -105,10 +121,21 @@
 					if(data == 'success'){
 						if(option == 0){
 							alert("设置审核 通过成功");
+							 $("#astatus"+index).val(2);
 						}else if(option == 1){
 							alert("设置审核不通过成功");
+							 $("#astatus"+index).val(3);
+							
 						}else if(option == 2){
 							alert("设置为推荐答案成功");
+							$("#arecommend"+index).val(1);
+							for (var i = 0; i < "${questdetail.total}"; i++) {
+								if(i == index){
+									continue;
+								}else{
+									$("#arecommend"+i).val(0);
+								}
+							}
 						}else{
 							alert("删除成功");
 							document.location.href="${ctx}/answer/detail?questid=${question.id }";
@@ -190,6 +217,10 @@
 					}
 				}
 			});
+		}
+		
+		function changePage(url , topage){
+			document.location.href='${ctx}/answer/detail?questid=${qbean.questid }&topage='+topage;
 		}
 	</script>
 </body>

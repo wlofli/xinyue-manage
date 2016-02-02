@@ -122,8 +122,6 @@ public class ProductController {
 	@RequestMapping("/editOption")
 	public String option(Model model , String productid){
 		ProductContent pc = pbiz.findOptionByProductid(productid);
-		System.out.println(productid);
-		System.out.println(pc==null);
 		if(GlobalConstant.isNull(pc)){
 			pc = new ProductContent();
 			pc.setProductcode(productid);
@@ -225,6 +223,32 @@ public class ProductController {
 		
 		//显示产品路径
 		model.addAttribute("showpath", pbiz.SHOW_PATH);
+		return "screens/product/proedit";
+	}
+	
+	/**
+	 * ywh 跳转到 编辑页面
+	 * @param id
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/edit")
+	public String toedit2(String id , String org ,  Model model){
+		//产品
+		Product pro = pbiz.getProductById(id);
+		model.addAttribute("pro", pro);
+		//产品类型
+		model.addAttribute("product_type", ptbiz.findProductTypeList());
+		//机构信息
+		model.addAttribute("orginfo", pbiz.getOrgs());
+		//省
+		List<SelectInfo> provinces = cityService.getAllProvince();
+		model.addAttribute("provinces", provinces);
+		
+		//显示产品路径
+		model.addAttribute("showpath", pbiz.SHOW_PATH);
+		//用来判断返回路径 
+		model.addAttribute("org", org);
 		return "screens/product/proedit";
 	}
 	

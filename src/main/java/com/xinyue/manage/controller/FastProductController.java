@@ -95,29 +95,37 @@ public class FastProductController {
 	}
 	
 	@RequestMapping("track/list")
-	public String trackList(String id,  Model model){
-		FastProduct fastproduct = fastProductService.getFastProduct(id);
+	//ywh modify 2015-12-18 改为快速订单
+	public String trackList(String id,  Model model ,String type){
+		FastProduct fastproduct;
+//ywh start 2015-12-24
+		if(GlobalConstant.isNull(type)){
+			fastproduct = fastProductService.getFastProduct(id);
+		}else{
+			fastproduct = fastProductService.getTypeFastProduct(id);
+		}
+		//ywh end 2015-12-24
 		String customerId = new String();
 		String orderType = new String();
 		if(fastproduct.getOrderType() != null){
 			switch (fastproduct.getOrderType()) {
 			case GlobalConstant.ORDER_TYPE_FIXED_CHINESE:
-				OrderFixed orderFixed  = orderCustomerService.getOrderFixed(fastproduct.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				OrderFixed orderFixed  = orderCustomerService.getOrderFixed(fastproduct.getId(),GlobalConstant.FASUPRODUCT_CUSTOMER_TYPE);
 				customerId = orderFixed.getId();
 				orderType = GlobalConstant.ORDER_TYPE_FIXED;
 				break;
 			case GlobalConstant.ORDER_TYPE_AUCTION_CHINESE:
-				OrderAuction orderAuction = orderCustomerService.getOrderAuction(fastproduct.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				OrderAuction orderAuction = orderCustomerService.getOrderAuction(fastproduct.getId(),GlobalConstant.FASUPRODUCT_CUSTOMER_TYPE);
 				customerId = orderAuction.getId();
 				orderType = GlobalConstant.ORDER_TYPE_AUCTION;
 				break;
 			case GlobalConstant.ORDER_TYPE_LOWPRICE_CHINESE:
-				OrderLowPrice orderLowPrice = orderCustomerService.getOrderLowPrice(fastproduct.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				OrderLowPrice orderLowPrice = orderCustomerService.getOrderLowPrice(fastproduct.getId(),GlobalConstant.FASUPRODUCT_CUSTOMER_TYPE);
 				customerId = orderLowPrice.getId();
 				orderType = GlobalConstant.ORDER_TYPE_LOWPRICE;
 				break;
 			case GlobalConstant.ORDER_TYPE_APPOINTED_CHINESE:
-				OrderAppointed orderAppointed = orderCustomerService.getOrderAppointed(fastproduct.getId(),GlobalConstant.ORDER_CUSTOMER_TYPE);
+				OrderAppointed orderAppointed = orderCustomerService.getOrderAppointed(fastproduct.getId(),GlobalConstant.FASUPRODUCT_CUSTOMER_TYPE);
 				customerId = orderAppointed.getId();
 				orderType = GlobalConstant.ORDER_TYPE_APPOINTED;
 				break;
@@ -126,17 +134,22 @@ public class FastProductController {
 			}
 		}
 		OrderInfo info = orderTrackService.getOrderInfo(customerId, orderType);
-		//目前不需要分页展示
-		List<OrderTrack> tracklList = orderTrackService.getOrderTrackList(info.getId(), info.getType(),0 ,0);
-		model.addAttribute("order", info);
-		model.addAttribute("tracklist", tracklList);
+		//目前不需要分页展示 
+		//modify ywh 2015-12-16 空指针
+		if(!GlobalConstant.isNull(info)){
+			List<OrderTrack> tracklList = orderTrackService.getOrderTrackList(info.getId(), info.getType(),0 ,0);
+			model.addAttribute("order", info);
+			model.addAttribute("tracklist", tracklList);
+		}
 		return "screens/order/orderTrackList";
 	}
 	
-	
+	 //
 	@RequestMapping("/product/detail")
 	public String productDetail(Model model, String id){
-		FastProduct fastProduct = fastProductService.getFastProduct(id);
+		//<!--ywh start modify 2015-12-23-->
+		FastProduct fastProduct = fastProductService.getTypeFastProduct(id);
+		//<!--ywh end-->
 		if(fastProduct.getType().equals("2")){
 			FastProductApplicant applicant = fastProductService.getApplicant(fastProduct.getApplicantFastId());
 			FastProductCompany company  = fastProductService.getCompany(fastProduct.getCompanyFastId());
@@ -168,14 +181,24 @@ public class FastProductController {
 					break;
 				}
 			}
+			// <!--ywh start modify 2015-12-23-->
+			getOrderDetailSelectInfo(model);
+			// <!--ywh end-->
 			return "screens/fastProduct/withProductCustomer";
 		}
 		return "screens/fastProduct/withProductDetail";
 	}
 	
 	@RequestMapping(value={"turnupdate"})
-	public String turnFastProductEdit(Model model,String id){
-		FastProduct fastProduct = fastProductService.getFastProduct(id);
+	public String turnFastProductEdit(Model model,String id , String type){
+		FastProduct fastProduct = null;
+		//<!--ywh start modify 2015-12-23-->
+		if(GlobalConstant.isNull(type)){
+			fastProduct = fastProductService.getFastProduct(id);
+		}else{
+			fastProduct = fastProductService.getTypeFastProduct(id);
+		}
+		//<!--ywh end-->
 		model.addAttribute("fspdt", fastProduct);
 		if(fastProduct.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_CHINESE) 
 				|| fastProduct.getStatus().equals(GlobalConstant.ORDER_STATUS_PASS_SET_CHINESE)){
@@ -201,7 +224,7 @@ public class FastProductController {
 						break;
 				}
 			}
-//			getOrderDetailSelectInfo(model);
+			getOrderDetailSelectInfo(model);
 			return "screens/fastProduct/fastProductOrderEdit";
 		}else {
 			return "screens/fastProduct/fastProductEdit";

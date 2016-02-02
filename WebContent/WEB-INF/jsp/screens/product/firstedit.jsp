@@ -44,8 +44,8 @@
 			</div>
 			<div>
 				<span>状态：</span>
-				<span class="dx1"><s:radiobutton path="status" checked="true" value="1"/>启用</span>
-				<span class="dx1"><s:radiobutton path="status" value="0"/>屏蔽</span>
+				<span class="dx1"><s:radiobutton path="status" checked="true" value="0"/>启用</span>
+				<span class="dx1"><s:radiobutton path="status" value="1"/>屏蔽</span>
 				<span class="zs">该项为必填项</span><div class="clear"></div>
 			</div>
 			<div><input type="button" value="保存" class="tj_btn tj_btn3" onclick="save()"/>

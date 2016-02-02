@@ -38,7 +38,9 @@ import com.xinyue.manage.model.Authentication;
 import com.xinyue.manage.service.AuthenticationService;
 import com.xinyue.manage.util.CommonFunction;
 import com.xinyue.manage.util.GlobalConstant;
-
+/**
+ *  modify ywh 2015-12-01 getList
+ */
 @Controller
 @RequestMapping("/authentication")
 public class AuthenticationController {
@@ -78,8 +80,8 @@ public class AuthenticationController {
 		//搜索框数据
 		model.addAttribute("searchInfo", searchAuthentication);
 		
-		//分页信息
-		int totalCount = authenticationService.getAllCount();
+		//分页信息 modify ywh 2015-12-01 
+		int totalCount = authenticationService.getAllCount(searchAuthentication);
 
 		PageInfo pageInfo = new PageInfo();
 		

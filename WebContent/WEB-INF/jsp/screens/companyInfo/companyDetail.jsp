@@ -23,7 +23,7 @@
 		</ul>
 	</div>
 	<div class="c_form" id="tab0">
-		<%@ include file="../../screens/companyInfo/applicantInfo.jsp" %>
+		<%@ include file="applicantInfo.jsp" %>
 	</div>
 	<div class="c_form" id="tab1" style="display:none">
 		<%@ include file="../../screens/companyInfo/companyBaseInfo.jsp" %>

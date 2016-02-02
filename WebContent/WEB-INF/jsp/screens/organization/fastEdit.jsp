@@ -39,7 +39,7 @@
 <a href="javascript:getList()">返回</a></div>
 <div class="c_form">
 <div><span>快速申贷订单号：</span><span class="dw"><strong>${fspdt.code }</strong></span><div class="clear"></div></div>
-<div><span>订单提交时间：</span><span class="dw"><fmt:formatDate value="${fspdt.createdTime}" type="both" pattern="yyyy-MM-dd h:m"/></span><div class="clear"></div></div>
+<div><span>订单提交时间：</span><span class="dw"><fmt:formatDate value="${fspdt.createdTime}" type="both" pattern="yyyy-MM-dd H:m"/></span><div class="clear"></div></div>
 <div><span>企业名称：</span><span class="dw">${fspdt.company }</span><div class="clear"></div>
 <span><a href="#undone:需要金辉那边完成再议">企业申请资料</a></span></div>
 <div><span>所在地区：</span><span class="dw">${fspdt.areaProvince }${fspdt.areaCity }${fspdt.areaZone }</span><div class="clear"></div></div>

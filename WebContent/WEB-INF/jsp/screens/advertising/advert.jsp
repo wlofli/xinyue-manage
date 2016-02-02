@@ -22,7 +22,6 @@
 			}
 		} 
 		 $(function(){
-			 var menu = document.getElementById("menu");
 				var menuli = menu.getElementsByTagName("li");
 				for(var i = 0; i< menuli.length; i++){
 					menuli[i].className="";

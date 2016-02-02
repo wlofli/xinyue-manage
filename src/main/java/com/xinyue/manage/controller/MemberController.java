@@ -16,12 +16,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xinyue.authe.AutheManage;
 import com.xinyue.manage.beans.MemberInfo;
+import com.xinyue.manage.beans.OrderInfo;
 import com.xinyue.manage.beans.PageData;
+import com.xinyue.manage.beans.QuestionBean;
 import com.xinyue.manage.beans.Recommend;
+import com.xinyue.manage.beans.SearchReward;
 import com.xinyue.manage.beans.SelectInfo;
+import com.xinyue.manage.beans.ShowAnswer;
+import com.xinyue.manage.model.Answer;
 import com.xinyue.manage.model.Member;
+import com.xinyue.manage.service.AnswerService;
 import com.xinyue.manage.service.CityService;
 import com.xinyue.manage.service.MemberService;
+import com.xinyue.manage.service.OrganizationService;
 import com.xinyue.manage.service.SelectService;
 import com.xinyue.manage.util.CommonFunction;
 import com.xinyue.manage.util.GlobalConstant;
@@ -42,6 +49,11 @@ public class MemberController {
 	@Autowired
 	private SelectService sbiz;
 	
+	@Autowired
+	private OrganizationService orgbiz;
+	
+	@Autowired
+	private AnswerService abiz;
 	
 	@RequestMapping("/list")
 	public String findPageList(HttpServletRequest req , Model model , MemberInfo memberinfo){
@@ -58,14 +70,8 @@ public class MemberController {
 		boolean ret_auth = cf.getAuth(model,req, authList, "会员管理");
 		if (!ret_auth) {
 			return "redirect:/errors/fail_authority.html";
-		}
-		int total = mbiz.getCount(memberinfo);
-		String topage = memberinfo.getTopage();
-		
-		int currentPage = (GlobalConstant.isNull(topage) || topage.equals("0"))?1:Integer.valueOf(topage);
-		memberinfo.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		List<Member> list = mbiz.findPageList(memberinfo);
-		PageData<Member> pdata = new PageData<Member>(list , total , currentPage);
+		}		
+		PageData<Member> pdata = mbiz.findPageList(memberinfo);
 		model.addAttribute("memberinfo", memberinfo);
 		model.addAttribute("memberpage", pdata);
 		model.addAttribute("industry", sbiz.getIndustryList());
@@ -116,11 +122,7 @@ public class MemberController {
 		if(GlobalConstant.isNull(id)){
 			String type = req.getParameter("typeid");
 			Member member = new Member();
-			if(GlobalConstant.isNull(type)){
-				member.setMemberid("2");
-			}else{
-				member.setMemberid(type);
-			}
+			member.setType(type);
 			model.addAttribute("memberedit", member);
 		}else{
 			Member member = mbiz.editMember(id);
@@ -159,14 +161,9 @@ public class MemberController {
 		if (!ret_auth) {
 			return "redirect:/errors/fail_authority.html";
 		}
-		int total = mbiz.getXinYueCount(memberinfo);
-		String topage = memberinfo.getTopage();
-		
-		int currentPage = (GlobalConstant.isNull(topage) || topage.equals("0"))?1:Integer.valueOf(topage);
-		memberinfo.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		List<Member> list = mbiz.findXinYuePage(memberinfo);
-		PageData<Member> pdata = new PageData<Member>(list , total , currentPage);
 		memberinfo.setType("2");
+		PageData<Member> pdata = mbiz.findPageList(memberinfo);
+		
 		model.addAttribute("memberinfo", memberinfo);
 		model.addAttribute("memberpage", pdata);
 		model.addAttribute("industry", sbiz.getIndustryList());
@@ -189,14 +186,9 @@ public class MemberController {
 		if (!ret_auth) {
 			return "redirect:/errors/fail_authority.html";
 		}		
-		int total = mbiz.getQQCount(memberinfo);
-		String topage = memberinfo.getTopage();
-		
-		int currentPage = (GlobalConstant.isNull(topage) || topage.equals("0"))?1:Integer.valueOf(topage);
-		memberinfo.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		List<Member> list = mbiz.findQQPage(memberinfo);
-		PageData<Member> pdata = new PageData<Member>(list , total , currentPage);
 		memberinfo.setType("1");
+		PageData<Member> pdata = mbiz.findPageList(memberinfo);
+		
 		model.addAttribute("memberinfo", memberinfo);
 		model.addAttribute("memberpage", pdata);
 		model.addAttribute("industry", sbiz.getIndustryList());
@@ -219,14 +211,9 @@ public class MemberController {
 		if (!ret_auth) {
 			return "redirect:/errors/fail_authority.html";
 		}
-		int total = mbiz.getWeixinCount(memberinfo);
-		String topage = memberinfo.getTopage();
-		
-		int currentPage = (GlobalConstant.isNull(topage) || topage.equals("0"))?1:Integer.valueOf(topage);
-		memberinfo.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		List<Member> list = mbiz.findWeixinPage(memberinfo);
-		PageData<Member> pdata = new PageData<Member>(list , total , currentPage);
 		memberinfo.setType("3");
+		PageData<Member> pdata = mbiz.findPageList(memberinfo);
+		
 		model.addAttribute("memberinfo", memberinfo);
 		model.addAttribute("memberpage", pdata);
 		model.addAttribute("industry", sbiz.getIndustryList());
@@ -250,14 +237,8 @@ public class MemberController {
 		if (!ret_auth) {
 			return "redirect:/errors/fail_authority.html";
 		}
-		int total = mbiz.getGuoCount(memberinfo);
-		String topage = memberinfo.getTopage();
-		
-		int currentPage = (GlobalConstant.isNull(topage) || topage.equals("0"))?1:Integer.valueOf(topage);
-		memberinfo.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		List<Member> list = mbiz.findGuoPage(memberinfo);
-		PageData<Member> pdata = new PageData<Member>(list , total , currentPage);
 		memberinfo.setType("7");
+		PageData<Member> pdata = mbiz.findPageList(memberinfo);
 		model.addAttribute("memberinfo", memberinfo);
 		model.addAttribute("memberpage", pdata);
 		model.addAttribute("industry", sbiz.getIndustryList());
@@ -279,14 +260,8 @@ public class MemberController {
 		if (!ret_auth) {
 			return "redirect:/errors/fail_authority.html";
 		}
-		int total = mbiz.getWeiboCount(memberinfo);
-		String topage = memberinfo.getTopage();
-		
-		int currentPage = (GlobalConstant.isNull(topage) || topage.equals("0"))?1:Integer.valueOf(topage);
-		memberinfo.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		List<Member> list = mbiz.findWeiboPage(memberinfo);
-		PageData<Member> pdata = new PageData<Member>(list , total , currentPage);
 		memberinfo.setType("4");
+		PageData<Member> pdata = mbiz.findPageList(memberinfo);
 		model.addAttribute("memberinfo", memberinfo);
 		model.addAttribute("memberpage", pdata);
 		model.addAttribute("industry", sbiz.getIndustryList());
@@ -308,14 +283,8 @@ public class MemberController {
 		if (!ret_auth) {
 			return "redirect:/errors/fail_authority.html";
 		}
-		int total = mbiz.getSuiwuCount(memberinfo);
-		String topage = memberinfo.getTopage();
-		
-		int currentPage = (GlobalConstant.isNull(topage) || topage.equals("0"))?1:Integer.valueOf(topage);
-		memberinfo.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		List<Member> list = mbiz.findSuiwuPage(memberinfo);
-		PageData<Member> pdata = new PageData<Member>(list , total , currentPage);
 		memberinfo.setType("5");
+		PageData<Member> pdata = mbiz.findPageList(memberinfo);
 		model.addAttribute("memberinfo", memberinfo);
 		model.addAttribute("memberpage", pdata);
 		model.addAttribute("industry", sbiz.getIndustryList());
@@ -337,14 +306,8 @@ public class MemberController {
 		if (!ret_auth) {
 			return "redirect:/errors/fail_authority.html";
 		}
-		int total = mbiz.getDisuiCount(memberinfo);
-		String topage = memberinfo.getTopage();
-		
-		int currentPage = (GlobalConstant.isNull(topage) || topage.equals("0"))?1:Integer.valueOf(topage);
-		memberinfo.setStart((currentPage-1)*GlobalConstant.PAGE_SIZE);
-		List<Member> list = mbiz.findDisuiPage(memberinfo);
-		PageData<Member> pdata = new PageData<Member>(list , total , currentPage);
 		memberinfo.setType("6");
+		PageData<Member> pdata = mbiz.findPageList(memberinfo);
 		model.addAttribute("memberinfo", memberinfo);
 		model.addAttribute("memberpage", pdata);
 		model.addAttribute("industry", sbiz.getIndustryList());
@@ -380,7 +343,7 @@ public class MemberController {
 	}
 	
 	/**
-	 * 
+	 * ywh admin 推荐
 	 * @param req
 	 * @param model
 	 * @return
@@ -401,5 +364,113 @@ public class MemberController {
 		//查询条件
 		model.addAttribute("rec", rec);
 		return "screens/member/recommend";
+	}
+	
+	/**
+	 * ywh admin 推荐
+	 * @param req
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value="/quest")
+	public String quest(HttpServletRequest req , Model model , QuestionBean qbean){
+		
+		model.addAttribute("questpage", abiz.findMemberQuest(qbean));
+		model.addAttribute("memberid", qbean.getMemberid());
+		model.addAttribute("title", "quest");
+		model.addAttribute("qbean", qbean);
+		return "screens/member/quest";
+	}
+	
+	/**
+	 * ywh 店铺问题详情
+	 * @param model
+	 * @param qbean
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping("/quest/detail")
+	public String findQuestDetail(Model model , QuestionBean qbean , HttpServletRequest req){
+		
+		PageData<ShowAnswer> answerpage = orgbiz.findOrgAnswer(qbean.getQuestid(), qbean.getTopage());
+		model.addAttribute("answerpage", answerpage);
+		//显示问题内容
+		ShowAnswer answer = answerpage.getData().get(0);
+		model.addAttribute("answer", answer);
+		//查询条件
+		model.addAttribute("qbean", qbean);
+		//信贷经理
+		model.addAttribute("credit", orgbiz.getAllCredit());
+		//省
+		List<SelectInfo> provinces = cityService.getAllProvince();
+		model.addAttribute("provinces", provinces);
+		//用于回答
+		Answer questanswer = new Answer();
+		questanswer.setQuestid(answer.getId());
+		model.addAttribute("questanswer", questanswer);
+		
+		model.addAttribute("memberid", qbean.getMemberid());
+		return "screens/member/questxq";
+	}
+	
+	/**
+	 * ywh member order
+	 * @param model
+	 * @param info
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping("/order")
+	public String findOrder(Model model , OrderInfo info , HttpServletRequest req){
+		//分页
+		model.addAttribute("orderpage", mbiz.findMemberOrder(info));
+		//条件
+		model.addAttribute("info", info);
+		//
+		model.addAttribute("memberid", info.getMemberid());
+		//标签
+		model.addAttribute("title", "order");
+		return "screens/member/order";
+	}
+	
+	/**
+	 * ywh member 
+	 * @param model
+	 * @param info
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping("/reward")
+	public String findReward(Model model , SearchReward sc , HttpServletRequest req){
+		//标签
+		model.addAttribute("title", "record");
+		//奖励
+		model.addAttribute("rewardpage", mbiz.findMemberReword(sc));
+		model.addAttribute("sc", sc);
+		//memberid
+		model.addAttribute("memberid", sc.getMemberid());
+	
+		return "screens/member/reward";
+	}
+	
+	/**
+	 * ywh member 
+	 * @param model
+	 * @param info
+	 * @param req
+	 * @return
+	 */
+	@RequestMapping("/draw")
+	public String findDraw(Model model , SearchReward sc , HttpServletRequest req){
+		//标签
+		model.addAttribute("title", "record");
+	
+		//提现
+		model.addAttribute("drawpage", mbiz.findMemberDraw(sc));
+		model.addAttribute("sc", sc);
+		//memberid
+		model.addAttribute("memberid", sc.getMemberid());
+		
+		return "screens/member/draw";
 	}
 }

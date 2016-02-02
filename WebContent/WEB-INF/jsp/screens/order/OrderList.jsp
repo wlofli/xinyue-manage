@@ -199,7 +199,7 @@
 <td colspan="2">${list.productCode }</td>
 <td colspan="2">${list.bank }</td>
 <td colspan="2"><c:if test="${!empty list.credit }"> ${list.credit }万</c:if></td>
-<td colspan="2"><fmt:formatDate value="${list.createdTime }" pattern="yyyy-MM-dd h:m"/></td>
+<td colspan="2"><fmt:formatDate value="${list.createdTime }" pattern="yyyy-MM-dd H:m"/></td>
 <td colspan="2">${list.linkUserName }</td>
 <td colspan="2">${list.applicatPerson }</td>
 <td colspan="2">${list.linkPhone }</td>

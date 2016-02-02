@@ -6,10 +6,10 @@
 		<li id="li_basic"><a href="javascript:void(0)" onclick="document.location.href='${ctx}/member/detail?memberid=${memberid }'">基本信息</a></li>
 		<%-- <li id=""><a href="javascript:void(0)" onclick="">绑定收款账户</a></li> --%>
 		<li id="li_recommend"><a href="javascript:void(0)" onclick="document.location.href='${ctx}/member/recommend?memberid=${memberid }'">推荐会员列表</a></li>
-		<li id="li_quest"><a href="javascript:void(0)">会员问答列表</a></li>
-		<li id="li_order"><a href="javascript:void(0)">会员订单列表</a></li>
+		<li id="li_quest"><a href="javascript:void(0)" onclick="document.location.href='${ctx}/member/quest?memberid=${memberid }'">会员问答列表</a></li>
+		<li id="li_order"><a href="javascript:void(0)" onclick="document.location.href='${ctx}/member/order?memberid=${memberid }'">会员订单列表</a></li>
 		<%-- <li id=""><a href="javascript:void(0)">会员收藏管理</a></li> --%>
-		<li id="li_"><a href="javascript:void(0)">推荐奖励提现</a></li>
+		<li id="li_record"><a href="javascript:void(0)" onclick="document.location.href='${ctx}/member/reward?memberid=${memberid }'">推荐奖励提现</a></li>
 	</ul>
 </div>
 <script type="text/javascript">

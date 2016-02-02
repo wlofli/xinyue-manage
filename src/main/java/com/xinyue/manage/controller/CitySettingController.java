@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.xinyue.authe.AutheManage;
 import com.xinyue.manage.beans.CityInfo;
 import com.xinyue.manage.beans.PageInfo;
 import com.xinyue.manage.beans.SearchCity;
@@ -115,12 +116,17 @@ public class CitySettingController {
 	
 	@RequestMapping(value={"/add","/edit"},method=RequestMethod.POST)
 	public @ResponseBody String addOrUpdateSubCity(HttpServletRequest request,SubStation subStationInfo) {
-		
+		/**
 		boolean retFlag = cityService.addOrUpdateSubStationInfo(
 				subStationInfo,
 				request.getSession()
 						.getAttribute(GlobalConstant.SESSION_USER_NAME)
-						.toString());
+						.toString());*/
+		//you start
+		boolean retFlag = cityService.addOrUpdateSubStationInfo(
+				subStationInfo,
+				AutheManage.getUsername(request));
+		//you over
 		
 		if (retFlag) {
 			return "success";

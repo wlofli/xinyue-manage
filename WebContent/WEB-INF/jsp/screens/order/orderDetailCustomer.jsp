@@ -123,7 +123,13 @@
 	}
 	
 	function getList(){
-		document.location.href="${ctx}/order/list?index=0";
+		var memberid = $("memberid");
+		if(memberid != null){
+			history.back(-1);
+		}else{
+			document.location.href="${ctx}/order/list?index=0";
+		}
+		
 	}
 	
 	
@@ -282,7 +288,7 @@
 <sf:hidden path="id"/>
 <div><span>订单号：</span><span class="dx2"><strong>${order.code }</strong></span><div class="clear"></div></div>
 	<div><span>订单状态：</span><span class="dx2">${order.status }</span><div class="clear"></div></div>
-	<div><span>下单时间：</span><span class="dx2"><fmt:formatDate value="${order.createdTime }" type="both" pattern="yyyy-MM-dd h:m"/></span>
+	<div><span>下单时间：</span><span class="dx2"><fmt:formatDate value="${order.createdTime }" type="both" pattern="yyyy-MM-dd H:m"/></span>
 	<div class="clear"></div></div>
 	<div><span>用户名：</span><span class="dx2">${order.linkUserName }</span><div class="clear"></div></div>
 	<div><span>申请单位：</span><span class="dx2">${order.companyInfo }</span><span><a href="${ctx }/order/turnapplicantdata?id=${order.id}">企业申请资料</a></span>
@@ -293,7 +299,7 @@
 	<div><span>产品编号：</span><span class="dx2">${order.productCode }</span><div class="clear"></div></div>
 	<div><span>所属机构：</span><span class="dx2">${order.bank }</span></div>
 	<div><span>企业贷款额度：</span><span class="dx2">${order.credit }万元</span><div class="clear"></div></div>
-	<div><span>新越网审核时间：</span><span class="dx2"><fmt:formatDate value="${order.taxAuditeTime }" type="both" pattern="yyyy-MM-dd h:m"/></span></div>
+	<div><span>新越网审核时间：</span><span class="dx2"><fmt:formatDate value="${order.taxAuditeTime }" type="both" pattern="yyyy-MM-dd H:m"/></span></div>
 	<div><span>新越网审核人员：</span><span class="dx2">${order.taxAuditePerson }</span><div class="clear"></div></div>
 	<div><span>新越网审核结果：</span><span class="dx2">
 		<c:if test="${order.taxAuditeStatus == 1}">审核通过</c:if>
@@ -306,8 +312,8 @@
 <c:when test="${order.orderType == '立即领取' }">
 	<div class="bt"><span>立即领取</span></div> 
 	<div><span>立即领取价：</span><span class="dw">${fixed.price}元</span><div class="clear"></div></div>
-	<div><span>领取开始时间：</span><span class="dw"><fmt:formatDate value="${fixed.startTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
-	<div><span>领取结束时间：</span><span class="dw"><fmt:formatDate value="${fixed.endTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
+	<div><span>领取开始时间：</span><span class="dw"><fmt:formatDate value="${fixed.startTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
+	<div><span>领取结束时间：</span><span class="dw"><fmt:formatDate value="${fixed.endTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
 	<div><span>领取状态：</span><span class="dw">${order.orderStatus}</span><div class="clear"></div></div>
 	<div><input type="button" value="重置" class="tj_btn" onclick="javascript:resetOrder('${order.id}')"/></div>
 </c:when>
@@ -317,8 +323,8 @@
 	<div><span>一口价：</span><span class="dw">${auction.fixedPrice}元</span><div class="clear"></div></div>
 	<div><span>起拍价：</span><span class="dw">${auction.startPrice}元</span><div class="clear"></div></div>
 	<div><span>最低加价：</span><span class="dw">${auction.lowerAddPrice}元</span><div class="clear"></div></div>
-	<div><span>竞拍开始时间：</span><span class="dw"><fmt:formatDate value="${auction.startTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
-	<div><span>竞拍结束时间：</span><span class="dw"><fmt:formatDate value="${auction.endTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
+	<div><span>竞拍开始时间：</span><span class="dw"><fmt:formatDate value="${auction.startTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
+	<div><span>竞拍结束时间：</span><span class="dw"><fmt:formatDate value="${auction.endTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
 	<div><span>领取状态：</span><span class="dw">${order.orderStatus}</span><div class="clear"></div></div>
 	<div><input type="button" value="重置" class="tj_btn" onclick="javascript:resetOrder('${order.id}')"/></div>
 </c:when>
@@ -329,8 +335,8 @@
 	<div><span>最低价：</span><span class="dw">${lowprice.minPrice}元</span><div class="clear"></div></div>
 	<div><span>每次降价：</span><span class="dw">${lowprice.perMinus}元</span><div class="clear"></div></div>
 	<div><span>降价间隔时间：</span><span class="dw">${lowprice.miniute}分钟</span><div class="clear"></div></div>
-	<div><span>开始时间：</span><span class="dw"><fmt:formatDate value="${lowprice.startTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
-	<div><span>结束时间：</span><span class="dw"><fmt:formatDate value="${lowprice.endTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
+	<div><span>开始时间：</span><span class="dw"><fmt:formatDate value="${lowprice.startTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
+	<div><span>结束时间：</span><span class="dw"><fmt:formatDate value="${lowprice.endTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
 	<div><span>领取状态：</span><span class="dw">${order.orderStatus}</span><div class="clear"></div></div>
 	<div><input type="button" value="重置" class="tj_btn" onclick="javascript:resetOrder('${order.id}')"/></div>
 </c:when>
@@ -378,7 +384,7 @@
 	       			<c:forEach items="${credittypeList }" var="list">
 			       			<option value="${list.key }">${list.value }</option>
 	       			</c:forEach></select><div class="clear"></div></div>
-<div><span>抵押物：</span><input name="collateral" id="collateral" type="text" class="t1 required" value="" /><div class="clear"></div></div> 
+<div><span>抵押物：</span><select class="t1 required" name="collateral" id="collateral"><option value="1">有抵押物</option><option value="2">无抵押物</option></select><div class="clear"></div></div> 
 <div><span>申贷期限(月)：</span><input name="limitDate" id="limitDate" type="text" class="t1 digits required" value="" /><div class="clear"></div></div>
 <div><span>年增值税(万)：</span><input name="totalVat" id="totalVat" type="text" class="t1 number required" value="" /><div class="clear"></div></div> 
 

@@ -95,11 +95,15 @@ function search(){
 	$("#searchForm").submit();
 }
 
-
+function changePage(n){
+	var index = n - 1;
+	$("#searchForm").attr("action","${ctx }/recommend/credit/list?index=" + index);
+	$("#searchForm").submit();
+}
 </script>
 <body> 
 <div class="c_right">
-<div class="c_r_bt"><h1><img src="../images/fx_tb1.png" alt="会员推广管理_信贷经理推荐列表" /><span>会员推广管理_信贷经理推荐列表</span></h1></div>
+<div class="c_r_bt"><h1><img src="${ctx }/images/fx_tb1.png" alt="会员推广管理_信贷经理推荐列表" /><span>会员推广管理_信贷经理推荐列表</span></h1></div>
 <div class="c_r_bt1">
 <sf:form action="${ctx }/recommend/credit/list" commandName="search" id="searchForm" method="post">
 <ul>
@@ -162,7 +166,7 @@ function search(){
 <td colspan="2">${list.recommendRechargeNum }</td>
 <td colspan="1">暂无</td> 
 <td colspan="1" class="cjtd">
-	<c:if test="${list.userType == 'c' }"><a href="${ctx }/credit/manager/detail/iu?id=${list.id}">推荐会员详情</a></c:if>
+	<c:if test="${list.userType == 'c' }"><a href="${ctx }/credit/manager/detail/iu?managerId=${list.id}&i=1">推荐会员详情</a></c:if>
 	<c:if test="${list.userType == 'm' }"><a href="${ctx}/member/recommend?memberid=${list.id}&typeid=1">推荐会员详情</a></c:if>
 	
 </td>

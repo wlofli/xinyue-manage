@@ -27,14 +27,12 @@ function update(){
 		});
 }
 
-function cancel(){
-	window.location.href = "${ctx}/fund/withdraw/list";
-}
+
 
 </script>
 <body> 
 <div class="c_right">
-<div class="c_r_bt"><h1><img src="../images/zj_tb1.png" alt="待审核提现订单审核"/><span>待审核提现订单审核</span></h1><a href="javascript:cancel()">返回</a></div>
+<div class="c_r_bt"><h1><img src="${ctx }/images/zj_tb1.png" alt="待审核提现订单审核"/><span>待审核提现订单审核</span></h1><a href="javascript:cancel()">返回</a></div>
 <div class="c_form">
 <div class="bt"><span>待审核订单详情</span></div>
 <div><span>申请日期：</span><span class="dw"><fmt:formatDate value="${ob.withdrawTime }" pattern="yyyy-MM-dd"/></span><div class="clear"></div></div>
@@ -66,7 +64,7 @@ function cancel(){
 <div><span>备注：</span><textarea name="auditeRemark" class="qxsz qxsz2" ></textarea>
 <span class="zs">该项为必填项</span><div class="clear"></div></div>
 <div><input type="button" value="确 定" onclick="update()" class="tj_btn" />
-<input type="button" onclick="cancel()" value="取 消" class="tj_btn tj_btn2" /></div>
+<input type="button" onclick="history.back()" value="取 消" class="tj_btn tj_btn2" /></div>
 </form>
 </c:if>
 
@@ -95,7 +93,7 @@ function cancel(){
 	<div><span>备注：</span><textarea name="payRemark" class="qxsz qxsz2" ></textarea><span class="zs">该项为必填项</span><div class="clear"></div></div>
 	<div>
 	<input type="button" onclick="update()" value="确 定"  class="tj_btn" />
-	<input type="button" onclick="cancel()" value="取 消" class="tj_btn tj_btn2" /></div>
+	<input type="button" onclick="history.back()" value="取 消" class="tj_btn tj_btn2" /></div>
 	</form>
 </c:if>
 </div>

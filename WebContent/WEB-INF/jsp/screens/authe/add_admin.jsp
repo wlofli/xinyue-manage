@@ -5,12 +5,13 @@
 <%@ include file="../../commons/common.jsp" %>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>新越网后台管理系统_权限管理_添加管理员</title>
-  <link rel="stylesheet" href="${ctx}/css/jquery-ui.min.css">
+  <link rel="stylesheet" href="${ctx}/css/jquery-ui.min.css"/>
   <script src="${ctx}/js/jquery-ui.min.js"></script>
 <script language="javascript">
 $(function() {
 	$("#orgName").autocomplete({
 	    source: function(request, response) {
+	    	$("#jg").val("");
 	        $.ajax({
 	            url: "${ctx}/organization/pinyin",
 	            dataType: "json",
@@ -159,11 +160,11 @@ function adduser(){
 <div class="c_form">
 <form>
 <div><span>用户名：</span><input type="text" class="t1" name="username" id="username" /><span class="zs" id="cuser">该项为必填项</span><div class="clear"></div></div>
-<div><span>密码：</span><input type="text" class="t1" name="password" id="password" /><span class="zs" id="cpassword">该项为必填项</span><div class="clear"></div></div>
+<div><span>密码：</span><input type="password" class="t1" name="password" id="password" /><span class="zs" id="cpassword">该项为必填项</span><div class="clear"></div></div>
 <div><span>姓名：</span><input type="text" class="t1" name="name" id="name"/><span class="zs" id="cname">该项为必填项</span><div class="clear"></div></div>
 <div><span>手机号：</span><input type="text" class="t1" name="phone" id="phone" /><span class="zs" id="cphone">该项为必填项</span><div class="clear"></div></div>
 <div><span>职位：</span><input type="text" class="t1" name="position" id="position"/><span class="zs" id="cposition">该项为必填项</span><div class="clear"></div></div>
-<div><span>所属机构：</span><input type="text" class="t1" name="orgName" id="orgName"/><span class="zs" id="corgName">该项为必填项</span><div class="clear"></div><input type="hidden" class="t1" name="jg" id="jg"/></div>
+<div><span>所属机构：</span><input type="text" class="t1 -ms-clear" name="orgName" id="orgName"/><span class="zs" id="corgName">该项为必填项</span><div class="clear"></div><input type="hidden" class="t1" name="jg" id="jg"/></div>
 <div ><span>权限设置：</span>
 
 <div class="qxsz" >
@@ -177,8 +178,13 @@ function adduser(){
 <span><input name="gid" type="checkbox" value="8"/>帮助中心管理</span>
 <span><input name="gid" type="checkbox" value="9"/>城市分站管理</span>
 <span><input name="gid" type="checkbox" value="10"/>广告位管理</span>
-<span><input name="gid" type="checkbox" value="11"/>友情链接管理</span>
-<span><input name="gid" type="checkbox" value="12"/>合作机构管理</span>
+
+<span><input name="gid" type="checkbox" value="20"/>贷款订单管理</span>
+<span><input name="gid" type="checkbox" value="21"/>信贷经理管理</span>
+<span><input name="gid" type="checkbox" value="22"/>资金管理</span>
+<span><input name="gid" type="checkbox" value="23"/>问答管理</span>
+<span><input name="gid" type="checkbox" value="24"/>会员推广管理</span>
+<span><input name="gid" type="checkbox" value="11"/>友情链接管理&合作机构管理</span>
 </div><div class="clear"></div>
 </div>
 <div >

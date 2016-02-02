@@ -45,7 +45,12 @@
 			success:function(data){
 				if(data == "success"){
 					alert("设置成功");
-					document.location.href="${ctx}/fastproduct/list?index=0";
+					if($(form).attr("id") == 'appointForm'){
+						document.location.href="${ctx}/fastproduct/list?index=0";
+					}else{
+						document.location.href="${ctx}/fastproduct/list/product?index=0";
+					}
+					
 				}else{
 					alert("设置失败");
 				}
@@ -257,13 +262,13 @@
 </script>
 <body> 
 <div class="c_right">
-<div class="c_r_bt"><h1><img src="../images/dd_tb1.png" alt="快速申贷订单详情"/><span>快速申贷订单详情</span></h1>
-<a href="javascript:getList()">返回</a></div>
+<div class="c_r_bt"><h1><img src="${ctx }/images/dd_tb1.png" alt="快速申贷订单详情"/><span>快速申贷订单详情</span></h1>
+<a href="javascript:history.back(-1)">返回</a></div>
 <div class="c_form">
 <sf:form  commandName="fspdt" id="editForm" method="post">
 <sf:hidden path="id"/>
 <div><span>快速申贷订单号：</span><span class="dw"><strong>${fspdt.code }</strong></span><div class="clear"></div></div>
-<div><span>订单提交时间：</span><span class="dw"><fmt:formatDate value="${fspdt.createdTime}" type="both" pattern="yyyy-MM-dd h:m"/></span><div class="clear"></div></div>
+<div><span>订单提交时间：</span><span class="dw"><fmt:formatDate value="${fspdt.createdTime}" type="both" pattern="yyyy-MM-dd H:m"/></span><div class="clear"></div></div>
 <div><span>企业名称：</span><span class="dw">${fspdt.company }</span><div class="clear"></div>
 	<span><a href="#undone:需要金辉那边完成再议">企业申请资料</a></span></div>
 <div><span>所在地区：</span><span class="dw">${fspdt.areaProvince }${fspdt.areaCity }${fspdt.areaZone }</span><div class="clear"></div></div>
@@ -282,8 +287,8 @@
 <c:when test="${fspdt.orderType == '立即领取' }">
 	<div class="bt"><span>立即领取</span></div> 
 	<div><span>立即领取价：</span><span class="dw">${fixed.price}元</span><div class="clear"></div></div>
-	<div><span>领取开始时间：</span><span class="dw"><fmt:formatDate value="${fixed.startTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
-	<div><span>领取结束时间：</span><span class="dw"><fmt:formatDate value="${fixed.endTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
+	<div><span>领取开始时间：</span><span class="dw"><fmt:formatDate value="${fixed.startTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
+	<div><span>领取结束时间：</span><span class="dw"><fmt:formatDate value="${fixed.endTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
 	<div><span>领取状态：</span><span class="dw">${fspdt.orderStatus}</span><div class="clear"></div></div>
 	<div><input type="button" value="重置" class="tj_btn" onclick="javascript:resetOrder('${fspdt.id}')"/></div>
 </c:when>
@@ -293,8 +298,8 @@
 	<div><span>一口价：</span><span class="dw">${auction.fixedPrice}元</span><div class="clear"></div></div>
 	<div><span>起拍价：</span><span class="dw">${auction.startPrice}元</span><div class="clear"></div></div>
 	<div><span>最低加价：</span><span class="dw">${auction.lowerAddPrice}元</span><div class="clear"></div></div>
-	<div><span>竞拍开始时间：</span><span class="dw"><fmt:formatDate value="${auction.startTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
-	<div><span>竞拍结束时间：</span><span class="dw"><fmt:formatDate value="${auction.endTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
+	<div><span>竞拍开始时间：</span><span class="dw"><fmt:formatDate value="${auction.startTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
+	<div><span>竞拍结束时间：</span><span class="dw"><fmt:formatDate value="${auction.endTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
 	<div><span>领取状态：</span><span class="dw">${fspdt.orderStatus}</span><div class="clear"></div></div>
 	<div><input type="button" value="重置" class="tj_btn" onclick="javascript:resetOrder('${fspdt.id}')"/></div>
 </c:when>
@@ -305,8 +310,8 @@
 	<div><span>最低价：</span><span class="dw">${lowprice.minPrice}元</span><div class="clear"></div></div>
 	<div><span>每次降价：</span><span class="dw">${lowprice.perMinus}元</span><div class="clear"></div></div>
 	<div><span>降价间隔时间：</span><span class="dw">${lowprice.miniute}分钟</span><div class="clear"></div></div>
-	<div><span>开始时间：</span><span class="dw"><fmt:formatDate value="${lowprice.startTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
-	<div><span>结束时间：</span><span class="dw"><fmt:formatDate value="${lowprice.endTime}" type="both" pattern="yyyy-MM-dd h:m:s"/></span><div class="clear"></div></div>
+	<div><span>开始时间：</span><span class="dw"><fmt:formatDate value="${lowprice.startTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
+	<div><span>结束时间：</span><span class="dw"><fmt:formatDate value="${lowprice.endTime}" type="both" pattern="yyyy-MM-dd H:m:s"/></span><div class="clear"></div></div>
 	<div><span>领取状态：</span><span class="dw">${fspdt.orderStatus}</span><div class="clear"></div></div>
 	<div><input type="button" value="重置" class="tj_btn" onclick="javascript:resetOrder('${fspdt.id}')"/></div>
 </c:when>
@@ -354,7 +359,7 @@
 	       			<c:forEach items="${credittypeList }" var="list">
 			       			<option value="${list.key }">${list.value }</option>
 	       			</c:forEach></select><div class="clear"></div></div>
-<div><span>抵押物：</span><input name="collateral" id="collateral" type="text" class="t1 required" value="" /><div class="clear"></div></div> 
+<div><span>抵押物：</span><select class="t1 required" name="collateral" id="collateral"><option value="1">有抵押物</option><option value="2">无抵押物</option></select><div class="clear"></div></div> 
 <div><span>申贷期限(月)：</span><input name="limitDate" id="limitDate" type="text" class="t1 digits required" value="" /><div class="clear"></div></div>
 <div><span>年增值税(万)：</span><input name="totalVat" id="totalVat" type="text" class="t1 number required" value="" /><div class="clear"></div></div> 
 	

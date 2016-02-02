@@ -249,7 +249,7 @@ function changeSelect(type,val){
 				<div class="clear"></div>
 			</div>
 			<div>
-				<span>是否推荐：</span>
+				<span>是否启用：</span>
 				<span class="dx"><input type="radio" name="status" value="0"  />是</span>
 				<span class="dx"><input type="radio" name="status" value="1" checked="checked"/>否</span>
 				<div class="clear"></div>

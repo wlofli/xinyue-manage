@@ -303,8 +303,8 @@ function tab_item(n,status)
 <td colspan="3">${list.companyInfo }</td>
 <td colspan="2">${list.province }${list.city }${list.zone }</td>
 <td colspan="2">${list.status }</td>
+<td colspan="2">${list.orderType }</td>
 <td colspan="2">${list.orderStatus }</td>
-<td colspan="2">${list.taxAuditePerson }</td>
 <c:choose>
 <c:when test="${auditestatus == '3'}">
 <td colspan="2">${list.taxAuditePerson }</td>

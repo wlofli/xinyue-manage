@@ -17,7 +17,7 @@
 			<h1>
 				<img src="${ctx }/images/wd_tb1.png" alt="问答列表" /><span>问答列表</span>
 			</h1>
-			<a href="javascript:void(0)">添加问答分类</a><a href="javascript:void(0)" onclick="document.location.href='${ctx}/answer/toedit'">添加问答</a>
+			<a href="javascript:void(0)" onclick="document.location.href='${ctx}/answer/toedit'">添加问答</a>
 		</div>
 		<div class="c_r_bt1">
 			<s:form commandName="qbean" action="${ctx }/answer/show" method="post" id="quest_form">
@@ -89,12 +89,12 @@
 								<td colspan="2">${quest.questType }</td>
 								<td colspan="2">${quest.createtime }</td>
 								<c:if test="${quest.createid != '0' }" var="flag">
-									<td colspan="2">${quest.createName }</td>
+									<td colspan="2">${quest.memberName}${quest.adminName } </td>
 									<td colspan="2">${quest.telphone }</td>
 								</c:if>
 								<c:if test="${not flag}">
 									<td colspan="2">匿名</td>
-									<td colspan="2"></td>
+									<td colspan="2">${quest.telphone }</td>
 								</c:if>
 								<td colspan="1"><c:if test="${quest.status==1 }">待审核</c:if><c:if test="${quest.status==2 }">审核通过</c:if><c:if test="${quest.status==3 }">审核失败</c:if> </td>
 								<td colspan="1">${quest.answerNum }</td>

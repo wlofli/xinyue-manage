@@ -79,7 +79,7 @@
 // 				alert("add");
 				$("#id_text").val(editor.html());
 				if(!$("#addNewInfo").valid()){
-					alert("必填项未填")
+					alert("必填项未填");
 					return ;
 				}
 // 				alert(1);
@@ -92,10 +92,10 @@
 						async:false,
 						success:function(data){
 							if(data == "success"){
-								alert("修改成功");
+								alert("保存成功");
 								document.location.href="${ctx}/new/list?index=0";
 							}else{
-								alert("添加失败");
+								alert("保存失败");
 							}
 						}
 					});
@@ -125,6 +125,9 @@
 				var fileVal = $("#imagefile").val();
 				if (fileVal != "") {
 					type = fileVal.split(".");
+				}else{
+					alert("请选择图片");
+					return;
 				}
 // 				$("#imageUrl").val(fileVal);
 				$.ajaxFileUpload({
@@ -137,7 +140,7 @@
 						if(data != 'fail'){
 							$("#fileName").val(data.name);
 							$("#fileDir").val(data.path);
-							$("#fileImg").attr("src" , data.path);
+							$("#fileImg").attr("src" , data.path + data.name);
 							
 						}
 					}
@@ -187,10 +190,10 @@
 						onclick="upload()" />
 						<c:choose>
 							<c:when test="${empty newInfo.fileName }">
-								<img src="${ctx }/images/f1.jpg" id="fileImg" width="200px" height="75px"/>
+								<img src="${ctx }/images/f1.jpg" id="fileImg" width="200px" height="75px" style="margin-left:15px"/>
 							</c:when>
 							<c:otherwise>
-								<img src="${newInfo.fileDir}" id="fileImg" width="200px" height="75px"/>
+								<img src="${newInfo.fileDir}${newInfo.fileName}" id="fileImg" width="200px" height="75px"/>
 							</c:otherwise>
 						</c:choose>
 						<span class="zs">该项为必填项</span>
@@ -262,10 +265,10 @@
 						onclick="backList()" class="tj_btn tj_btn2" />
 				</div>
 				<div id="login" style="display:block; visibility:hidden; margin:0; padding:0;">
-					<div class="login1">
+					<div class="login1" style="height:auto; min-height:200px;">
 						<div class="bt">
 							<h1>添加提示框</h1>
-							<a href="javascript:hide()"><img src="../images/close.png" /></a>
+							<a href="javascript:hide()"><img src="${ctx }/images/close.png" /></a>
 							<div class="clear"></div>
 						</div>
 						

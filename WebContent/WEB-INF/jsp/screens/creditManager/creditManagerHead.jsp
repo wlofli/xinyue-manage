@@ -11,16 +11,16 @@
 <div class="c_r_bt1">
 	<ul class="menu1">
 		<li class="" id="id_li_base_info"><a href="${ctx}/credit/manager/detail/bi">基本信息</a></li>
-		<li class="" id="id_li_account_info"><a href="${ctx}/credit/manager/detail/ai">账户信息</a></li>
+		<!--<li class="" id="id_li_account_info"><a href="${ctx}/credit/manager/detail/ai">账户信息</a></li> -->
 		<li class="" id="id_li_invite_user"><a href="${ctx}/credit/manager/detail/iu">推荐会员</a></li>
 		<li class="" id="id_li_money_account"><a href="${ctx}/credit/manager/detail/ma">资金账户</a></li>
 		<!-- 			<li class="" id="id_li_point_account"><a href="jf_xd.html">积分账户</a></li> -->
 		<li class="" id="id_li_customer_info"><a href="${ctx}/credit/manager/detail/ci">客户信息</a></li>
-		<li class="" id="id_li_spread_product"><a href="tg_xd.html">推广产品</a></li>
+		<!--<li class="" id="id_li_spread_product"><a href="tg_xd.html">推广产品</a></li>-->
 		<li class="" id="id_li_success_case"><a href="${ctx}/credit/manager/detail/sc">成功案例</a></li>
 		<!-- <li class="" id="id_li_info_search"><a href="new_xd.html">信息查询</a></li> -->
 		<li class="" id="id_li_server_rating"><a href="${ctx}/credit/manager/detail/sr">服务评级</a></li>
-		<li class="" id="id_li_customer_question"><a href="wd_xd.html">客户问答</a></li>
+		<li class="" id="id_li_customer_question"><a href="${ctx}/credit/manager/detail/xans">客户问答</a></li>
 	</ul>
 </div>
 <script type="text/javascript">

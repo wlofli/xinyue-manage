@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.xinyue.manage.beans.CustomerInfo;
 import com.xinyue.manage.beans.InvitationMemberInfo;
+import com.xinyue.manage.beans.OrderCustomer;
 import com.xinyue.manage.beans.PageData;
 import com.xinyue.manage.beans.QuestionBean;
 import com.xinyue.manage.beans.SearchCreditManager;
@@ -33,6 +34,7 @@ import com.xinyue.manage.model.WithdrawMoney;
 import com.xinyue.manage.service.AnswerService;
 import com.xinyue.manage.service.CreditManagerService;
 import com.xinyue.manage.service.FundService;
+import com.xinyue.manage.service.OrderCustomerService;
 import com.xinyue.manage.service.OrderService;
 import com.xinyue.manage.service.OrderTrackService;
 import com.xinyue.manage.service.OrganizationService;
@@ -42,7 +44,12 @@ import com.xinyue.manage.service.SelectService;
 import com.xinyue.manage.service.SuccessCaseService;
 import com.xinyue.manage.util.CommonFunction;
 import com.xinyue.manage.util.GlobalConstant;
-
+/**
+ * ywh modify 
+ * 2015-12-01 invitationChangepage
+ * 2015-12-08 modify  saveCreditManager  saveAudit
+ * 2015-12-09 baseInfoCM  inviteUserCM   getServerRating
+ */
 /**
  * 信贷经理(后台)
  * @author MK)茅
@@ -177,17 +184,31 @@ public class CreditManagerController {
 	@RequestMapping(value="/save",method=RequestMethod.POST)
 	public String saveCreditManager(HttpServletRequest request,Model model,CreditManager creditManager) {
 		
-		boolean result = creditManagerService.saveCreditManager(creditManager);
-		
-		if (result) {
+		try {
+			creditManagerService.saveCreditManager(creditManager);
 			return "redirect:/credit/manager/list";
-		}else {
+		} catch (Exception e) {
+			// TODO: handle exception
 			model.addAttribute("creditManager", creditManager);
 			model.addAttribute("message", "保存失败");
 			getSelectList(model);
+			return "screens/creditManager/creditManagerEdit";
 		}
+	
+	}
+	
+	//ywh 2015-11-13 
+	@RequestMapping(value="/audit/save",method=RequestMethod.POST)
+	@ResponseBody
+	public String saveAudit(HttpServletRequest request,Model model,AuthenticationCM authenticationCM) {
 		
-		return "screens/creditManager/creditManagerEdit";
+		try {
+			creditManagerService.updateAudit(authenticationCM);
+			return GlobalConstant.RET_SUCCESS;
+		} catch (Exception e) {
+			// TODO: handle exception
+			return GlobalConstant.RET_FAIL;
+		}
 	}
 	
 	/**
@@ -201,14 +222,24 @@ public class CreditManagerController {
 	public String baseInfoCM(HttpServletRequest request,Model model,String managerId) {
 		
 		//标题选择
-		selectTitle(request, managerId, "base_info");
-		
+		if(GlobalConstant.isNull(managerId)){
+			selectTitle(request, getManagerId(), "base_info");
+		}else{
+			selectTitle(request,managerId, "base_info");
+		}
 		//基本信息
-		CreditManager creditManager = creditManagerService.getCreditManagerById(managerId);
+		CreditManager creditManager = creditManagerService.getCreditManagerById(getManagerId());
 		model.addAttribute("creditManager", creditManager);
 		
 		//认证信息
 		AuthenticationCM authenticationCM = creditManagerService.getAuthenticationById(managerId);
+		//you start
+		if(GlobalConstant.isNull(authenticationCM)){
+			authenticationCM = new AuthenticationCM();
+		}
+		authenticationCM.setRecommend(creditManager.getRecommend());
+		authenticationCM.setManagerId(managerId);
+		//you over
 		model.addAttribute("authenticationCM", authenticationCM);
 		
 		//图片路径
@@ -249,7 +280,13 @@ public class CreditManagerController {
 		clearSession(request);
 		
 		//标题选择
-		selectTitle(request, getManagerId(), "invite_user");
+		String managerId = request.getParameter("managerId");
+		if(GlobalConstant.isNull(managerId)){
+			selectTitle(request, getManagerId(), "invite_user");
+		}else{
+			selectTitle(request,managerId, "invite_user");
+		}
+		
 		
 		// 普通会员推荐人数
 		int invitationMemberCount = creditManagerService
@@ -262,6 +299,11 @@ public class CreditManagerController {
 				.getInvitationManagerCount(getManagerId());
 		request.getSession().setAttribute("invitationManagerCount", invitationManagerCount);
 		getInvitationManagerInfo(request, getManagerId(), 1);
+		String i = request.getParameter("i");
+		if(!GlobalConstant.isNull(i)){
+			model.addAttribute("i", i);
+		}
+		model.addAttribute("i", i);
 		
 		return "screens/creditManager/creditManagerInviteUser";
 	}
@@ -279,8 +321,10 @@ public class CreditManagerController {
 		
 		if (type.equals("member")) {
 			getInvitationMemberInfo(request, getManagerId(), toPage);
+			model.addAttribute("i", 0);
 		}else if (type.equals("manager")) {
 			getInvitationManagerInfo(request, getManagerId(), toPage);
+			model.addAttribute("i", 1);
 		}
 		
 		return "screens/creditManager/creditManagerInviteUser";
@@ -363,6 +407,8 @@ public class CreditManagerController {
 		return "screens/creditManager/creditManagerCustomerInfo";
 	}
 	
+	
+	
 	/**
 	 * 客户信息查询
 	 * @param request
@@ -427,9 +473,9 @@ public class CreditManagerController {
 	 * @return
 	 */
 	@RequestMapping(value="/successcase/page")
-	public String successCasePage(HttpServletRequest request,Model model,int toPpage) {
+	public String successCasePage(HttpServletRequest request,Model model,int toPage) {
 		
-		successCaseRecords(model,toPpage);
+		successCaseRecords(model,toPage);
 		
 		return "screens/creditManager/creditManagerSuccessCase";
 	}
@@ -530,6 +576,7 @@ public class CreditManagerController {
 	 * @param request
 	 * @param searchCustomer
 	 */
+	/**
 	private void getCustomerInfoAll(HttpServletRequest request,
 			SearchCustomer searchCustomer) {
 		
@@ -538,6 +585,22 @@ public class CreditManagerController {
 		PageData<CustomerInfo> allPageData = new PageData<>(allInfo, count, searchCustomer.getPage());
 		request.getSession().setAttribute("allPageData", allPageData);
 	}
+	*/
+	
+	//ywh start 2015-12-18
+	@Resource
+	private OrderCustomerService os;
+	private void getCustomerInfoAll(HttpServletRequest request,
+			SearchCustomer searchCustomer) {
+		
+		List<OrderCustomer> allInfo = os.getMyCustomer(searchCustomer, searchCustomer.getManagerId(), (searchCustomer.getPage()-1)*GlobalConstant.PAGE_SIZE, GlobalConstant.PAGE_SIZE);
+		int count = os.countMyCustomer(searchCustomer,searchCustomer.getManagerId());
+		PageData<OrderCustomer> allPageData = new PageData<OrderCustomer>(allInfo, count, searchCustomer.getPage());
+		request.getSession().setAttribute("allPageData", allPageData);
+	}
+	
+	//ywh over 2015-12-18
+	
 	
 	/**
 	 * 评级信息
@@ -550,6 +613,7 @@ public class CreditManagerController {
 		int count = creditManagerService.getServerRatingCount(getManagerId());
 		PageData<Order> pageData = new PageData<>(orders, count, page);
 		model.addAttribute("pageData", pageData);
+		model.addAttribute("st", star);
 	}
 
 	/**
@@ -653,11 +717,11 @@ public class CreditManagerController {
 		
 		// 普通会员推荐
 		List<InvitationMemberInfo> memberInfos = creditManagerService
-				.getInvitationMemberInfo(managerId, 1);
+				.getInvitationMemberInfo(managerId, page);
 		int memberRecords = creditManagerService
 				.getInvitationMemberRecords(managerId);
 		PageData<InvitationMemberInfo> memberPageData = new PageData<>(
-				memberInfos, memberRecords, 1);
+				memberInfos, memberRecords, page);
 		request.getSession().setAttribute("memberPageData", memberPageData);
 
 	}
@@ -764,9 +828,15 @@ public class CreditManagerController {
 		String index = req.getParameter("index");
 		if(GlobalConstant.isNull(index)){
 			QuestionBean myanswer = abiz.getMyAnswer(createid);
+			if(GlobalConstant.isNull(myanswer)){
+				myanswer = new QuestionBean();
+			}
 			req.getSession().setAttribute("myanswer", myanswer);
 			
 			QuestionBean recentanswer = abiz.getRecentlyAnswer(createid);
+			if(GlobalConstant.isNull(recentanswer)){
+				recentanswer = new QuestionBean();
+			}
 			req.getSession().setAttribute("recentanswer", recentanswer);
 		}
 		
@@ -792,9 +862,15 @@ public class CreditManagerController {
 		String index = req.getParameter("index");
 		if(GlobalConstant.isNull(index)){
 			QuestionBean myanswer = abiz.getMyAnswer(createid);
+			if(GlobalConstant.isNull(myanswer)){
+				myanswer = new QuestionBean();
+			}
 			req.getSession().setAttribute("myanswer", myanswer);
 			
 			QuestionBean recentanswer = abiz.getRecentlyAnswer(createid);
+			if(GlobalConstant.isNull(recentanswer)){
+				recentanswer = new QuestionBean();
+			}
 			req.getSession().setAttribute("recentanswer", recentanswer);
 		}
 		//新越平台问题

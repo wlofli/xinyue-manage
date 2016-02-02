@@ -26,7 +26,7 @@
 			<c:forEach begin="${pageData.start}" end="${pageData.end}" varStatus="vs">
 				<c:choose>
 					<c:when test="${vs.index == pageData.currentPage}">
-						<li><a href="javascript:void();" onclick="changePage('${url}',${vs.index})" class="hit">${vs.index}</a></li>
+						<li><a href="javascript:void();" class="hit">${vs.index}</a></li>
 					</c:when>
 					<c:otherwise>
 						<li><a href="javascript:void();" onclick="changePage('${url}',${vs.index})">${vs.index}</a></li>
@@ -38,7 +38,7 @@
 			<c:if test="${pageData.currentPage > 3}">
 				<c:choose>
 					<c:when test="${pageData.currentPage == 1}">
-						<li><a href="javascript:void();" onclick="changePage('${url}',1)" class="hit">1</a></li>
+						<li><a href="javascript:void();" class="hit">1</a></li>
 					</c:when>
 					<c:otherwise>
 						<li><a href="javascript:void();" onclick="changePage('${url}',1)" >1</a></li>
@@ -49,7 +49,7 @@
 			<c:forEach begin="${pageData.start}" end="${pageData.end}" varStatus="vs">
 				<c:choose>
 					<c:when test="${pageData.currentPage == vs.index}">
-						<li><a href="javascript:void();" onclick="changePage('${url}',${vs.index})" class="hit">${vs.index}</a></li>
+						<li><a href="javascript:void();" class="hit">${vs.index}</a></li>
 					</c:when>
 					<c:otherwise>
 						<li><a href="javascript:void();" onclick="changePage('${url}',${vs.index})" >${vs.index}</a></li>
@@ -60,7 +60,7 @@
 			<c:if test="${pageData.currentPage+2 < pageData.totalPage}">
 				<c:choose>
 					<c:when test="${pageData.currentPage == pageData.totalPage}">
-						<li><a href="javascript:void();" onclick="changePage('${url}',${pageData.totalPage})" class="hit">${pageData.totalPage}</a></li>
+						<li><a href="javascript:void();" class="hit">${pageData.totalPage}</a></li>
 					</c:when>
 					<c:otherwise>
 						<li><a href="javascript:void();" onclick="changePage('${url}',${pageData.totalPage})" >${pageData.totalPage}</a></li>

@@ -15,7 +15,7 @@
 
 <body> 
 <div class="c_right">
-<div class="c_r_bt"><h1><img src="${ctx }/images/cp_tb1.png" alt="产品快速申贷订单详情"/><span>产品快速申贷订单详情</span></h1><a href="#">返回</a></div>
+<div class="c_r_bt"><h1><img src="${ctx }/images/cp_tb1.png" alt="产品快速申贷订单详情"/><span>产品快速申贷订单详情</span></h1><a href="javascript:void(0)" onclick="history.back(-1)">返回</a></div>
 <div class="c_form">
 <div><span>订单号：</span><span class="dx2"><strong>${fspdt.code }</strong></span><div class="clear"></div></div>
 <div><span>订单状态：</span><span class="dx2">${fspdt.status }</span><div class="clear"></div></div>

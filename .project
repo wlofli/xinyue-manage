@@ -3,7 +3,6 @@
 	<name>xinyue-manage</name>
 	<comment></comment>
 	<projects>
-		<project>xinyue-common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

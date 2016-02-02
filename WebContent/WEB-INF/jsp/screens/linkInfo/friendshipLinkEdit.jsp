@@ -225,6 +225,7 @@ function add(){
 	var rad_val = $('input[id="rad_type"]:checked').val();
 	
 	if ($("#addForm").valid()) {
+		
 		if(rad_val != 1 && rad_val != 2){
 			alert("请选择链接类型");
 			return;
@@ -264,6 +265,10 @@ function addLogo(){
 
 	var type = "";
 	var fileVal = $("#logoFile").val();
+	if(fileVal == ''){
+		alert("请选择图片");
+		return;
+	}
 	if (fileVal != "") {
 		type = fileVal.split(".");
 	}

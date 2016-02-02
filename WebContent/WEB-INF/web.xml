@@ -65,14 +65,14 @@
 	</welcome-file-list>
 	<error-page>
 		<error-code>403</error-code>
-		<location>/errors/jump403.html</location>
+		<location>/WEB-INF/jsp/errors/jump403.html</location>
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/errors/jump404.html</location>
+		<location>/WEB-INF/jsp/errors/jump404.html</location>
 	</error-page>
 	<error-page>
 		<error-code>500</error-code>
-		<location>/errors/jump500.html</location>
+		<location>/WEB-INF/jsp/errors/jump500.html</location>
 	</error-page>
 </web-app>

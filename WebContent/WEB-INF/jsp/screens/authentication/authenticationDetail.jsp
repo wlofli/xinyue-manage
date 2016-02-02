@@ -30,9 +30,9 @@
 			<div><span>联系人姓名：</span><sf:input path="contactPerson" class="t1" readonly="true"/><div class="clear"></div></div>
 			<div>
 				<span>性别：</span>
-				<span class="dx"><sf:radiobutton path="contactSex" value="1" disabled="true"/>男</span>
-				<span class="dx"><sf:radiobutton path="contactSex" value="0" disabled="true"/>女</span>
-				<span class="dx"><sf:radiobutton path="contactSex" value="2" disabled="true"/>保密</span>
+				<span class="dx"><sf:radiobutton path="contactSex" value="2" disabled="true"/>男</span>
+				<span class="dx"><sf:radiobutton path="contactSex" value="1" disabled="true"/>女</span>
+				<span class="dx"><sf:radiobutton path="contactSex" value="3" disabled="true"/>保密</span>
 				<div class="clear"></div>
 			</div>
 			<div><span>联系电话：</span><sf:input path="contactTel" class="t1" readonly="true"/><div class="clear"></div></div>
@@ -127,9 +127,9 @@
 			</div>
 			<div>
 				<span>实名认证状态：</span>
-				<span class="dx1"><sf:radiobutton path="authenticationStatus" value="1"/>审核中</span>
-				<span class="dx1"><sf:radiobutton path="authenticationStatus" value="2"/>认证成功</span>
-				<span class="dx1"><sf:radiobutton path="authenticationStatus" value="3"/>认证失败</span>
+				<span class="dx1"><sf:radiobutton path="authenticationStatus" value="0"/>审核中</span>
+				<span class="dx1"><sf:radiobutton path="authenticationStatus" value="1"/>认证成功</span>
+				<span class="dx1"><sf:radiobutton path="authenticationStatus" value="2"/>认证失败</span>
 				<div class="clear"></div>
 			</div>
 			<div><span>向企业法人发消息：</span><sf:textarea path="messages" class="qxsz2"/><div class="clear"></div></div>

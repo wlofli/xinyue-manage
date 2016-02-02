@@ -8,9 +8,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>新越网管理系统_帮助中心_编辑</title>
-<%@ include file="../../commons/editPlugin.jsp" %>
 <%@ include file="../../commons/common.jsp" %>
 <%@ include file="../../commons/validate.jsp" %>
+<%@ include file="../../commons/editPlugin.jsp" %>
+
 <style type="text/css">
     *{
 		border:0;}
@@ -123,7 +124,7 @@ $(function(){
 			</div>
 			<div>
 				<span>分类：</span>
-				<sf:select path="type" class="t1">
+				<sf:select path="type" class="t1 required">
 					<sf:option value="">请选择</sf:option>
 					<sf:options items="${typeList}" itemValue="key" itemLabel="value"/>
 				</sf:select>

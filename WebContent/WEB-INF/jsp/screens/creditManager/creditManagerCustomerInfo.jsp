@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="sf" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"  %> 
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 <%@ taglib prefix="m" tagdir="/WEB-INF/tags"%>
 <html>
@@ -86,19 +87,19 @@
 					<tbody>
 						<c:forEach items="${allPageData.data}" var="info" varStatus="vs">
 						<tr>
-							<td colspan="2">${info.orderId}</td>
-							<td colspan="1">${info.applicant}</td>
+							<td colspan="2">${info.code}</td>
+							<td colspan="1">${info.applicantName}</td>
 							<td colspan="1">${info.productName}</td>
-							<td colspan="2">${info.applicantTel}</td>
-							<td colspan="1">${info.loanAmount}</td>
-							<td colspan="1">${info.loanLimit}</td>
-							<td colspan="2">${info.company}</td>
-							<td colspan="2">${info.applicantDate}</td>
-							<td colspan="1">${info.orderStatus}</td>
+							<td colspan="2">${info.applicantPhone}</td>
+							<td colspan="1">${info.credit}</td>
+							<td colspan="1">${info.limitDate}</td>
+							<td colspan="2">${info.companyName}</td>
+							<td colspan="2"><fmt:formatDate value="${info.applicantTime }" pattern="yyyy-MM-dd h:m"/></td>
+							<td colspan="1">${info.status}</td>
 							<td colspan="1">${info.orderType}</td>
 							<td colspan="2">
-								<a href="${ctx}/order/turndetail?id=${info.id}">查看</a>
-								<a href="${ctx}/credit/manager/detail/ci/track?id=${info.id}">跟踪</a></td>
+								<a href="${ctx}/fastproduct/turnupdate?id=${info.id}">查看</a>
+								<a href="${ctx}/credit/manager/detail/ci/track?id=${info.code}">跟踪</a></td>
 						</tr>
 						</c:forEach>
 					</tbody>

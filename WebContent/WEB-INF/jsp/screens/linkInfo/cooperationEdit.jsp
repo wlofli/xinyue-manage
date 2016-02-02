@@ -100,7 +100,7 @@
 var addFlag = true;
 $(function(){
 	var cval = $("#hid_c").val();
-	var zval = $("#hid_z").val();
+	var zval = $("#hid_Z").val();
 	
 	if($("#editP").val() != ""){
 		getCities(cval);
@@ -174,8 +174,8 @@ $(function(){
 			</div>
 			<div><span>显示文本：</span><sf:input path="coopText" class="t1" id="show_T"/><div class="clear"></div></div>
 			<div><span>链接类型：</span>
-				<span class="dx"><sf:radiobutton path="coopType" value="1" id="rad_type_t"/>文本</span>
-				<span class="dx"><sf:radiobutton path="coopType" value="2" id="rad_type_p"/>图片</span>
+				<span class="dx"><sf:radiobutton path="coopType" value="1" id="rad_type"/>文本</span>
+				<span class="dx"><sf:radiobutton path="coopType" value="2" id="rad_type"/>图片</span>
 				<span id="type_err" class='zs_b'></span>
 				<div class="clear"></div>
 			</div>
@@ -191,7 +191,7 @@ $(function(){
 				<sf:select path="coopZone" class="t2" id="editZ" >
 					<sf:option value="">所属区/县</sf:option>
 				</sf:select>
-				<sf:hidden path="coopZoneHid" id="hid_c"/>
+				<sf:hidden path="coopZoneHid" id="hid_Z"/>
 				<sf:hidden path="coopCityHid" id="hid_c"/>
 				<span id="city_err"></span>
 				<div class="clear"></div>
@@ -259,6 +259,9 @@ function addLogo(){
 	var fileVal = $("#logoFile").val();
 	if (fileVal != "") {
 		type = fileVal.split(".");
+	}else{
+		alert("请选择图片");
+		return;
 	}
 
 	$.ajaxFileUpload({

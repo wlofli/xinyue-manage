@@ -15,17 +15,18 @@
 
 <body> 
 <div class="c_right">
-<div class="c_r_bt"><h1><img src="${ctx }/images/cp_tb1.png" alt="信贷经理订单跟踪记录"/><span>信贷经理订单跟踪记录</span></h1><a href="${ctx }/order/list">返回</a></div>
+<div class="c_r_bt"><h1><img src="${ctx }/images/cp_tb1.png" alt="信贷经理订单跟踪记录"/><span>信贷经理订单跟踪记录</span></h1><a href="javascript:void(0)" onclick="history.back(-1)">返回</a></div>
 <div class="c_form">
 <div class="bt"><span>订单跟踪明细</span></div>
-<div><span>产品名称：</span><span class="dx2"><a href="#">${order.productInfo} }</a></span><div class="clear"></div></div>
+<div><span>产品名称：</span><span class="dx2"><a href="#">${order.productInfo} </a></span><div class="clear"></div></div>
 <div><span>所属机构：</span><span class="dx2">${order.organization }</span><div class="clear"></div></div>
 <div><span>订单状态：</span><span class="dx2">${order.status }</span><div class="clear"></div></div>
 <div><span>贷款金额(万元)：</span><span class="dx2">${order.credit }</span><div class="clear"></div></div>
 <div><span>贷款期限(月)：</span><span class="dx2">${order.limitDate }</span><div class="clear"></div></div>
 <div><span>贷款人姓名：</span><span class="dx2">${order.applicantName }</span><div class="clear"></div></div>
 <div><span>贷款人电话：</span><span class="dx2">${order.applicantPhone }</span><div class="clear"></div></div>
-<div><span>借款单位：</span><span class="dx2">${order.companyName }</span><span><a href="${ctx }/order/turnapplicantdata?id=${order.id}">企业资料详情</a></span><div class="clear"></div></div>
+<div><span>借款单位：</span><span class="dx2">${order.companyName }</span>
+<span><c:if test="${not empty order.id && order.type == 1}"><a href="${ctx }/order/turnapplicantdata?id=${order.id}">企业资料详情</a></c:if></span><div class="clear"></div></div>
 <div><span>申请日期：</span><span class="dx2"><fmt:formatDate value="${order.applicantTime }" pattern="yyyy-MM-dd"/></span><div class="clear"></div></div>
 <div class="bt"><span>订单跟踪记录</span></div>
 <table cellpadding="0" cellspacing="0">

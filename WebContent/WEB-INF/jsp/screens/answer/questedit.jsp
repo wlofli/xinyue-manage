@@ -26,6 +26,7 @@
 					<s:hidden path="id" id="quest_id"/>
 					<s:hidden path="publish" id="quest_publish"/>
 					<s:input path="title" class="t1 required"/>
+					<s:hidden path="createid"/>
 					<div class="clear"></div>
 				</div>
 				<div>
@@ -43,7 +44,14 @@
 				</div>
 				<div>
 					<span>提问者：</span>
-					<s:input path="createName" class="t1 required"/>
+					<c:choose>
+						<c:when test="${not empty quest.id }">
+							<s:input path="createName" class="t1 required" readonly="readonly"/>
+						</c:when>
+						<c:otherwise>
+							<s:input path="createName" class="t1 required"/>
+						</c:otherwise>
+					</c:choose>
 					<div class="clear"></div>
 				</div>
 				<div>
@@ -72,7 +80,10 @@
 				</div>
 				<div>
 					<input type="button" value="提 交" class="tj_btn tj_btn3" onclick="save(0)"/><input
-						type="button" value="发 布" class="tj_btn tj_btn2" onclick="save(1)"/>
+						type="button" value="发 布" class="tj_btn tj_btn2" 
+					    <c:choose><c:when test="${quest.status == 2 }">onclick="save(1)"</c:when><c:otherwise>onclick="alert('审核未通过或未审核')"</c:otherwise> </c:choose>
+						/>
+						
 				</div>
 			</s:form>
 		</div>

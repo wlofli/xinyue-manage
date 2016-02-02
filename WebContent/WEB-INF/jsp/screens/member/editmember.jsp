@@ -29,49 +29,57 @@ $(function(){
 </head>
 <body>
 <div class="c_right">
-	<div class="c_r_bt"><h1><img src="${ctx }/images/hy_tb1.png" alt="会员管理"/><span>添加会员</span></h1></div>
+	<div class="c_r_bt"><h1><img src="${ctx }/images/hy_tb1.png" alt="会员管理"/><span><c:choose><c:when test="${not empty memberedit.id}">修改会员</c:when><c:otherwise>添加会员</c:otherwise> </c:choose></span></h1></div>
 	<div class="c_form">
 		<s:form commandName="memberedit" id="member_edit" method="post" action="">
 			<div>
 				<span>用户名：</span>
 				<s:hidden path="id" id="member_id"/>
-				<s:hidden path="memberid" id="member_edit_memberid"/>
-				<s:input path="loginName" class="t1" required="true"/>
+				<s:hidden path="type" id="member_edit_memberid"/>
+				<c:choose>
+					<c:when test="${not empty memberedit.id}">
+						<s:input path="loginName" cssClass="t1" readonly="true" required="true"/>
+					</c:when>
+					<c:otherwise>
+						<s:input path="loginName" cssClass="t1" required="true"/>
+					</c:otherwise> 
+				</c:choose>
+				
 			</div>
 			<div>
 				<span>联系人：</span>
-				<s:input path="contactName" class="t1" required="true"/>
+				<s:input path="contactName" cssClass="t1" required="true"/>
 			</div>
 			<div>
 				<span>联系人手机：</span>
-				<s:input path="contactPhone" class="t1" required="true" type="telphone"/>
+				<s:input path="contactPhone" cssClass="t1" required="true" type="telphone"/>
 			</div>
 			<div>
 				<span>企业名称：</span>
-				<s:input path="company" class="t1" required="true"/>
+				<s:input path="company" cssClass="t1" required="true"/>
 			</div>
 			<div>
 				<span>地区：</span>
-				<s:select path="provinceid" class="t2" id="provinceS" onchange="changeSelect('p','')" required="true">
+				<s:select path="provinceid" cssClass="t2" id="provinceS" onchange="changeSelect('p','')">
 					<s:option value="">请选择</s:option>
 					<s:options items="${provinces}" itemLabel="value" itemValue="key"/>
 				</s:select>
-				<s:select path="cityid" class="t2" id="cityS" onchange="changeSelect('c','')" required="true">
+				<s:select path="cityid" cssClass="t2" id="cityS" onchange="changeSelect('c','')">
 					<s:option value="">请选择</s:option>
 				</s:select>
 				<s:hidden path="cityids" id="c_id"/>
-				<s:select path="zoneid" class="t2" id="zoneS" required="true">
+				<s:select path="zoneid" cssClass="t2" id="zoneS" required="true">
 					<s:option value="">请选择</s:option>
 				</s:select>
 				<s:hidden path="zoneids" id="z_id"/>
 			</div>
 			<div>
 				<span>详细地址：</span>
-				<s:input path="address" class="t1" required="true"/>
+				<s:input path="address" cssClass="t1" required="true"/>
 			</div>
 			<div>
 				<span>会员类型：</span>
-				<s:select path="memberid" class="t1" required="true">
+				<s:select path="memberid" cssClass="t1" required="true">
 					<s:option value="">请选择</s:option>
 					<s:option value="1">QQ会员</s:option>
 					<s:option value="2">新越网会员</s:option>
@@ -82,7 +90,7 @@ $(function(){
 					<s:option value="7">国税VPDN会员</s:option>
 				</s:select>
 			</div>
-			<div><span>合作账户名：</span><input type="text" class="t1" /><span class="zs">该项为必填项</span><div class="clear"></div></div>
+			<div><span>合作账户名：</span><s:input path="memberCount" cssClass="t1" required="true"/><div class="clear"></div></div>
 			<div>
 				<input type="button" value="提 交" class="tj_btn" onclick="save()"/>
 				<input type="button" value="取消" class="tj_btn tj_btn2" onclick="history.back()"/>
@@ -91,6 +99,7 @@ $(function(){
 	</div>
 </div> 
 <script type="text/javascript">
+
 function changeSelect(type,val){
 
 	switch (type) {
@@ -210,7 +219,7 @@ function save(){
 							document.location.href="${ctx}/member/glist";
 						}
 					}else{
-						document.location.href='${ctx}/member/detail?editid=${member.id }'
+						document.location.href='${ctx}/member/detail?memberid=${memberedit.id }';
 					}
 					
 					

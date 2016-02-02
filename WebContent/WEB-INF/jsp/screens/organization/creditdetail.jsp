@@ -36,7 +36,7 @@
 					<div class="clear"></div>
 				</div>
 				<div>
-					<span>状态：</span><span class="dw"><c:choose><c:when test="${creditManager.status == 0 }">正常启用中</c:when><c:otherwise>屏蔽</c:otherwise> </c:choose></span>
+					<span>状态：</span><span class="dw" id="credit_status"><c:choose><c:when test="${creditManager.status == 0 }">正常启用中</c:when><c:otherwise>屏蔽</c:otherwise> </c:choose></span>
 					<div class="clear"></div>
 				</div>
 				<div>
@@ -103,7 +103,7 @@
 									<img src="${ctx }/images/frhsfz_icon.png" id="id_img_card"/>
 								</c:when>
 								<c:otherwise>
-									<img src="${showPath}moko/images/credit/person/credit/${authenticationCM.cardImg}" id="id_img_card"/>
+									<img src="${showPath}moko/images/credit/person/card/${authenticationCM.cardImg}" id="id_img_card"/>
 								</c:otherwise>
 							</c:choose>
 						</li>
@@ -118,7 +118,6 @@
 							</c:choose>
 						</li>
 						<li><span>头像图片</span>
-							<img src="${ctx }/images/tx.png" />
 							<c:choose>
 								<c:when test="${empty authenticationCM.halfImg}">
 									<img src="${ctx}/images/tx.png" id="id_img_half"/>
@@ -207,6 +206,7 @@
 				$.ajax({
 					url:'${ctx}/organization/email',
 					type:'post',
+					dataType:'json',
 					data:{'email':param,'content':$("#email_content_send").val()},
 					success:function(data){
 						if(data == 'success'){
@@ -222,11 +222,16 @@
 		function sendTel(tel){
 			var param = [];
 			param.push(tel);
+			if($("#tel_content_send").val().trim() == ''){
+				alert("内容不能为空");
+				return;
+			}
 			if(confirm("确定要发送?")){
 				$.ajax({
 					url:'${ctx}/organization/tel',
 					type:'post',
-					data:{'tel':param,'content':$("#tel_content_send").val()},
+					dataType:'json',
+					data:{'tel':param,'content':$('#tel_content_send').val()},
 					success:function(data){
 						if(data == 'success'){
 							alert("发送成功");
@@ -239,42 +244,43 @@
 		}
 	
 		function lock(id,status){
-			var managerId = getSelects(id);
-			if (managerId == "") {
-				alert("请选择一条记录");
-				return;
-			}
 			$.ajax({
 				url:"${ctx}/credit/manager/lock",
 				type:"post",
 				data:{
-					managerIds:managerId,
+					managerIds:id,
 					status:status
 				},
 				success:function(data){
 					if (data) {
-						alert("启用/屏蔽成功");
-						$("#credit_form").submit();
+						alert("启用或屏蔽成功");
+						if(status == 0){
+							$("#credit_status").html("启用");
+						}else{
+							$("#credit_status").html("屏蔽");
+						}
 					}else {
-						alert("启用/屏蔽失败");
+						alert("启用或屏蔽失败");
 					}
 				}
 			});
 		}
 	
 		function del(id){
-			$.ajax({
-				url:"${ctx}/credit/manager/del?managerIds="+id,
-				type:"post",
-				success:function(data){
-					if (data) {
-						alert("删除成功");
-						document.location.href="${ctx}/organization/credit";
-					}else {
-						alert("删除失败");
+			if(confirm("确认要删除?")){
+				$.ajax({
+					url:"${ctx}/credit/manager/del?managerIds="+id,
+					type:"post",
+					success:function(data){
+						if (data) {
+							alert("删除成功");
+							document.location.href="${ctx}/organization/credit?orgid=${orgid }";
+						}else {
+							alert("删除失败");
+						}
 					}
-				}
-			});
+				});
+			}
 		}
 		
 		var over = document.getElementById("over");

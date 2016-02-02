@@ -17,7 +17,7 @@
 		<div class="c_r_bt1">
 			<ul class="menu1">
 				<li><span>服务评级：</span></li>
-				<li><span><strong>3</strong>颗星</span></li>
+				<li><span><strong>${star }</strong>颗星</span></li>
 			</ul>
 		</div>
 		<div class="c_table">
@@ -29,12 +29,12 @@
 							<td colspan="1">评价用户</td>
 							<td colspan="1">
 								<select class="s1" id="id_star" onchange="sortStar(this.value)">
-									<option selected="selected" value="0">评价星数</option>
-									<option value="1">1星</option>
-									<option value="2">2星</option>
-									<option value="3">3星</option>
-									<option value="4">4星</option>
-									<option value="5">5星</option>
+									<option <c:if test="${st == 0  }">selected="selected"</c:if>  value="0">评价星数</option>
+									<option <c:if test="${st == 1  }">selected="selected"</c:if> value="1">1星</option>
+									<option <c:if test="${st == 2  }">selected="selected"</c:if> value="2">2星</option>
+									<option <c:if test="${st == 3  }">selected="selected"</c:if> value="3">3星</option>
+									<option <c:if test="${st == 4  }">selected="selected"</c:if> value="4">4星</option>
+									<option <c:if test="${st == 5  }">selected="selected"</c:if> value="5">5星</option>
 								</select>
 							</td>
 							<td colspan="1">评价时间</td>

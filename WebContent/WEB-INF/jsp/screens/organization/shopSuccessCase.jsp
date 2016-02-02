@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="m" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
-<%@ taglib prefix="m" tagdir="/WEB-INF/tags" %>
+
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -24,7 +25,7 @@
 		<div id="tab3" class="c_table">
 			<div class="c_table">
 				<div class="c_r_bt">
-					<a href="${ctx}/organization/success/case/add?orgid=${orgid}">添加成功案例</a>
+					<a href="${ctx}/organization/success/toedit?orgid=${orgid}">添加成功案例</a>
 				</div>
 				<table cellpadding="0" cellspacing="0">
 					<thead>
@@ -62,16 +63,16 @@
 							<td colspan="1">${info.orderNumber}</td>
 							<td colspan="1">${info.creditManagerName}</td>
 							<td colspan="3">
-								<a href="order_list1_xq.html">查看</a>
+								<a href="javascript:void(0)" onclick="document.location.href='${ctx}/organization/success/detail?successid=${info.id }'">查看</a>
 								<a href="javascript:void()" onclick="del('${info.id}')">删除</a>
 								<c:if test="${info.useFlag == true}">
-									<a href="javascript:void()" onclick="forPublish('${info.id}',1)">
+									<a href="javascript:void()" onclick="forPublish('${info.id}',0)">
 										<font color="#666">启用</font>/<font color="#0075a9">屏蔽</font>
 									</a>
 								</c:if>
 								<c:if test="${info.useFlag == false}">
-									<a href="javascript:void()" onclick="forPublish('${info.id}',0)">
-										<font color="#0075a9">启用</font>/<font color="#666">屏蔽</font>
+									<a href="javascript:void()" onclick="forPublish('${info.id}',1)">
+										<font color="#0075a9">屏蔽</font>/<font color="#666">启用</font>
 									</a>
 								</c:if>
 							</td>
@@ -119,14 +120,18 @@ function forPublish(id,type){
 		pubCode = id;
 	}
 	pubCode = encodeURI(encodeURI(pubCode));
+	
 	$.ajax({
 		url:"${ctx}/organization/success/case/publish?code="+pubCode+"&type="+type,
+		type:'post',
 		success:function(data){
 			if (data == true) {
-				if (type == 'p') {
+				if (type == '0') {
 					alert("启用成功");
+					document.location.href="${ctx}/organization/success/case/page?orgid=${orgid}&toPage="+${scPageData.currentPage};
 				} else {
 					alert("屏蔽成功");
+					document.location.href="${ctx}/organization/success/case/page?orgid=${orgid}&toPage="+${scPageData.currentPage};
 				}
 			}else{
 				alert("启用/屏蔽失败");
@@ -151,22 +156,29 @@ function del(id){
 		pubCode = id;
 	}
 	
-	$.ajax({
-		url:"${ctx}/organization/success/case/delete?code="+pubCode,
-		success:function(data){
-			if (data == true) {
-				alert("删除成功");
-			}else{
-				alert("删除失败");
+	if(confirm("确认要删除?")){
+		$.ajax({
+			url:"${ctx}/organization/success/case/delete?code="+pubCode,
+			type:'post',
+			success:function(data){
+				if (data == true) {
+					alert("删除成功");
+					document.location.href="${ctx}/organization/success/case?orgid=${orgid}";
+				}else{
+					alert("删除失败");
+				}
 			}
-		}
-	});
+		});
+	}
 	
 }
 
 function changePage(url,toPage){
 	var orgid = "${orgid}";
-	$.post("${ctx}/organization/success/case/page",{toPage:"toPage",orgid:orgid});
+	//ywh start 之所心没用jquery post是是因为前后台数据不一致
+	document.location.href="${ctx}/organization/success/case/page?toPage="+toPage+"&orgid="+orgid;
+	//ywh over 
+	//$.post("${ctx}/organization/success/case/page",{"toPage":toPage,"orgid":orgid});
 }
 </script>
 </html>

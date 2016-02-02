@@ -42,12 +42,13 @@
 	}
 	
 	function addAdvert(){
+		
 		if($("#advert_thumbnail").val() == ""){
 			alert("请上传图片");
 			return;
 		}
+		
 		if($("#advert_upload_form").valid()){
-				
 			$.ajax({
 				url:"${ctx}/advert/edit",
 				type:"post",
@@ -95,7 +96,7 @@
 					</c:otherwise>
 				</c:choose>		
 				<s:hidden path="thumbnail" id="advert_thumbnail" required="true"/>		
-				<span class="t5" ><input type="file" name="file" id="advert_upload_file" style="border:0;" required="true"/></span>
+				<span class="t5" ><input type="file" name="file" id="advert_upload_file" style="border:0;"/></span>
 				<input type="button" onclick="upload()" style="cursor: pointer;" class="t4" value="上传" />
 				
 		</div>

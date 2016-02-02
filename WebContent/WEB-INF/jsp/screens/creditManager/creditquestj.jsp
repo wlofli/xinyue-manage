@@ -27,7 +27,7 @@
 		</div>
 		<div class="c_r_bt1">
 			<ul class="menu1" id="menu">
-				<li onclick="document.location.href='${ctx}/credit/manager/detail/jans?index=1'"><a>新越网平台问答</a></li>
+				<li onclick="document.location.href='${ctx}/credit/manager/detail/xans?index=1'"><a>新越网平台问答</a></li>
 				<li class="hit"><a>所在机构问答</a></li>
 			</ul>
 		</div>

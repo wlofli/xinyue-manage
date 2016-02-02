@@ -13,9 +13,14 @@
 $(function(){
 	var nowPage = "${page.nowPage}";
 	$("#page_"+nowPage).addClass("hit");
+	var hic = "${searchInfo.searchCityHid}";
+	var hiz = "${searchInfo.searchZoneHid}";
+	getCities(hic);
+	getZones(hic , hiz);
 });
 var checkFlag = false;
 function changeIndex(index,val){
+	
 	var hidVal = $("#hid_index"+index).val();
 	var code = $("#hid_"+index).val();
 	if (hidVal == val) {
@@ -24,7 +29,7 @@ function changeIndex(index,val){
 	if (val != hidVal) {
 		$.ajax({
 			url:"${ctx}/cooperate/organization/change/array?code="+code+"&index="+val,
-			dataType:'POST',
+			type:'POST',
 			success:function(data){
 				if (data == "updateS") {
 					alert("修改序号成功！");
@@ -79,7 +84,7 @@ function changePage(page){
 					<sf:option value="">所属市</sf:option>
 				</sf:select>
 				<sf:hidden path="searchCityHid" id="hid_c"/>
-				<sf:select path="searchZone" class="s2" id="searchZ" >
+				<sf:select path="searchZone" class="s2" id="searchZ" onchange="getZ()">
 					<sf:option value="">所属区/县</sf:option>
 				</sf:select>
 				<sf:hidden path="searchZoneHid" id="hid_z"/>
@@ -173,6 +178,12 @@ function changePage(page){
 </div>
 </body>
 <script type="text/javascript">
+function getZ(){
+	var val = $("#searchZ").val();
+	if(val != ''){
+		$("#hid_z").val(val);
+	}
+}
 function searchFs(){
 	$("#searchForm").submit();
 }
@@ -228,11 +239,15 @@ function getZones(cityData,zoneData){
 	$("#searchZ").append(option);
 	
 	var cityVal = $("#searchC option:selected").val();
+	
 	if (cityVal == "") {
 		cityVal = cityData;
+	}else{
+		$("#hid_c").val(cityVal);
 	}
 	
 	if (cityVal != 0) {
+	
 		$.ajax({
 			url:"${ctx}/city/pulldown?type=tz&id="+cityVal,
 			success:function(data){
@@ -275,30 +290,35 @@ function delfs(id){
 		return;
 	}
 	delCode = encodeURI(encodeURI(delCode));
-	$.ajax({
-		url:"${ctx}/cooperate/organization/delete?code="+delCode,
-// 		dataType:"post",
-		success:function(data){
-			alert("删除成功");
-			searchFs();
-		}
-	});
+	if(confirm("确认要删除?")){
+		$.ajax({
+			url:"${ctx}/cooperate/organization/delete?code="+delCode,
+//	 		dataType:"post",
+			success:function(data){
+				alert("删除成功");
+				searchFs();
+			}
+		});
+	}
 }
 
 function forPublish(type){
+	
 	var pubCode = "";
 	for (var i = 1; i <= 10; i++) {
 		if ($("#cb_"+i).is(':checked')) {
 			pubCode = pubCode + $("#hid_"+i).val() + "~";
 		}
 	}
-	if (delCode == "") {
+	if (pubCode == "") {
 		alert("未选中对象!");
 		return;
 	}
+	
 	pubCode = encodeURI(encodeURI(pubCode));
 	$.ajax({
-		url:"${ctx}/cooperate/organization/publish?code="+delCode+"&type="+type,
+		url:"${ctx}/cooperate/organization/publish?code="+pubCode+"&type="+type,
+		type:'post',
 		success:function(data){
 			if (type == 'p') {
 				alert("发布成功");

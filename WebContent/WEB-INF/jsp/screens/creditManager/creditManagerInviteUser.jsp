@@ -10,6 +10,15 @@
 <title>信贷经理_信贷经理详情</title>
 <%@ include file="../../commons/common.jsp"%>
 <script type="text/javascript">
+$(function(){
+	var i = "${i}";
+	if(!i){
+		tab_item(0);
+	}else{
+		tab_item(i);
+	}
+	
+});
 function tab_item(n)
 {
 		var menu = document.getElementById("menu");

@@ -43,7 +43,7 @@
 		$("input[name='ck_pro']").each(function(){
 			if(this.checked){
 				
-				if($(this).parent().parent().next().find("td").eq(8).html() == "待上架"){
+				if($(this).attr("status") == 1){
 					param.push(this.value);
 				}else{
 					
@@ -84,7 +84,8 @@
 		var param = [];//存储id
 		$("input[name='ck_pro']").each(function(){
 			if(this.checked){
-				if($(this).parent().parent().next().find("td").eq(8).html() == "上架中"){
+				
+				if($(this).attr("status") == 2){
 					param.push(this.value);
 				}else{
 					
@@ -199,7 +200,7 @@
 					<c:forEach items="${prodata.data }" var="pro" varStatus="vs">
 						<tr>
 							<td colspan="2">
-								<input type="checkbox" name="ck_pro" value="${pro.id }"  />
+								<input type="checkbox" name="ck_pro" value="${pro.id }" status="${pro.status.dicKey }" />
 								<span><c:out value="${vs.count + (prodata.currentPage-1)*10}" /></span>
 							</td>
 							<td colspan="3">${pro.name }</td>

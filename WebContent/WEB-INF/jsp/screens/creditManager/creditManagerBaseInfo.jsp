@@ -9,6 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>信贷经理_信贷经理详情</title>
 <%@ include file="../../commons/common.jsp"%>
+<%@ include file="../../commons/validate.jsp"%>
 </head>
 <body>
 	<div class="c_right">
@@ -91,7 +92,7 @@
 									<img src="${ctx}/images/sfz1_icon.png" id="id_img_card"/>
 								</c:when>
 								<c:otherwise>
-									<img src="${showPath}moko/images/credit/person/credit/${authenticationCM.cardImg}" id="id_img_card"/>
+									<img src="${showPath}moko/images/credit/person/card/${authenticationCM.cardImg}" id="id_img_card"/>
 								</c:otherwise>
 							</c:choose>
 						</a>
@@ -128,19 +129,43 @@
 				<span>审核结果</span>
 			</div>
 			<sf:form action="${ctx}/credit/manager/audit/save" commandName="authenticationCM" method="post" id="editForm">
+				<sf:hidden path="id" id="cm_id"/>
+				<sf:hidden path="managerId"/>
 				<div>
 					<span>审核结果：</span>
+						
 						<span class="dx1">
-							<sf:radiobutton path="audit" value="4" label="审核通过"/>
+							<c:choose>
+							<c:when test="${authenticationCM.audit ==4 }">
+								<sf:radiobutton path="audit" value="4" label="审核通过" checked="checked" />
+							</c:when>
+							<c:otherwise>
+								<sf:radiobutton path="audit" value="4" label="审核通过"/>
+							</c:otherwise>
+							</c:choose>
 						</span>
+						
 						<span class="dx1">
-							<sf:radiobutton path="audit" value="3" label="审核不通过"/>
+							<c:choose>
+							<c:when test="${authenticationCM.audit ==3 or authenticationCM.audit!=4 }">
+								<sf:radiobutton path="audit" value="3" label="审核不通过" checked="checked" />
+							</c:when>
+							<c:otherwise>
+								<sf:radiobutton path="audit" value="3" label="审核不通过"/>
+							</c:otherwise>
+							</c:choose>
 						</span>
 					<div class="clear"></div>
 				</div>
 				<div>
 					<span>描述说明：</span>
-					<sf:textarea path="auditMessage" cssClass="qxsz qxsz2"/>
+					<sf:textarea path="auditMessage" cssClass="qxsz qxsz2" required="true"/>
+					<div class="clear"></div>
+				</div>
+				<div>
+					<span>是否设为首页推荐：</span>
+					<span class="dx"><sf:radiobutton path="recommend" value="1" cssClass="c1"/>推荐</span>
+					<span class="dx"><sf:radiobutton path="recommend" value="0" cssClass="c1"/>不推荐</span>
 					<div class="clear"></div>
 				</div>
 				<div>
@@ -215,18 +240,25 @@
 	}
 	
 	function auditSave(){
-		$.ajax({
-			url:"${ctx}/credit/manager/audit/save",
-			type:"post",
-			data:$("#editForm").serialize(),
-			success:function(data){
-				if (data) {
-					alert("提交成功");
-				} else {
-					alert("提交失败");
-				}
+		
+		if($("#cm_id").val() != ""){
+			if($("#editForm").valid()){
+				$.ajax({
+					url:"${ctx}/credit/manager/audit/save",
+					type:"post",
+					data:$("#editForm").serialize(),
+					success:function(data){
+						if (data=='success') {
+							alert("提交成功");
+						} else {
+							alert("提交失败");
+						}
+					}
+				});
 			}
-		});
+		}else{
+			alert("没有相对应的认证资料");
+		}
 	}
 </script>
 </html>

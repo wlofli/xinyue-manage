@@ -214,7 +214,9 @@ function getZones(cityData,zoneData){
 				option.html(zone.value);
 				$("#searchZ").append(option);
 			};
-			$("#searchZ").val(zoneData);
+			if(zoneData != ''){
+				$("#searchZ").val(zoneData);
+			}
 		}
 	});
 	

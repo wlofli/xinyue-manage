@@ -95,7 +95,7 @@
 							<tr>
 								<td colspan="1">${(creditpage.currentPage-1)*10+vs.index+1}</td>
 								<td colspan="2">${credit.name }</td>
-								<td colspan="2">${credit. }</td>
+								<td colspan="2">${credit.telPhone }</td>
 								<td colspan="2">信贷经理</td>
 								<td colspan="3">${credit.registerTime }</td>
 							<%--	<td colspan="2">20</td>

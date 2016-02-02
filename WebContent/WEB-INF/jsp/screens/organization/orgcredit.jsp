@@ -24,8 +24,9 @@
 		<div id="tab8" class="c_table">
 
 			<div class="c_table">
-				<s:form commandName="sc" method="post" action="" id="credit_form">
+				<s:form commandName="sc" method="post" action="${ctx }/organization/credit" id="credit_form">
 					<s:hidden path="topage" id="credit_topage"/>
+					<s:hidden path="orgid"/>
 				<div class="c_r_bt1">
 						
 						<ul>
@@ -69,15 +70,14 @@
 							<td colspan="1" rowspan="2">性别</td>
 							<td colspan="2" rowspan="2">身份证号</td>
 							<td colspan="2" rowspan="2">
-								<s:select path="audit" class="s1">
+								<s:select path="audit" class="s1" onchange="find(0)">
 									<s:option value="">员工认证</s:option>
 									<s:option value="4">已认证</s:option>
 									<s:option value="2">未认证</s:option>
 								</s:select>
 							</td>
 							<td colspan="2" rowspan="2">
-								<s:select path="serverStar"
-									cssClass="s1">
+								<s:select path="serverStar" cssClass="s1" onchange="find(0)">
 									<s:option value="">服务质量</s:option>
 									<s:options items="${stars}" itemValue="key" itemLabel="value" />
 								</s:select>
@@ -100,8 +100,9 @@
 					<tbody>
 						<c:forEach items="${creditpage.data }" var="credit" varStatus="vs">
 							<tr>
-								<td colspan="1"><input type="checkbox" name="ck_credit" tel="${credit.tel }" email
-									value="${credit.id }" /> <span>${(vs.index+1)+(creditpage.currentPage-1)*10}</span>
+								<td colspan="1">
+								<input type="checkbox" name="ck_credit" tel="${credit.tel }" value="${credit.id }" email="${credit.email }" /> 
+								<span>${(vs.index+1)+(creditpage.currentPage-1)*10}</span>
 								</td>
 								<td colspan="1">${credit.realName }</td>
 								<td colspan="1">${credit.sex }</td>
@@ -118,15 +119,15 @@
 								<td colspan="2">${credit.province}${credit.city}</td>
 								<td colspan="2">${credit.registerDate }</td>
 								<td colspan="3">
-									<a href="javascript:void(0)" onclick="document.location.href='${ctx}/organization/creditdetail?manageid=${credit.id }'">查看</a> 
+									<a href="javascript:void(0)" onclick="document.location.href='${ctx}/organization/creditdetail?managerid=${credit.id }&orgid=${orgid }'">查看</a> 
 									<c:choose>
-										<c:when test="${status == 0 }">
+										<c:when test="${credit.status == 0 }">
 											<a href="javascript:void(0)" onclick="lock('${credit.id}',1)">屏蔽</a>
 										</c:when>
 										<c:otherwise>
 											<a href="javascript:void(0)" onclick="lock('${credit.id}',0)"><font color="#666">启用</font></a>
 										</c:otherwise>
-									</c:choose> <a href="javascript:void(0)" onclick="del('${cm.id}')">删除</a></td>
+									</c:choose> <a href="javascript:void(0)" onclick="del('${credit.id}')">删除</a></td>
 							</tr>
 						</c:forEach>
 					</tbody>
@@ -199,9 +200,9 @@
 			var param = [];
 			$("input[name='ck_credit']").each(function(){
 				if(this.checked){
-					alert(this.email != "");
+					
 					if(this.email != ""){
-						param.push(this.email);
+						param.push($(this).attr("email"));
 					}
 					
 				}
@@ -225,6 +226,7 @@
 				$.ajax({
 					url:'${ctx}/organization/email',
 					type:'post',
+					dataType:'json',
 					data:{'email':param,'content':$("#email_content_send").val()},
 					success:function(data){
 						if(data == 'success'){
@@ -241,7 +243,7 @@
 			var param = [];
 			$("input[name='ck_credit']").each(function(){
 				if(this.checked){
-					param.push(this.tel);
+					param.push($(this).attr("tel"));
 				}
 			});	
 			if(param.length == 0){
@@ -259,12 +261,13 @@
 				alert("内容不能为空");
 				return;
 			}
-			
+			alert(JSON.stringify(param));
 			if(confirm("确认要发送?")){
 				$.ajax({
 					url:'${ctx}/organization/tel',
-					type:'post',
-					data:{'tel':param,'content':$("#tel_content_send").val()},
+					type:'POST',
+					dataType:'json',
+					data:{'tel':param,'content':$('#tel_content_send').val()},
 					success:function(data){
 						if(data == 'success'){
 							alert("发送成功");

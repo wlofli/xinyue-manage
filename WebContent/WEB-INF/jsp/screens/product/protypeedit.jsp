@@ -39,8 +39,8 @@
 			</div>
 			<div>
 				<span>状态：</span>
-				<span class="dx1"><s:radiobutton path="status" checked="true" value="1"/>启用</span>
-				<span class="dx1"><s:radiobutton path="status" value="0"/>屏蔽</span>
+				<span class="dx1"><s:radiobutton path="status" checked="true" value="0"/>启用</span>
+				<span class="dx1"><s:radiobutton path="status" value="1"/>屏蔽</span>
 			</div>
 			<div><input type="button" value="添 加" class="tj_btn tj_btn3" onclick="save()"/><input type="button" value="取 消" class="tj_btn tj_btn2" onclick="history.back()"/></div>
 		</s:form>
